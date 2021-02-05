@@ -2,6 +2,16 @@
 
 ## Tours and maps
 
+The application aims to develop detailed texts, pictures,
+videos and other guidance information are provided, and so
+people can better understand the tourist attractions and
+make decision objectively. A problem is shown that tourists
+are not able to get travel information timely when they are
+on the move. Therefore, we intend to explore how to build a
+mobile tourist guide system based on mashup technology to
+solve this problem. 
+
+
 Have you ever wanted to visit the Louvre, hike Mount Everest, or wander through the pyramids of Giza,
 but you just don’t have the time? If you can’t go there, AR can turn any hallway into a museum, 
 any molehill into a mountain, and any park into a pyramid, that you’ll be able to see through your iPhone or Android device.
