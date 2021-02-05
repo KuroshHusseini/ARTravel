@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/mapsFragment"
+        android:title="@string/nav_bar_map_txt"
+        android:icon="@drawable/ic_map_place_24"/>
+
+    <item android:id="@+id/attractionsFragment"
+        android:title="@string/nav_bar_attractions_txt"
+        android:icon="@drawable/ic_attractions_24"/>
+
+    <item android:id="@+id/weatherFragment"
+        android:title="@string/nav_bar_weather_txt"
+        android:icon="@drawable/ic_weather_icon_24"/>
+</menu>

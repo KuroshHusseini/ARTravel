@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">ARTravel</string>
+    <string name="app_name">fragment_demo</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="nav_bar_map_txt">Map</string>
+    <string name="nav_bar_attractions_txt">Attractions</string>
+    <string name="nav_bar_weather_txt">Weather</string>
+    <string name="hello_attractions_fragment">Navigation fragment</string>
+    <string name="hello_weather_fragment">Weather fragment</string>
 </resources>
