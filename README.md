@@ -1,6 +1,6 @@
 # ARTravel
 
-##Tours and maps
+## Tours and maps
 
 Have you ever wanted to visit the Louvre, hike Mount Everest, or wander through the pyramids of Giza,
 but you just don’t have the time? If you can’t go there, AR can turn any hallway into a museum, 
