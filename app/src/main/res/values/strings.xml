@@ -7,4 +7,11 @@
     <string name="nav_bar_weather_txt">Weather</string>
     <string name="hello_attractions_fragment">Navigation fragment</string>
     <string name="hello_weather_fragment">Weather fragment</string>
+
+    <!-- MapsFragment -->
+    <string name="pick_place">Pick a place</string>
+    <string name="user_granted_permission">User has granted location access permission.</string>
+    <string name="user_not_grant_permission">User has not granted location access permission.</string>
+
+
 </resources>
