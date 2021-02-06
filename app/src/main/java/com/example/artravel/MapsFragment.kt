@@ -331,4 +331,7 @@ class MapsFragment : Fragment() {
         )
         return Bitmap.createScaledBitmap(imageBitmap, width, height, false)
     }
+
+
 }
+

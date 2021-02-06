@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">fragment_demo</string>
+    <string name="app_name">ARTravel</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="nav_bar_map_txt">Map</string>
@@ -13,4 +13,9 @@
     <string name="toast_txt_for_location">Your location provider is turned off. Please turn it on!</string>
     <string name="toast_txt_for_location_on">Your location provider is already ON!</string>
 
+    <string name="required_permission">Required Permissions</string>
+    <string name="required_permission_message">This app require permission to use awesome feature. Grant them in app settings.</string>
+    <string name="show_rational_dialog_for_permission_alert_txt">It looks like you have turned of permissions rquired for this feature. It can be enabled under Application Settings</string>
+    <string name="positive_button_for_alert_txt">GOT TO SETTINGS</string>
+    <string name="negative_button_for_alert_txt">Cancel</string>
 </resources>
