@@ -327,7 +327,7 @@ class MapsFragment : Fragment() {
     fun resizeMapIcons(iconName: String?, width: Int, height: Int): Bitmap? {
         val imageBitmap = BitmapFactory.decodeResource(
             resources,
-            resources.getIdentifier(iconName, "drawable", MainActivity.mainPackage)
+            resources.getIdentifier(iconName, "drawable", activity?.packageName)
         )
         return Bitmap.createScaledBitmap(imageBitmap, width, height, false)
     }
