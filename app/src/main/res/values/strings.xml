@@ -7,4 +7,10 @@
     <string name="nav_bar_weather_txt">Weather</string>
     <string name="hello_attractions_fragment">Navigation fragment</string>
     <string name="hello_weather_fragment">Weather fragment</string>
+
+
+    <!-- Weather fragment and xml strings -->
+    <string name="toast_txt_for_location">Your location provider is turned off. Please turn it on!</string>
+    <string name="toast_txt_for_location_on">Your location provider is already ON!</string>
+
 </resources>
