@@ -105,7 +105,8 @@ class MapsFragment : Fragment() {
             startLocationUpdates()
             Toast.makeText(
                 view?.context,
-                "User has granted location access permission.",
+                R.string.user_granted_permission,
+//                "User has granted location access permission.",
                 Toast.LENGTH_LONG
             )
                 .show()
@@ -130,7 +131,7 @@ class MapsFragment : Fragment() {
             } else {
                 Toast.makeText(
                     view?.context,
-                    "User has not granted location access permission.",
+                    R.string.user_not_grant_permission,
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -319,7 +320,7 @@ class MapsFragment : Fragment() {
 
         // Display the dialog.
         AlertDialog.Builder(requireContext())
-            .setTitle("Pick a place.")
+            .setTitle(R.string.pick_place)
             .setItems(likelyPlaceNames, listener)
             .show()
     }
@@ -327,7 +328,7 @@ class MapsFragment : Fragment() {
     fun resizeMapIcons(iconName: String?, width: Int, height: Int): Bitmap? {
         val imageBitmap = BitmapFactory.decodeResource(
             resources,
-            resources.getIdentifier(iconName, "drawable", MainActivity.mainPackage)
+            resources.getIdentifier(iconName, "drawable", activity?.packageName)
         )
         return Bitmap.createScaledBitmap(imageBitmap, width, height, false)
     }

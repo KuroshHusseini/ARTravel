@@ -9,8 +9,16 @@
     <string name="hello_weather_fragment">Weather fragment</string>
 
 
+
     <!-- Weather fragment and xml strings -->
     <string name="toast_txt_for_location">Your location provider is turned off. Please turn it on!</string>
     <string name="toast_txt_for_location_on">Your location provider is already ON!</string>
+
+    <!-- MapsFragment -->
+    <string name="pick_place">Pick a place</string>
+    <string name="user_granted_permission">User has granted location access permission.</string>
+    <string name="user_not_grant_permission">User has not granted location access permission.</string>
+
+
 
 </resources>
