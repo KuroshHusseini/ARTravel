@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">ARTravel</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="nav_bar_map_txt">Map</string>
     <string name="nav_bar_attractions_txt">Attractions</string>
@@ -9,12 +8,11 @@
     <string name="hello_weather_fragment">Weather fragment</string>
 
 
-
     <!-- Weather fragment and xml strings -->
     <string name="toast_txt_for_location">Your location provider is turned off. Please turn it on!</string>
     <string name="toast_txt_for_location_on">Your location provider is already ON!</string>
 
-
+    <!-- Weather fragment -->
     <string name="required_permission">Required Permissions</string>
     <string name="required_permission_message">This app require permission to use awesome feature. Grant them in app settings.</string>
     <string name="show_rational_dialog_for_permission_alert_txt">It looks like you have turned of permissions rquired for this feature. It can be enabled under Application Settings</string>
@@ -26,4 +24,7 @@
     <string name="user_granted_permission">User has granted location access permission.</string>
     <string name="user_not_grant_permission">User has not granted location access permission.</string>
 
+
+    <!-- dialog custom progress -->
+    <string name="please_wait">Please wait&#8230;</string>
 </resources>

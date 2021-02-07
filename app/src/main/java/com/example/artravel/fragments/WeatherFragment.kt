@@ -1,11 +1,11 @@
-package com.example.artravel
+package com.example.artravel.fragments
 
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.location.Location
 import android.location.LocationManager
@@ -19,6 +19,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.example.artravel.R
+import com.example.artravel.constants.Constants
+import com.example.artravel.models.WeatherResponse
+import com.example.artravel.network.WeatherService
 import com.google.android.gms.location.*
 
 import com.karumi.dexter.Dexter
@@ -26,11 +30,14 @@ import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import retrofit2.*
+import retrofit2.converter.gson.GsonConverterFactory
 
 
 @Suppress("DEPRECATION")
 class WeatherFragment : Fragment() {
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
+    private var mProgressDialog: Dialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +70,57 @@ class WeatherFragment : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_weather, container, false)
 
+    }
+
+
+    private fun getLocationWeatherDetails(latitude: Double, longitude: Double) {
+        if (Constants.isNetworkAvailable(activity)) {
+            val retrofit: Retrofit = Retrofit.Builder()
+                .baseUrl(Constants.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create()).build()
+
+            val service: WeatherService =
+                retrofit.create<WeatherService>(WeatherService::class.java)
+
+            val listCall: Call<WeatherResponse> = service.getWeather(
+                latitude, longitude, Constants.METRIC_UNIT, Constants.APP_ID
+            )
+            showCustomProgressDialog()
+            listCall.enqueue(object : Callback<WeatherResponse> {
+                override fun onResponse(
+                    call: Call<WeatherResponse>,
+                    response: Response<WeatherResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        val weatherList: WeatherResponse? = response.body()
+                        hideProgressDialog()
+                        Log.i("Response Result", "$weatherList")
+                    } else {
+                        val rc = response.code()
+                        when (rc) {
+                            400 -> {
+                                Log.e("Error 300", "Bad connection")
+                            }
+                            404 -> {
+                                Log.e("Error 404", "Not Found")
+                            }
+                            else -> {
+                                Log.e("Error", "Generic Error")
+                            }
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
+                    Log.e("Error", t.message.toString())
+                    hideProgressDialog()
+                }
+
+            })
+        } else {
+            Toast.makeText(activity, "You have not been connected to internet", Toast.LENGTH_SHORT)
+                .show()
+        }
     }
 
     private fun isLocationEnable(): Boolean {
@@ -144,10 +202,20 @@ class WeatherFragment : Fragment() {
 
             val longitude = mLastLocation.longitude
             Log.i("Current longitude", "$longitude")
-
-
+            getLocationWeatherDetails(latitude, longitude)
         }
     }
 
+    //making our custom dialog
+    private fun showCustomProgressDialog() {
+        mProgressDialog = Dialog(activity!!)
+        mProgressDialog!!.setContentView(R.layout.dialog_custom_progress)
+        mProgressDialog!!.show()
+    }
 
+    private fun hideProgressDialog() {
+        if (mProgressDialog != null) {
+            mProgressDialog!!.dismiss()
+        }
+    }
 }

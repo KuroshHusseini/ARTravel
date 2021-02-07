@@ -1,4 +1,4 @@
-package com.example.artravel
+package com.example.artravel.fragments
 
 import android.annotation.SuppressLint
 import android.content.DialogInterface
@@ -18,6 +18,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.artravel.R
 import com.google.android.gms.location.*
 
 import com.google.android.gms.maps.CameraUpdateFactory
