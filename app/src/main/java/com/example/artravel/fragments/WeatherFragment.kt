@@ -78,7 +78,7 @@ class WeatherFragment : Fragment() {
     private fun getLocationWeatherDetails(latitude: Double, longitude: Double) {
         if (Constants.isNetworkAvailable(activity)) {
             val retrofit: Retrofit = Retrofit.Builder()
-                .baseUrl(Constants.BASE_URL)
+                .baseUrl(Constants.WEATHER_URL)
                 .addConverterFactory(GsonConverterFactory.create()).build()
 
             val service: WeatherService =
@@ -232,22 +232,22 @@ class WeatherFragment : Fragment() {
         for (i in weatherList.weather.indices) {
             Log.i("Weather Name", weatherList.weather.toString())
 
-            tv_main.text = weatherList.weather[i].main
-            tv_main_description.text = weatherList.weather[i].description
-            tv_temp.text =
+            tv_main?.text = weatherList.weather[i].main
+            tv_main_description?.text = weatherList.weather[i].description
+            tv_temp?.text =
                 "${weatherList.main.temp} ${getUnit(resources.configuration.toString())}"
 
-            tv_sunrise_time.text = unixTime(weatherList.sys.sunrise)
-            tv_sunset_time.text = unixTime(weatherList.sys.sunset)
+            tv_sunrise_time?.text = unixTime(weatherList.sys.sunrise)
+            tv_sunset_time?.text = unixTime(weatherList.sys.sunset)
 
-            tv_humidity.text = "${weatherList.main.humidity} per cent"
+            tv_humidity?.text = "${weatherList.main.humidity} percent"
 
-            tv_min.text = "${weatherList.main.temp_min} min"
-            tv_max.text = "${weatherList.main.temp_max} max"
+            tv_min?.text = "${weatherList.main.temp_min} min"
+            tv_max?.text = "${weatherList.main.temp_max} max"
 
-            tv_speed.text = weatherList.wind.speed.toString()
-            tv_name.text = weatherList.name
-            tv_country.text = weatherList.sys.country
+            tv_speed?.text = weatherList.wind.speed.toString()
+            tv_name?.text = weatherList.name
+            tv_country?.text = weatherList.sys.country
 
 
 

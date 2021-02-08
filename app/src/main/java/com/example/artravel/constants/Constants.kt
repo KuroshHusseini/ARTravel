@@ -9,7 +9,9 @@ object Constants {
 
 
     const val APP_ID: String = "f9ffb10ce3149b190a641828f7900651"
-    const val BASE_URL: String = "https://api.openweathermap.org/data/"
+    const val WEATHER_URL: String = "https://api.openweathermap.org/data/"
+    const val WIKIPEDIA_URL: String =
+        "https://en.wikipedia.org/w/api.php?action=query&prop=coordinates|pageimages|description|info&inprop=url&pithumbsize=144&generator=geosearch&ggsradius=10000&ggslimit=10&ggscoord=61.2055|24.6559&format=json"
     const val METRIC_UNIT: String = "metric"
 
 
