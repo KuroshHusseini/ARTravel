@@ -153,7 +153,7 @@ class MapsFragment : Fragment() {
                 // Geocode user location address
                 val addresses: List<Address>
 
-                val geocoder: Geocoder = Geocoder(requireContext(), Locale.getDefault())
+                val geocoder: Geocoder = Geocoder(activity, Locale.getDefault())
 
                 if (locationResult.locations.isNotEmpty()) {
                     val location = locationResult.lastLocation
