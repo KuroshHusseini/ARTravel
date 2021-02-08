@@ -1,4 +1,4 @@
-package com.example.artravel.models
+package com.example.artravel.weatherModels
 
 data class Weather(
     val id: Int,

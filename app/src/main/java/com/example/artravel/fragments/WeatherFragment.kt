@@ -21,8 +21,8 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.artravel.R
 import com.example.artravel.constants.Constants
-import com.example.artravel.models.WeatherResponse
-import com.example.artravel.network.WeatherService
+import com.example.artravel.weatherModels.WeatherResponse
+import com.example.artravel.weatherNetwork.WeatherService
 import com.google.android.gms.location.*
 
 import com.karumi.dexter.Dexter
@@ -30,11 +30,14 @@ import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import kotlinx.android.synthetic.main.fragment_weather.*
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
+import java.text.SimpleDateFormat
+import java.util.*
 
 
-@Suppress("DEPRECATION")
+@Suppress("DEPRECATION", "NAME_SHADOWING")
 class WeatherFragment : Fragment() {
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private var mProgressDialog: Dialog? = null
@@ -56,7 +59,6 @@ class WeatherFragment : Fragment() {
             //redirect the user to the setting to turn on the location
             val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
             startActivity(intent)
-
         } else {
             requestMultiplePermissions()
         }
@@ -80,7 +82,7 @@ class WeatherFragment : Fragment() {
                 .addConverterFactory(GsonConverterFactory.create()).build()
 
             val service: WeatherService =
-                retrofit.create<WeatherService>(WeatherService::class.java)
+                retrofit.create(WeatherService::class.java)
 
             val listCall: Call<WeatherResponse> = service.getWeather(
                 latitude, longitude, Constants.METRIC_UNIT, Constants.APP_ID
@@ -92,12 +94,14 @@ class WeatherFragment : Fragment() {
                     response: Response<WeatherResponse>
                 ) {
                     if (response.isSuccessful) {
-                        val weatherList: WeatherResponse? = response.body()
+                        //if response is successful hide the progress bar and show it
                         hideProgressDialog()
+                        val weatherList: WeatherResponse? = response.body()
+                        setupUI(weatherList!!)
                         Log.i("Response Result", "$weatherList")
+
                     } else {
-                        val rc = response.code()
-                        when (rc) {
+                        when (response.code()) {
                             400 -> {
                                 Log.e("Error 300", "Bad connection")
                             }
@@ -118,7 +122,7 @@ class WeatherFragment : Fragment() {
 
             })
         } else {
-            Toast.makeText(activity, "You have not been connected to internet", Toast.LENGTH_SHORT)
+            Toast.makeText(activity, getString(R.string.You_have_not_been_connected_to_internet), Toast.LENGTH_SHORT)
                 .show()
         }
     }
@@ -148,7 +152,7 @@ class WeatherFragment : Fragment() {
                     // check for permanent denial of any permission
                     if (report.isAnyPermissionPermanentlyDenied) {
                         // show alert dialog navigating to Settings
-
+                        showRationalDialogForPermission()
                     }
                 }
 
@@ -182,6 +186,7 @@ class WeatherFragment : Fragment() {
             }.show()
     }
 
+    //getting the location
     @SuppressLint("MissingPermission")
     private fun requestLocationData() {
         val mLocationRequest = LocationRequest()
@@ -193,6 +198,8 @@ class WeatherFragment : Fragment() {
             Looper.myLooper()
         )
     }
+
+
 
     private val mLocationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
@@ -206,7 +213,7 @@ class WeatherFragment : Fragment() {
         }
     }
 
-    //making our custom dialog
+    //custom dialog
     private fun showCustomProgressDialog() {
         mProgressDialog = Dialog(activity!!)
         mProgressDialog!!.setContentView(R.layout.dialog_custom_progress)
@@ -217,5 +224,62 @@ class WeatherFragment : Fragment() {
         if (mProgressDialog != null) {
             mProgressDialog!!.dismiss()
         }
+    }
+
+    //Setting UI texts
+    @SuppressLint("SetTextI18n")
+    private fun setupUI(weatherList: WeatherResponse) {
+        for (i in weatherList.weather.indices) {
+            Log.i("Weather Name", weatherList.weather.toString())
+
+            tv_main.text = weatherList.weather[i].main
+            tv_main_description.text = weatherList.weather[i].description
+            tv_temp.text =
+                "${weatherList.main.temp} ${getUnit(resources.configuration.toString())}"
+
+            tv_sunrise_time.text = unixTime(weatherList.sys.sunrise)
+            tv_sunset_time.text = unixTime(weatherList.sys.sunset)
+
+            tv_humidity.text = "${weatherList.main.humidity} per cent"
+
+            tv_min.text = "${weatherList.main.temp_min} min"
+            tv_max.text = "${weatherList.main.temp_max} max"
+
+            tv_speed.text = weatherList.wind.speed.toString()
+            tv_name.text = weatherList.name
+            tv_country.text = weatherList.sys.country
+
+
+
+            when (weatherList.weather[i].icon) {
+                "01d" -> iv_main.setImageResource(R.drawable.sunny)
+                "02d" -> iv_main.setImageResource(R.drawable.cloud)
+                "03d" -> iv_main.setImageResource(R.drawable.cloud)
+                "04d" -> iv_main.setImageResource(R.drawable.cloud)
+                "09d" -> iv_main.setImageResource(R.drawable.rain)
+                "10d" -> iv_main.setImageResource(R.drawable.rain)
+                "11d" -> iv_main.setImageResource(R.drawable.storm)
+                "13d" -> iv_main.setImageResource(R.drawable.snowflake)
+            }
+        }
+    }
+
+    //get the right unit
+    private fun getUnit(value: String): String {
+        var value: String = "°C"
+        if ("US" == value || "LR" == value || "MM" == value) {
+            value = "°F"
+        }
+        return value
+    }
+
+
+    // getting time
+    private fun unixTime(timex: Long): String {
+        val date = Date(timex * 1000L)
+        val sdf = SimpleDateFormat("HH:mm", Locale.UK)
+        sdf.timeZone = TimeZone.getDefault()
+        return sdf.format(date)
+
     }
 }

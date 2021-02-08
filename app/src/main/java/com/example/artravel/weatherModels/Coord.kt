@@ -1,4 +1,4 @@
-package com.example.artravel.models
+package com.example.artravel.weatherModels
 
 import java.io.Serializable
 

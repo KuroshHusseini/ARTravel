@@ -11,6 +11,9 @@
     <!-- Weather fragment and xml strings -->
     <string name="toast_txt_for_location">Your location provider is turned off. Please turn it on!</string>
     <string name="toast_txt_for_location_on">Your location provider is already ON!</string>
+    <string name="image_contentDescription">image</string>
+    <string name="miles_per_hour">miles/hour</string>
+
 
     <!-- Weather fragment -->
     <string name="required_permission">Required Permissions</string>
@@ -27,4 +30,5 @@
 
     <!-- dialog custom progress -->
     <string name="please_wait">Please wait&#8230;</string>
+    <string name="You_have_not_been_connected_to_internet">You have not been connected to internet</string>
 </resources>

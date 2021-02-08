@@ -151,10 +151,9 @@ class MapsFragment : Fragment() {
 
             override fun onLocationResult(locationResult: LocationResult) {
                 // Geocode user location address
-                val geocoder: Geocoder
                 val addresses: List<Address>
 
-                geocoder = Geocoder(requireContext(), Locale.getDefault())
+                val geocoder: Geocoder = Geocoder(requireContext(), Locale.getDefault())
 
                 if (locationResult.locations.isNotEmpty()) {
                     val location = locationResult.lastLocation

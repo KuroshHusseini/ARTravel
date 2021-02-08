@@ -1,7 +1,7 @@
-package com.example.artravel.network
+package com.example.artravel.weatherNetwork
 
 
-import com.example.artravel.models.WeatherResponse
+import com.example.artravel.weatherModels.WeatherResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query

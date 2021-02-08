@@ -1,7 +1,7 @@
-package com.example.artravel.models
+package com.example.artravel.weatherModels
 
 data class Main(
-    val temp: Int,
+    val temp: Double,
     val feels_like: Double,
     val temp_min: Double,
     val temp_max: Double,

@@ -9,7 +9,7 @@ object Constants {
 
 
     const val APP_ID: String = "f9ffb10ce3149b190a641828f7900651"
-    const val BASE_URL: String = "http://http://api.openweathermap.org/data/"
+    const val BASE_URL: String = "https://api.openweathermap.org/data/"
     const val METRIC_UNIT: String = "metric"
 
 
