@@ -14,9 +14,7 @@ import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.artravel.R
@@ -44,11 +42,9 @@ class WeatherFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        setHasOptionsMenu(true);
         mFusedLocationClient =
             activity?.let { LocationServices.getFusedLocationProviderClient(it) }!!
-
-
         //Checking if location is enabled
         if (!isLocationEnable()) {
             Toast.makeText(
@@ -122,7 +118,11 @@ class WeatherFragment : Fragment() {
 
             })
         } else {
-            Toast.makeText(activity, getString(R.string.You_have_not_been_connected_to_internet), Toast.LENGTH_SHORT)
+            Toast.makeText(
+                activity,
+                getString(R.string.You_have_not_been_connected_to_internet),
+                Toast.LENGTH_SHORT
+            )
                 .show()
         }
     }
@@ -180,25 +180,22 @@ class WeatherFragment : Fragment() {
                     e.printStackTrace()
                 }
             }
-
             .setNegativeButton(getString(R.string.negative_button_for_alert_txt)) { dialog, _ ->
                 dialog.dismiss()
             }.show()
     }
 
-    //getting the location
+    //getting the location data
     @SuppressLint("MissingPermission")
     private fun requestLocationData() {
         val mLocationRequest = LocationRequest()
         mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-
         mFusedLocationClient.requestLocationUpdates(
             mLocationRequest,
             mLocationCallback,
             Looper.myLooper()
         )
     }
-
 
 
     private val mLocationCallback = object : LocationCallback() {
@@ -213,43 +210,22 @@ class WeatherFragment : Fragment() {
         }
     }
 
-    //custom dialog
-    private fun showCustomProgressDialog() {
-        mProgressDialog = Dialog(activity!!)
-        mProgressDialog!!.setContentView(R.layout.dialog_custom_progress)
-        mProgressDialog!!.show()
-    }
-
-    private fun hideProgressDialog() {
-        if (mProgressDialog != null) {
-            mProgressDialog!!.dismiss()
-        }
-    }
-
     //Setting UI texts
     @SuppressLint("SetTextI18n")
     private fun setupUI(weatherList: WeatherResponse) {
         for (i in weatherList.weather.indices) {
             Log.i("Weather Name", weatherList.weather.toString())
-
             tv_main.text = weatherList.weather[i].main
             tv_main_description.text = weatherList.weather[i].description
-            tv_temp.text =
-                "${weatherList.main.temp} ${getUnit(resources.configuration.toString())}"
-
+            tv_temp.text = "${weatherList.main.temp} ${getUnit(resources.configuration.toString())}"
             tv_sunrise_time.text = unixTime(weatherList.sys.sunrise)
             tv_sunset_time.text = unixTime(weatherList.sys.sunset)
-
             tv_humidity.text = "${weatherList.main.humidity} per cent"
-
             tv_min.text = "${weatherList.main.temp_min} min"
             tv_max.text = "${weatherList.main.temp_max} max"
-
             tv_speed.text = weatherList.wind.speed.toString()
             tv_name.text = weatherList.name
             tv_country.text = weatherList.sys.country
-
-
 
             when (weatherList.weather[i].icon) {
                 "01d" -> iv_main.setImageResource(R.drawable.sunny)
@@ -280,6 +256,34 @@ class WeatherFragment : Fragment() {
         val sdf = SimpleDateFormat("HH:mm", Locale.UK)
         sdf.timeZone = TimeZone.getDefault()
         return sdf.format(date)
+    }
 
+    //custom dialog
+    private fun showCustomProgressDialog() {
+        mProgressDialog = Dialog(activity!!)
+        mProgressDialog!!.setContentView(R.layout.dialog_custom_progress)
+        mProgressDialog!!.show()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.weather_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    // when button is pressed do this
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (item.itemId == R.id.action_refresh) {
+            requestLocationData()
+            true
+        } else {
+            super.onOptionsItemSelected(item)
+        }
+    }
+
+
+    private fun hideProgressDialog() {
+        if (mProgressDialog != null) {
+            mProgressDialog!!.dismiss()
+        }
     }
 }

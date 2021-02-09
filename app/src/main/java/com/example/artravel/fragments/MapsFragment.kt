@@ -73,7 +73,7 @@ class MapsFragment : Fragment() {
 
         // Use a custom info window adapter to handle multiple lines of text in the
         // info window contents.
-        this.map?.setInfoWindowAdapter(object : GoogleMap.InfoWindowAdapter {
+        this.map.setInfoWindowAdapter(object : GoogleMap.InfoWindowAdapter {
             // Return null here, so that getInfoContents() is called next.
             override fun getInfoWindow(arg0: Marker): View? {
                 return null
@@ -140,8 +140,6 @@ class MapsFragment : Fragment() {
     }
 
     private fun getLocationUpdates() {
-
-
         locationRequest = LocationRequest()
         locationRequest.interval = 30000
         locationRequest.fastestInterval = 20000
@@ -152,7 +150,6 @@ class MapsFragment : Fragment() {
             override fun onLocationResult(locationResult: LocationResult) {
                 // Geocode user location address
                 val addresses: List<Address>
-
                 val geocoder: Geocoder = Geocoder(activity, Locale.getDefault())
 
                 if (locationResult.locations.isNotEmpty()) {
@@ -161,7 +158,6 @@ class MapsFragment : Fragment() {
                     if (location != null) {
                         val latLng = LatLng(location.latitude, location.longitude)
                         val markerOptions = MarkerOptions().position(latLng)
-
 
                         addresses =
                             geocoder.getFromLocation(location.latitude, location.longitude, 1)
@@ -217,9 +213,7 @@ class MapsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_maps, container, false)
-
         setHasOptionsMenu(true);
-
         return view
     }
 
@@ -302,7 +296,7 @@ class MapsFragment : Fragment() {
 
                 // Add a marker for the selected place, with an info window
                 // showing information about that place.
-                map?.addMarker(
+                map.addMarker(
                     MarkerOptions()
                         .title(likelyPlaceNames[which])
                         .position(markerLatLng!!)
@@ -310,14 +304,13 @@ class MapsFragment : Fragment() {
                 )
 
                 // Position the map's camera at the location of the marker.
-                map?.moveCamera(
+                map.moveCamera(
                     CameraUpdateFactory.newLatLngZoom(
                         markerLatLng,
                         15.toFloat()
                     )
                 )
             }
-
         // Display the dialog.
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.pick_place)
@@ -332,7 +325,5 @@ class MapsFragment : Fragment() {
         )
         return Bitmap.createScaledBitmap(imageBitmap, width, height, false)
     }
-
-
 }
 
