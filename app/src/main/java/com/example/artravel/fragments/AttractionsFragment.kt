@@ -21,17 +21,19 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.artravel.R
 import com.example.artravel.constants.Constants
+import com.example.artravel.wikipediaPlaces.WikipediaResponse
+import com.example.artravel.wikipediaPlaces.WikipediaService
 import com.google.android.gms.location.*
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import org.json.JSONArray
-import org.json.JSONObject
-import java.io.IOException
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 
 class AttractionsFragment : Fragment() {
@@ -165,74 +167,143 @@ class AttractionsFragment : Fragment() {
         }
     }
 
+    //    private fun getNearbyPlaces(latitude: Double, longitude: Double) {
+//
+//        Log.d("DBG", "Attempting to Fetch JSON")
+//        val request = Request.Builder().url(Constants.WIKIPEDIA_URL).build()
+//        val client = OkHttpClient()
+//
+//        client.newCall(request)
+//            .enqueue(object : okhttp3.Callback {
+//
+//                override fun onResponse(call: okhttp3.Call?, response: okhttp3.Response?) {
+//                    val body = response?.body()?.string()
+//                    if (body != null) {
+//                        Log.d("DBG", body)
+//                    }
+//
+//                    try {
+//                        var jsonObject = JSONObject(body)
+//
+//                        var query: String = jsonObject.getString("query")
+//
+//                        var pages = JSONObject(query)
+//
+//                        val keys: Iterator<String> = pages.keys()
+//
+//                        var jsonArrayOfPages = JSONArray()
+//
+//                        while (keys.hasNext()) {
+//                            // Iterate pages Object
+//                            var key = keys.next()
+//
+//                            // Get each page key (e.g. 774361)
+//                            if (pages.get(key) is JSONObject) {
+//
+//                                var page = JSONObject(pages.getString(key))
+//
+//                                val keys: Iterator<String> = page.keys()
+//
+//                                // Drill down each JSON Object
+//                                while (keys.hasNext()) {
+//                                    var key = keys.next()
+//
+//                                    var newPage = page.getJSONObject(key)
+//
+//                                    // Add page to array
+//                                    jsonArrayOfPages.put(newPage)
+//
+//                                }
+//                            }
+//                        }
+//
+//                        Log.d("DBG", jsonArrayOfPages.toString())
+//
+//
+//                    } catch (e: Exception) {
+//                        e.printStackTrace()
+//                    }
+//
+//                }
+//
+//                override fun onFailure(call: okhttp3.Call, e: IOException) {
+//                    Log.e("Error", e.message.toString())
+//                    hideProgressDialog()
+//                }
+//
+//            })
+//    }
     private fun getNearbyPlaces(latitude: Double, longitude: Double) {
 
-        Log.d("DBG", "Attempting to Fetch JSON")
+        if (Constants.isNetworkAvailable(activity)) {
+            val retrofit = Retrofit.Builder()
+                .baseUrl("https://api.opentripmap.com/0.1/en/places/")
+                .addConverterFactory(GsonConverterFactory.create()).build()
 
-        val request = Request.Builder().url(Constants.WIKIPEDIA_URL).build()
-        val client = OkHttpClient()
+            val service: WikipediaService = retrofit.create(WikipediaService::class.java)
 
-        client.newCall(request)
-            .enqueue(object : okhttp3.Callback {
+            val listCall: Call<WikipediaResponse> = service.getWikiArticles(
+                1000, 24.94085264648028, 60.16623605171053, "wikidata",
+                "wikidata", 10, "5ae2e3f221c38a28845f05b63f384c730e6c086fbc1c4ea103a5c463"
+            )
 
-                override fun onResponse(call: okhttp3.Call?, response: okhttp3.Response?) {
-                    val body = response?.body()?.string()
-                    if (body != null) {
-                        Log.d("DBG", body)
-                    }
+            //radius=1000&lon=24.94085264648028&lat=60.16623605171053&src_geom=wikidata&src_attr=wikidata&limit=10&apikey=5ae2e3f221c38a28845f05b63f384c730e6c086fbc1c4ea103a5c463
 
-                    try {
+            showCustomProgressDialog()
 
-                        var jsonObject = JSONObject(body)
+            listCall.enqueue(object : Callback<WikipediaResponse> {
+                override fun onResponse(
+                    call: Call<WikipediaResponse>,
+                    response: Response<WikipediaResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        // if response is successful hide the progress bar and show it
+                        hideProgressDialog()
+                        val nearbyPlaces: WikipediaResponse? = response.body()
 
-                        var query: String = jsonObject.getString("query")
+                        // setupUI
 
-                        var pages = JSONObject(query)
+                        setupUI(nearbyPlaces!!)
 
-
-                        val keys: Iterator<String> = pages.keys()
-
-
-                        var jsonArrayOfPages: JSONArray = JSONArray()
-
-                        while (keys.hasNext()) {
-                            // Iterate pages Object
-                            var key = keys.next()
-
-                            // Get each page key (e.g. 774361)
-                            if (pages.get(key) is JSONObject) {
-
-                                var page = JSONObject(pages.getString(key))
-
-                                val keys: Iterator<String> = page.keys()
-
-                                // Drill down each JSON Object
-                                while (keys.hasNext()) {
-                                    var key = keys.next()
-
-                                    var newPage = page.getJSONObject(key)
-
-                                    // Add page to array
-                                    jsonArrayOfPages.put(newPage)
-
-                                }
+                        Log.d("DBG", "$nearbyPlaces")
+                    } else {
+                        when (response.code()) {
+                            400 -> {
+                                Log.e("Error 300", "Bad connection")
+                            }
+                            404 -> {
+                                Log.e("Error 404", "Not Found")
+                            }
+                            else -> {
+                                Log.e("Error", "Generic Error")
                             }
                         }
-
-                        Log.d("DBG", jsonArrayOfPages.toString())
-
-
-                    } catch (e: Exception) {
-                        e.printStackTrace()
                     }
-
                 }
 
-                override fun onFailure(call: okhttp3.Call, e: IOException) {
-                    Log.e("Error", e.message.toString())
+                override fun onFailure(call: Call<WikipediaResponse>, t: Throwable) {
+                    Log.e("Error", t.message.toString())
                     hideProgressDialog()
                 }
 
             })
+        } else {
+            Toast.makeText(
+                activity,
+                getString(R.string.You_have_not_been_connected_to_internet),
+                Toast.LENGTH_SHORT
+            )
+                .show()
+        }
+    }
+
+    private fun setupUI(nearbyPlaces: WikipediaResponse) {
+
+        for (i in nearbyPlaces.features.indices) {
+            Log.d("DBG", nearbyPlaces.features[i].properties.name )
+        }
     }
 }
+
+
+// https://api.opentripmap.com/0.1/en/places/radius?radius=1000&lon=24.94085264648028&lat=60.16623605171053&src_geom=wikidata&src_attr=wikidata&limit=10&apikey=5ae2e3f221c38a28845f05b63f384c730e6c086fbc1c4ea103a5c463
