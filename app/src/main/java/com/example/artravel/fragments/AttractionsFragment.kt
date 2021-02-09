@@ -30,7 +30,6 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONArray
-import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 
@@ -195,8 +194,6 @@ class AttractionsFragment : Fragment() {
 
 
                         var jsonArrayOfPages: JSONArray = JSONArray()
-
-
 
                         while (keys.hasNext()) {
                             // Iterate pages Object

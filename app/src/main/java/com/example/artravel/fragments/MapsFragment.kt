@@ -7,8 +7,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.location.Address
 import android.location.Geocoder
-import androidx.fragment.app.Fragment
-
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -18,9 +16,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.example.artravel.R
 import com.google.android.gms.location.*
-
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -63,7 +61,6 @@ class MapsFragment : Fragment() {
          * Manipulates the map once available.
          * This callback is triggered when the map is ready to be used.
          * This is where we can add markers or lines, add listeners or move the camera.
-         * In this case, we just add a marker near Sydney, Australia.
          * If Google Play services is not installed on the device, the user will be prompted to
          * install it inside the SupportMapFragment. This method will only be triggered once the
          * user has installed Google Play services and returned to the app.
@@ -107,7 +104,6 @@ class MapsFragment : Fragment() {
             Toast.makeText(
                 view?.context,
                 R.string.user_granted_permission,
-//                "User has granted location access permission.",
                 Toast.LENGTH_LONG
             )
                 .show()
@@ -140,8 +136,6 @@ class MapsFragment : Fragment() {
     }
 
     private fun getLocationUpdates() {
-
-
         locationRequest = LocationRequest()
         locationRequest.interval = 30000
         locationRequest.fastestInterval = 20000
@@ -153,7 +147,8 @@ class MapsFragment : Fragment() {
                 // Geocode user location address
                 val addresses: List<Address>
 
-                val geocoder = Geocoder(activity, Locale.getDefault())
+                activity ?: return
+                val geocoder = Geocoder(activity!!.application, Locale.getDefault())
 
                 if (locationResult.locations.isNotEmpty()) {
                     val location = locationResult.lastLocation
@@ -330,7 +325,5 @@ class MapsFragment : Fragment() {
         )
         return Bitmap.createScaledBitmap(imageBitmap, width, height, false)
     }
-
-
 }
 
