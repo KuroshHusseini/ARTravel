@@ -21,21 +21,17 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.artravel.R
 import com.example.artravel.constants.Constants
-import com.example.artravel.wikipediaPlaces.PlaceInfoResponse
-import com.example.artravel.wikipediaPlaces.PlacesInfoService
-import com.example.artravel.wikipediaPlaces.WikipediaResponse
-import com.example.artravel.wikipediaPlaces.WikipediaService
+import com.example.artravel.wikipediaPlaces.*
 import com.google.android.gms.location.*
-import com.google.android.libraries.places.api.model.Place
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
-import kotlinx.android.synthetic.main.fragment_attractions.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -174,153 +170,101 @@ class AttractionsFragment : Fragment() {
     private fun getNearbyPlaces(latitude: Double, longitude: Double) {
 
         if (Constants.isNetworkAvailable(activity)) {
-            val retrofit = Retrofit.Builder()
-                .baseUrl("https://api.opentripmap.com/0.1/en/places/")
-                .addConverterFactory(GsonConverterFactory.create()).build()
-
-            val service: WikipediaService = retrofit.create(WikipediaService::class.java)
-
-            val listCall: Call<WikipediaResponse> = service.getWikiArticles(
-                1000, longitude, latitude, "wikidata",
-                "wikidata", 10, "5ae2e3f221c38a28845f05b63f384c730e6c086fbc1c4ea103a5c463"
-            )
+            val compositeDisposable = CompositeDisposable()
 
             showCustomProgressDialog()
 
-            listCall.enqueue(object : Callback<WikipediaResponse> {
-                override fun onResponse(
-                    call: Call<WikipediaResponse>,
-                    response: Response<WikipediaResponse>
-                ) {
-                    if (response.isSuccessful) {
-                        // if response is successful hide the progress bar and show it
-                        hideProgressDialog()
-                        val nearbyPlaces: WikipediaResponse? = response.body()
-
-                        setNewPlaces(nearbyPlaces!!)
-
-                        Log.d("DBG", "$nearbyPlaces")
-                    } else {
-                        when (response.code()) {
-                            400 -> {
-                                Log.e("Error 300", "Bad connection")
-                            }
-                            404 -> {
-                                Log.e("Error 404", "Not Found")
-                            }
-                            else -> {
-                                Log.e("Error", "Generic Error")
-                            }
-                        }
-                    }
-                }
-
-                override fun onFailure(call: Call<WikipediaResponse>, t: Throwable) {
-                    Log.e("Error", t.message.toString())
-                    hideProgressDialog()
-                }
-
-            })
-        } else {
-            Toast.makeText(
-                activity,
-                getString(R.string.You_have_not_been_connected_to_internet),
-                Toast.LENGTH_SHORT
-            )
-                .show()
-        }
-    }
-
-    var placeInfos = mutableListOf<PlaceInfoResponse>()
-
-
-    private fun setNewPlaces(nearbyPlaces: WikipediaResponse) {
-
-
-        if (Constants.isNetworkAvailable(activity)) {
-
-
-            for (i in nearbyPlaces.features.indices) {
-
-                if (Constants.isNetworkAvailable(activity)) {
-                    val retrofit =
-                        Retrofit.Builder() // https://api.opentripmap.com/0.1/en/places/xid/W8058596?apikey=5ae2e3f221c38a28845f05b63f384c730e6c086fbc1c4ea103a5c463
-                            .baseUrl("https://api.opentripmap.com/0.1/en/places/xid/")
-                            .addConverterFactory(GsonConverterFactory.create()).build()
-
-                    val service: PlacesInfoService = retrofit.create(PlacesInfoService::class.java)
-
-
-                    val listCall: Call<PlaceInfoResponse> = service.getPlaceInfo(
-                        nearbyPlaces.features[i].properties.xid,
+            compositeDisposable.add(
+                ServiceBuilder.buildService()
+                    .getWikiArticles(
+                        2000,
+                        longitude,
+                        latitude,
+                        "wikidata",
+                        "wikidata",
+                        0,
+                        10,
                         "5ae2e3f221c38a28845f05b63f384c730e6c086fbc1c4ea103a5c463"
                     )
-
-                    listCall.enqueue(object : Callback<PlaceInfoResponse> {
-                        override fun onResponse(
-                            call: Call<PlaceInfoResponse>,
-                            response: Response<PlaceInfoResponse>
-                        ) {
-                            if (response.isSuccessful) {
-                                // if response is successful hide the progress bar and show it
-
-                                val placeInfoResponse: PlaceInfoResponse? = response.body()
-
-                                setupUI(placeInfoResponse!!)
-
-                                Log.d("DBG", "$placeInfoResponse")
-
-                            } else {
-                                when (response.code()) {
-                                    400 -> {
-                                        Log.e("Error 300", "Bad connection")
-                                    }
-                                    404 -> {
-                                        Log.e("Error 404", "Not Found")
-                                    }
-                                    else -> {
-                                        Log.e("Error", "Generic Error")
-                                    }
-                                }
-                            }
-                        }
-
-                        override fun onFailure(call: Call<PlaceInfoResponse>, t: Throwable) {
-                            Log.e("Error", t.message.toString())
-                            hideProgressDialog()
-                        }
-
-                    })
-
-                } else {
-                    Toast.makeText(
-                        activity,
-                        getString(R.string.You_have_not_been_connected_to_internet),
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
-                }
-            }
-            Log.d("DBG", "I AM HERE !!!")
-
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.newThread())
+                    .subscribe({ response ->
+                        hideProgressDialog()
+                        onResponse(response)
+                    },
+                        { t ->
+                            onFailure(t)
+                        })
+            )
         }
     }
 
-    private fun setupUI(placeInfoResponse: PlaceInfoResponse) {
+
+    private fun onResponse(response: WikipediaResponse) {
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://api.opentripmap.com/0.1/en/places/xid/")
+            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val backendAPI = retrofit.create(MyBackendAPI::class.java)
+
+        val requests = ArrayList<Observable<PlaceInfoResponse>>()
+
+        for (i in response.features.indices) {
+            Log.d("DBG", response.features[i].properties.xid)
+
+            requests.add(
+                backendAPI.getPlaceInfo(
+                    response.features[i].properties.xid,
+                    "5ae2e3f221c38a28845f05b63f384c730e6c086fbc1c4ea103a5c463"
+                )
+            )
+        }
+
+        Log.d("DBG", "Size: ${requests.size}")
+
+        Observable.zip(requests) { objects ->
+
+            val dataResponses = mutableListOf<PlaceInfoResponse>()
+
+            for (o in objects) {
+
+                var placeInfo = o as PlaceInfoResponse
+
+                dataResponses.add(placeInfo)
+            }
 
 
-        placeInfos.add(placeInfoResponse!!)
+            return@zip dataResponses
+        }
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.newThread())
+            .subscribe({ placeInfos ->
+                Log.d("DBG", "Success")
+                setupUI(placeInfos)
 
-        test_tv.text = placeInfoResponse.name
-
-
-        Log.d("DBG", "${placeInfos.count()}")
-
-
-
+            }, { t ->
+                Log.d("DBG", "Failure")
+            })
 
     }
+
+    private fun setupUI(dataResponses: MutableList<PlaceInfoResponse>) {
+
+        /*
+        *
+        * TODO: Setup data for RecyclerView
+        *
+        * */
+
+        Log.d("DBG", "${dataResponses}")
+    }
+
+    private fun onFailure(t: Throwable) {
+        Log.d("DBG", "Failure")
+    }
+
+
 }
-
-
-// https://api.opentripmap.com/0.1/en/places/radius?radius=1000&lon=24.94085264648028&lat=60.16623605171053&src_geom=wikidata&src_attr=wikidata&limit=10&apikey=5ae2e3f221c38a28845f05b63f384c730e6c086fbc1c4ea103a5c463

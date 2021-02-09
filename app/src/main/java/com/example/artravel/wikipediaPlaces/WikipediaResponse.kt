@@ -10,4 +10,4 @@ data class WikipediaResponse(
 
 /*    val weather: Query,*/
 
-) : Serializable
+)
