@@ -21,14 +21,18 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.artravel.R
 import com.example.artravel.constants.Constants
+import com.example.artravel.wikipediaPlaces.PlaceInfoResponse
+import com.example.artravel.wikipediaPlaces.PlacesInfoService
 import com.example.artravel.wikipediaPlaces.WikipediaResponse
 import com.example.artravel.wikipediaPlaces.WikipediaService
 import com.google.android.gms.location.*
+import com.google.android.libraries.places.api.model.Place
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import kotlinx.android.synthetic.main.fragment_attractions.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -167,72 +171,6 @@ class AttractionsFragment : Fragment() {
         }
     }
 
-    //    private fun getNearbyPlaces(latitude: Double, longitude: Double) {
-//
-//        Log.d("DBG", "Attempting to Fetch JSON")
-//        val request = Request.Builder().url(Constants.WIKIPEDIA_URL).build()
-//        val client = OkHttpClient()
-//
-//        client.newCall(request)
-//            .enqueue(object : okhttp3.Callback {
-//
-//                override fun onResponse(call: okhttp3.Call?, response: okhttp3.Response?) {
-//                    val body = response?.body()?.string()
-//                    if (body != null) {
-//                        Log.d("DBG", body)
-//                    }
-//
-//                    try {
-//                        var jsonObject = JSONObject(body)
-//
-//                        var query: String = jsonObject.getString("query")
-//
-//                        var pages = JSONObject(query)
-//
-//                        val keys: Iterator<String> = pages.keys()
-//
-//                        var jsonArrayOfPages = JSONArray()
-//
-//                        while (keys.hasNext()) {
-//                            // Iterate pages Object
-//                            var key = keys.next()
-//
-//                            // Get each page key (e.g. 774361)
-//                            if (pages.get(key) is JSONObject) {
-//
-//                                var page = JSONObject(pages.getString(key))
-//
-//                                val keys: Iterator<String> = page.keys()
-//
-//                                // Drill down each JSON Object
-//                                while (keys.hasNext()) {
-//                                    var key = keys.next()
-//
-//                                    var newPage = page.getJSONObject(key)
-//
-//                                    // Add page to array
-//                                    jsonArrayOfPages.put(newPage)
-//
-//                                }
-//                            }
-//                        }
-//
-//                        Log.d("DBG", jsonArrayOfPages.toString())
-//
-//
-//                    } catch (e: Exception) {
-//                        e.printStackTrace()
-//                    }
-//
-//                }
-//
-//                override fun onFailure(call: okhttp3.Call, e: IOException) {
-//                    Log.e("Error", e.message.toString())
-//                    hideProgressDialog()
-//                }
-//
-//            })
-//    }
     private fun getNearbyPlaces(latitude: Double, longitude: Double) {
 
         if (Constants.isNetworkAvailable(activity)) {
@@ -243,11 +181,9 @@ class AttractionsFragment : Fragment() {
             val service: WikipediaService = retrofit.create(WikipediaService::class.java)
 
             val listCall: Call<WikipediaResponse> = service.getWikiArticles(
-                1000, 24.94085264648028, 60.16623605171053, "wikidata",
+                1000, longitude, latitude, "wikidata",
                 "wikidata", 10, "5ae2e3f221c38a28845f05b63f384c730e6c086fbc1c4ea103a5c463"
             )
-
-            //radius=1000&lon=24.94085264648028&lat=60.16623605171053&src_geom=wikidata&src_attr=wikidata&limit=10&apikey=5ae2e3f221c38a28845f05b63f384c730e6c086fbc1c4ea103a5c463
 
             showCustomProgressDialog()
 
@@ -261,9 +197,7 @@ class AttractionsFragment : Fragment() {
                         hideProgressDialog()
                         val nearbyPlaces: WikipediaResponse? = response.body()
 
-                        // setupUI
-
-                        setupUI(nearbyPlaces!!)
+                        setNewPlaces(nearbyPlaces!!)
 
                         Log.d("DBG", "$nearbyPlaces")
                     } else {
@@ -297,11 +231,94 @@ class AttractionsFragment : Fragment() {
         }
     }
 
-    private fun setupUI(nearbyPlaces: WikipediaResponse) {
+    var placeInfos = mutableListOf<PlaceInfoResponse>()
 
-        for (i in nearbyPlaces.features.indices) {
-            Log.d("DBG", nearbyPlaces.features[i].properties.name )
+
+    private fun setNewPlaces(nearbyPlaces: WikipediaResponse) {
+
+
+        if (Constants.isNetworkAvailable(activity)) {
+
+
+            for (i in nearbyPlaces.features.indices) {
+
+                if (Constants.isNetworkAvailable(activity)) {
+                    val retrofit =
+                        Retrofit.Builder() // https://api.opentripmap.com/0.1/en/places/xid/W8058596?apikey=5ae2e3f221c38a28845f05b63f384c730e6c086fbc1c4ea103a5c463
+                            .baseUrl("https://api.opentripmap.com/0.1/en/places/xid/")
+                            .addConverterFactory(GsonConverterFactory.create()).build()
+
+                    val service: PlacesInfoService = retrofit.create(PlacesInfoService::class.java)
+
+
+                    val listCall: Call<PlaceInfoResponse> = service.getPlaceInfo(
+                        nearbyPlaces.features[i].properties.xid,
+                        "5ae2e3f221c38a28845f05b63f384c730e6c086fbc1c4ea103a5c463"
+                    )
+
+                    listCall.enqueue(object : Callback<PlaceInfoResponse> {
+                        override fun onResponse(
+                            call: Call<PlaceInfoResponse>,
+                            response: Response<PlaceInfoResponse>
+                        ) {
+                            if (response.isSuccessful) {
+                                // if response is successful hide the progress bar and show it
+
+                                val placeInfoResponse: PlaceInfoResponse? = response.body()
+
+                                setupUI(placeInfoResponse!!)
+
+                                Log.d("DBG", "$placeInfoResponse")
+
+                            } else {
+                                when (response.code()) {
+                                    400 -> {
+                                        Log.e("Error 300", "Bad connection")
+                                    }
+                                    404 -> {
+                                        Log.e("Error 404", "Not Found")
+                                    }
+                                    else -> {
+                                        Log.e("Error", "Generic Error")
+                                    }
+                                }
+                            }
+                        }
+
+                        override fun onFailure(call: Call<PlaceInfoResponse>, t: Throwable) {
+                            Log.e("Error", t.message.toString())
+                            hideProgressDialog()
+                        }
+
+                    })
+
+                } else {
+                    Toast.makeText(
+                        activity,
+                        getString(R.string.You_have_not_been_connected_to_internet),
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                }
+            }
+            Log.d("DBG", "I AM HERE !!!")
+
         }
+    }
+
+    private fun setupUI(placeInfoResponse: PlaceInfoResponse) {
+
+
+        placeInfos.add(placeInfoResponse!!)
+
+        test_tv.text = placeInfoResponse.name
+
+
+        Log.d("DBG", "${placeInfos.count()}")
+
+
+
+
     }
 }
 
