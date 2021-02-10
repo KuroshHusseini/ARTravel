@@ -7,6 +7,8 @@ import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.location.Location
 import android.location.LocationManager
 import android.net.Uri
@@ -41,10 +43,16 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.IOException
+import java.io.InputStream
+import java.net.HttpURLConnection
+import java.net.URL
+import kotlin.concurrent.thread
+
 
 @Suppress("UNREACHABLE_CODE")
 class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
-    
+
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private var mProgressDialog: Dialog? = null
     private lateinit var placesList: ArrayList<Place>
@@ -80,7 +88,6 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
         val view: View = inflater.inflate(R.layout.fragment_attractions, container, false)
 
         placesList = ArrayList()
-        addPlaces()
 
         recyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.addItemDecoration(DividerItemDecoration(activity, 1))
@@ -90,64 +97,6 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
         return view
     }
 
-    fun addPlaces() {
-        placesList.add(
-            Place(
-                "place 1",
-                R.drawable.ic_places_image,
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-            )
-        )
-        placesList.add(
-            Place(
-                "place 2",
-                R.drawable.ic_places_image,
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-            )
-        )
-        placesList.add(
-            Place(
-                "place 3",
-                R.drawable.ic_places_image,
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-            )
-        )
-        placesList.add(
-            Place(
-                "place 4",
-                R.drawable.ic_places_image,
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-            )
-        )
-        placesList.add(
-            Place(
-                "place 5",
-                R.drawable.ic_places_image,
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-            )
-        )
-        placesList.add(
-            Place(
-                "place 6",
-                R.drawable.ic_places_image,
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-            )
-        )
-        placesList.add(
-            Place(
-                "place 7",
-                R.drawable.ic_places_image,
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-            )
-        )
-        placesList.add(
-            Place(
-                "place 8",
-                R.drawable.ic_places_image,
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-            )
-        )
-    }
 
     override fun onItemClick(item: Place, position: Int) {
         val intent = Intent(activity, AttractionsDetailActivity::class.java)
@@ -340,18 +289,52 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
 
     private fun setupUI(dataResponses: MutableList<PlaceInfoResponse>) {
 
-        /*
-        *
-        * TODO: Setup data for RecyclerView
-        *
-        * */
+        thread {
+            for (dataResponse in dataResponses) {
 
-        Log.d("DBG", "${dataResponses}")
+                val newImage = getBitmapFromURL(dataResponse.preview?.source)
+
+                placesList.add(
+                    Place(
+                        dataResponse.name,
+                        newImage,
+                        dataResponse.wikipedia_extracts?.text,
+                        dataResponse.point?.lat,
+                        dataResponse.point?.lon
+                    )
+                )
+
+                Log.d(
+                    "DBG", "${dataResponse.name},\n" +
+                            "                        ${newImage},\n" +
+                            "                        ${dataResponse.wikipedia_extracts?.text},\n" +
+                            "                        ${dataResponse.point?.lat},\n" +
+                            "                        ${dataResponse.point?.lon}"
+                )
+            }
+            activity!!.runOnUiThread {
+                recyclerView.adapter?.notifyDataSetChanged()
+
+            }
+        }
     }
 
     private fun onFailure(t: Throwable) {
         Log.d("DBG", "Failure")
     }
 
-
+    fun getBitmapFromURL(src: String?): Bitmap? {
+        return try {
+            val url = URL(src)
+            val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
+            connection.setDoInput(true)
+            connection.connect()
+            val input: InputStream = connection.getInputStream()
+            BitmapFactory.decodeStream(input)
+        } catch (e: IOException) {
+            // Log exception
+            e.printStackTrace()
+            null
+        }
+    }
 }
