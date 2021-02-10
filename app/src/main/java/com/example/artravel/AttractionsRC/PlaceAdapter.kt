@@ -1,5 +1,6 @@
 package com.example.artravel.AttractionsRC
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,7 +38,22 @@ class PlaceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun initialize(item: Place, action: OnPlaceItemClickListener) {
         placeName.text = item.name
-        placeImage.setImageResource(item.image)
+
+        if (item.image == null) {
+            Log.d("DBG", "There is no image. SEtting default image.")
+            placeImage.setImageResource(R.drawable.ic_places_image)
+        }
+
+        placeImage.setImageBitmap(item.image)
+
+
+//        if (item.image == null) {
+//            placeImage.setImageResource(R.drawable.ic_places_image)
+//        } else {
+//            placeImage.setImageBitmap(item.image)
+//
+//        }
+
         placeDesc.text = item.desc
 
         itemView.setOnClickListener {
