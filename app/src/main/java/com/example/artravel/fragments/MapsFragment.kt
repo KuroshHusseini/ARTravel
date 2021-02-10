@@ -70,7 +70,7 @@ class MapsFragment : Fragment() {
 
         // Use a custom info window adapter to handle multiple lines of text in the
         // info window contents.
-        this.map?.setInfoWindowAdapter(object : GoogleMap.InfoWindowAdapter {
+        this.map.setInfoWindowAdapter(object : GoogleMap.InfoWindowAdapter {
             // Return null here, so that getInfoContents() is called next.
             override fun getInfoWindow(arg0: Marker): View? {
                 return null
@@ -210,9 +210,7 @@ class MapsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_maps, container, false)
-
         setHasOptionsMenu(true);
-
         return view
     }
 
@@ -295,7 +293,7 @@ class MapsFragment : Fragment() {
 
                 // Add a marker for the selected place, with an info window
                 // showing information about that place.
-                map?.addMarker(
+                map.addMarker(
                     MarkerOptions()
                         .title(likelyPlaceNames[which])
                         .position(markerLatLng!!)
@@ -303,14 +301,13 @@ class MapsFragment : Fragment() {
                 )
 
                 // Position the map's camera at the location of the marker.
-                map?.moveCamera(
+                map.moveCamera(
                     CameraUpdateFactory.newLatLngZoom(
                         markerLatLng,
                         15.toFloat()
                     )
                 )
             }
-
         // Display the dialog.
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.pick_place)
