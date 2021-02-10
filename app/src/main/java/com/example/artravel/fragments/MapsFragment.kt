@@ -196,7 +196,6 @@ class MapsFragment : Fragment() {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.option_get_place) {
             showCurrentPlace()

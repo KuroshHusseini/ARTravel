@@ -58,7 +58,6 @@ class WeatherFragment : Fragment() {
         } else {
             requestMultiplePermissions()
         }
-
     }
 
     override fun onCreateView(
@@ -67,7 +66,6 @@ class WeatherFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_weather, container, false)
-
     }
 
 
@@ -115,7 +113,6 @@ class WeatherFragment : Fragment() {
                     Log.e("Error", t.message.toString())
                     hideProgressDialog()
                 }
-
             })
         } else {
             Toast.makeText(
