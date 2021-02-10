@@ -16,8 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ARTravel">
-        <activity android:name=".AttractionsDetailActivity"
-            android:parentActivityName="com.example.artravel."></activity>
+        <activity android:name=".AttractionsDetailActivity"></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
