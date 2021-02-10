@@ -90,7 +90,7 @@ class WeatherFragment : Fragment() {
                     response: Response<WeatherResponse>
                 ) {
                     if (response.isSuccessful) {
-                        //if response is successful hide the progress bar and show it
+                        //if response is successful hide the progress bar and show the data
                         hideProgressDialog()
                         val weatherList: WeatherResponse? = response.body()
                         setupUI(weatherList!!)
@@ -265,6 +265,13 @@ class WeatherFragment : Fragment() {
         mProgressDialog!!.show()
     }
 
+
+    private fun hideProgressDialog() {
+        if (mProgressDialog != null) {
+            mProgressDialog!!.dismiss()
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.weather_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
@@ -281,9 +288,4 @@ class WeatherFragment : Fragment() {
     }
 
 
-    private fun hideProgressDialog() {
-        if (mProgressDialog != null) {
-            mProgressDialog!!.dismiss()
-        }
-    }
 }
