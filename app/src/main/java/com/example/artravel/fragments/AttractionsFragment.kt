@@ -101,7 +101,7 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
     override fun onItemClick(item: Place, position: Int) {
         val intent = Intent(activity, AttractionsDetailActivity::class.java)
         intent.putExtra("PLACENAME", item.name)
-        intent.putExtra("PLACEIMAGE", item.image.toString())
+        intent.putExtra("PLACEIMAGE", item.image)
         intent.putExtra("PLACEDESC", item.desc)
         startActivity(intent)
     }
@@ -225,7 +225,6 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.newThread())
                     .subscribe({ response ->
-                        hideProgressDialog()
                         onResponse(response)
                     },
                         { t ->
@@ -258,9 +257,7 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
                 )
             )
         }
-
-        Log.d("DBG", "Size: ${requests.size}")
-
+        
         Observable.zip(requests) { objects ->
 
             val dataResponses = mutableListOf<PlaceInfoResponse>()
@@ -289,6 +286,9 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
 
     private fun setupUI(dataResponses: MutableList<PlaceInfoResponse>) {
 
+
+
+        // Thread for network calls
         thread {
             for (dataResponse in dataResponses) {
 
@@ -312,9 +312,10 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
                             "                        ${dataResponse.point?.lon}"
                 )
             }
+            // Once for loop is finished, update places ArrayList and hide spinner.
             activity!!.runOnUiThread {
                 recyclerView.adapter?.notifyDataSetChanged()
-
+                hideProgressDialog()
             }
         }
     }
