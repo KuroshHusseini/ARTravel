@@ -34,12 +34,13 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".AttractionDrawRouteActivity"
-            android:parentActivityName=".AttractionsDetailActivity" />
+            android:name=".AttractionsDrawRouteActivity"
+            android:parentActivityName=".AttractionsDetailActivity"
+            android:label="@string/title_activity_attractions_draw_route"></activity>
         <activity
             android:name=".AttractionsDetailActivity"
-            android:parentActivityName=".MainActivity"
-            android:label="@string/title_activity_attraction_draw_route"/>
+            android:label="@string/title_activity_attraction_draw_route"
+            android:parentActivityName=".MainActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

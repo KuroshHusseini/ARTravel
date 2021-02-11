@@ -40,6 +40,9 @@ android {
 
 dependencies {
 
+    // Google Maps Routing
+    implementation 'com.github.jd-alexander:library:1.1.0'
+
     // ReactiveX/RxJava
     implementation "io.reactivex.rxjava3:rxjava:3.0.11-RC3"
     implementation "com.github.akarnokd:rxjava3-retrofit-adapter:3.0.0"
