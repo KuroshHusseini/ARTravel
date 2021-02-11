@@ -307,7 +307,7 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
             var url: URL?
             if (dataResponse.preview?.source == null) {
                 url =
-                    URL("https://cdn.pixabay.com/photo/2018/10/24/05/14/kittycat-3769571_960_720.jpg")
+                    URL("https://cdn-a.william-reed.com/var/wrbm_gb_food_pharma/storage/images/9/2/8/5/235829-6-eng-GB/Feed-Test-SIC-Feed-20142_news_large.jpg")
             } else {
                 url = URL(dataResponse.preview?.source)
             }
