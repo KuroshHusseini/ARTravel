@@ -1,5 +1,6 @@
 package com.example.artravel
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
@@ -24,5 +25,13 @@ class AttractionsDetailActivity : AppCompatActivity() {
         iv_detail_place_image.setImageBitmap(image)
 
         tv_detail_place_desc.text = intent.getStringExtra("PLACEDESC")
+
+
+        showOnMap_button.setOnClickListener {
+
+            val intent = Intent(this, AttractionDrawRouteActivity::class.java)
+
+            startActivity(intent)
+        }
     }
 }
