@@ -24,10 +24,10 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.artravel.AttractionsDetailActivity
-import com.example.artravel.AttractionsRC.OnPlaceItemClickListener
-import com.example.artravel.AttractionsRC.Place
-import com.example.artravel.AttractionsRC.PlaceAdapter
+import com.example.artravel.activities.AttractionsDetailActivity
+import com.example.artravel.attractionsRC.OnPlaceItemClickListener
+import com.example.artravel.attractionsRC.Place
+import com.example.artravel.attractionsRC.PlaceAdapter
 import com.example.artravel.R
 import com.example.artravel.constants.Constants
 import com.example.artravel.wikipediaPlaces.*

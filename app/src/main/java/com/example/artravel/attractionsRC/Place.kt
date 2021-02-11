@@ -1,4 +1,4 @@
-package com.example.artravel.AttractionsRC
+package com.example.artravel.attractionsRC
 
 import android.graphics.Bitmap
 

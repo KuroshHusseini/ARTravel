@@ -1,8 +1,9 @@
-package com.example.artravel
+package com.example.artravel.activities
 
 import android.graphics.Bitmap
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.artravel.R
 import kotlinx.android.synthetic.main.activity_attractions_detail.*
 
 class AttractionsDetailActivity : AppCompatActivity() {
