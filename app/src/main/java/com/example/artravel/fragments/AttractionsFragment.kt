@@ -41,6 +41,8 @@ import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
@@ -257,7 +259,7 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
                 )
             )
         }
-        
+
         Observable.zip(requests) { objects ->
 
             val dataResponses = mutableListOf<PlaceInfoResponse>()
@@ -279,6 +281,7 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
                 setupUI(placeInfos)
 
             }, { t ->
+                t.printStackTrace()
                 Log.d("DBG", "Failure")
             })
 
@@ -289,10 +292,22 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
 
 
         // Thread for network calls
-        thread {
-            for (dataResponse in dataResponses) {
+        GlobalScope.launch(Dispatchers.Main) {
 
-                val newImage = getBitmapFromURL(dataResponse.preview?.source)
+        }
+        for (dataResponse in dataResponses) {
+            thread {
+
+                var newImage = getBitmapFromURL(dataResponse.preview?.source)
+
+//                if (newImage == null) {
+//                    Log.d("NEWIMAGE", "Is null")
+//                    newImage = BitmapFactory.decodeResource(activity?.resources, R.drawable.ic_places_image)
+//                }
+
+                Log.d("JOTAIN", dataResponse.name)
+                Log.d("JOTAIN", newImage.toString())
+
 
                 placesList.add(
                     Place(
@@ -312,15 +327,16 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
                             "                        ${dataResponse.point?.lon}"
                 )
             }
-            // Once for loop is finished, update places ArrayList and hide spinner.
-            activity!!.runOnUiThread {
-                recyclerView.adapter?.notifyDataSetChanged()
-                hideProgressDialog()
-            }
+        }
+        // Once for loop is finished, update places ArrayList and hide spinner.
+        activity!!.runOnUiThread {
+            recyclerView.adapter?.notifyDataSetChanged()
+            hideProgressDialog()
         }
     }
 
     private fun onFailure(t: Throwable) {
+        t.printStackTrace()
         Log.d("DBG", "Failure")
     }
 
