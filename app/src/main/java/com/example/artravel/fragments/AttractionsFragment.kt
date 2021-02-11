@@ -41,15 +41,12 @@ import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.ByteArrayOutputStream
 import java.io.IOException
-import java.io.InputStream
-import java.net.HttpURLConnection
 import java.net.URL
-import kotlin.concurrent.thread
 
 
 @Suppress("UNREACHABLE_CODE")
@@ -103,7 +100,18 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
     override fun onItemClick(item: Place, position: Int) {
         val intent = Intent(activity, AttractionsDetailActivity::class.java)
         intent.putExtra("PLACENAME", item.name)
-        intent.putExtra("PLACEIMAGE", item.image)
+
+        Log.d("PERKULE", item.image.toString())
+
+
+        // Compress Bitmap as bytearray and uncompress in Detail Activity
+        var stream = ByteArrayOutputStream()
+        item.image?.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+        var bytes: ByteArray = stream.toByteArray()
+
+        Log.d("PERKULE", "BYTES ${bytes.toString()}")
+
+        intent.putExtra("PLACEIMAGE", bytes)
         intent.putExtra("PLACEDESC", item.desc)
         startActivity(intent)
     }
@@ -261,16 +269,13 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
         }
 
         Observable.zip(requests) { objects ->
-
             val dataResponses = mutableListOf<PlaceInfoResponse>()
 
             for (o in objects) {
-
                 var placeInfo = o as PlaceInfoResponse
 
                 dataResponses.add(placeInfo)
             }
-
 
             return@zip dataResponses
         }
@@ -287,32 +292,41 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
 
     }
 
+    // extension function to get / download bitmap from url
+    fun URL.toBitmap(): Bitmap? {
+        return try {
+            BitmapFactory.decodeStream(openStream())
+        } catch (e: IOException) {
+            null
+        }
+    }
+
     private fun setupUI(dataResponses: MutableList<PlaceInfoResponse>) {
 
-
-
-        // Thread for network calls
-        GlobalScope.launch(Dispatchers.Main) {
-
-        }
         for (dataResponse in dataResponses) {
-            thread {
+            var url: URL?
+            if (dataResponse.preview?.source == null) {
+                url =
+                    URL("https://cdn.pixabay.com/photo/2018/10/24/05/14/kittycat-3769571_960_720.jpg")
+            } else {
+                url = URL(dataResponse.preview?.source)
+            }
 
-                var newImage = getBitmapFromURL(dataResponse.preview?.source)
+            var result: Deferred<Bitmap?> = GlobalScope.async {
+                url.toBitmap()
+            }
 
-//                if (newImage == null) {
-//                    Log.d("NEWIMAGE", "Is null")
-//                    newImage = BitmapFactory.decodeResource(activity?.resources, R.drawable.ic_places_image)
-//                }
+            GlobalScope.launch(Dispatchers.Main) {
+                // get the downloaded bitmap
 
-                Log.d("JOTAIN", dataResponse.name)
-                Log.d("JOTAIN", newImage.toString())
+                val bitmap: Bitmap? = result.await()
 
+                Log.d("PERKULE", bitmap.toString())
 
                 placesList.add(
                     Place(
                         dataResponse.name,
-                        newImage,
+                        bitmap,
                         dataResponse.wikipedia_extracts?.text,
                         dataResponse.point?.lat,
                         dataResponse.point?.lon
@@ -321,17 +335,15 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
 
                 Log.d(
                     "DBG", "${dataResponse.name},\n" +
-                            "                        ${newImage},\n" +
-                            "                        ${dataResponse.wikipedia_extracts?.text},\n" +
-                            "                        ${dataResponse.point?.lat},\n" +
-                            "                        ${dataResponse.point?.lon}"
+                            "${bitmap},\n" +
+                            "${dataResponse.wikipedia_extracts?.text},\n" +
+                            "${dataResponse.point?.lat},\n" +
+                            "${dataResponse.point?.lon}"
                 )
+
+                recyclerView.adapter?.notifyDataSetChanged()
+                hideProgressDialog()
             }
-        }
-        // Once for loop is finished, update places ArrayList and hide spinner.
-        activity!!.runOnUiThread {
-            recyclerView.adapter?.notifyDataSetChanged()
-            hideProgressDialog()
         }
     }
 
@@ -340,18 +352,5 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
         Log.d("DBG", "Failure")
     }
 
-    fun getBitmapFromURL(src: String?): Bitmap? {
-        return try {
-            val url = URL(src)
-            val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
-            connection.setDoInput(true)
-            connection.connect()
-            val input: InputStream = connection.getInputStream()
-            BitmapFactory.decodeStream(input)
-        } catch (e: IOException) {
-            // Log exception
-            e.printStackTrace()
-            null
-        }
-    }
+
 }

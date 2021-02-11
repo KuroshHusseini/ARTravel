@@ -1,8 +1,10 @@
 package com.example.artravel
 
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import kotlinx.android.synthetic.main.activity_attractions_detail.*
 
 class AttractionsDetailActivity : AppCompatActivity() {
@@ -13,7 +15,11 @@ class AttractionsDetailActivity : AppCompatActivity() {
 
         tv_detail_place_name.text = intent.getStringExtra("PLACENAME")
         // Set bitmap image to ImageView
-        var image = intent.getParcelableExtra<Bitmap>("PLACEIMAGE")
+
+        var bytes: ByteArray? = intent.getByteArrayExtra("PLACEIMAGE")
+        bytes?: return
+        var image: Bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+
 
         iv_detail_place_image.setImageBitmap(image)
 

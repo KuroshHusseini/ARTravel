@@ -19,14 +19,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         setupViews()
-
-
     }
 
     fun setupViews() {
         // Finding the Navigation Controller
         val navController = findNavController(R.id.fragNavHost)
-       val appBarConfiguration = AppBarConfiguration(
+        val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.mapsFragment,
                 R.id.attractionsFragment,
