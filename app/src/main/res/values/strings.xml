@@ -7,6 +7,8 @@
     <string name="hello_attractions_fragment">Navigation fragment</string>
     <string name="hello_weather_fragment">Weather fragment</string>
 
+    <!--  Labels for Activites -->
+    <string name="activity_detail_draw_route">Draw Route</string>
 
     <!-- Weather fragment and xml strings -->
     <string name="toast_txt_for_location">Your location provider is turned off. Please turn it on!</string>
@@ -33,4 +35,6 @@
     <string name="You_have_not_been_connected_to_internet">You have not been connected to internet</string>
     <string name="action_refresh_text">Refresh</string>
     <string name="show_on_map_btn_txt">Show on map</string>
+    <string name="title_activity_attraction_draw_route">Map</string>
+    <string name="title_activity_attractions_draw_route">Map</string>
 </resources>

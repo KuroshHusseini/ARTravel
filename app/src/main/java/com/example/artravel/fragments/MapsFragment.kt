@@ -80,7 +80,7 @@ class MapsFragment : Fragment() {
                 // Inflate the layouts for the info window, title and snippet.
                 val infoWindow = layoutInflater.inflate(
                     R.layout.custom_info_contents,
-                    view?.findViewById<FrameLayout>(R.id.map), false
+                    view?.findViewById<FrameLayout>(R.id.google_map), false
                 )
                 val title = infoWindow.findViewById<TextView>(R.id.title)
                 title.text = marker.title
@@ -215,7 +215,7 @@ class MapsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
+        val mapFragment = childFragmentManager.findFragmentById(R.id.google_map) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
 
         // For locating and updating user location

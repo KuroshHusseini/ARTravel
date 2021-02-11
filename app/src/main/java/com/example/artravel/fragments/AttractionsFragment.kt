@@ -99,20 +99,21 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
 
     override fun onItemClick(item: Place, position: Int) {
         val intent = Intent(activity, AttractionsDetailActivity::class.java)
+
         intent.putExtra("PLACENAME", item.name)
 
-        Log.d("PERKULE", item.image.toString())
-
+        Log.d("Place", "${item.lat} ${item.lng}")
 
         // Compress Bitmap as bytearray and uncompress in Detail Activity
         var stream = ByteArrayOutputStream()
         item.image?.compress(Bitmap.CompressFormat.JPEG, 100, stream)
         var bytes: ByteArray = stream.toByteArray()
 
-        Log.d("PERKULE", "BYTES ${bytes.toString()}")
-
         intent.putExtra("PLACEIMAGE", bytes)
         intent.putExtra("PLACEDESC", item.desc)
+        
+        intent.putExtra("PLACELAT", item.lat)
+        intent.putExtra("PLACELNG", item.lng)
         startActivity(intent)
     }
 
@@ -321,7 +322,10 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
 
                 val bitmap: Bitmap? = result.await()
 
-                Log.d("PERKULE", bitmap.toString())
+                Log.d(
+                    "DEBUGGA",
+                    "${dataResponse.name}: ${dataResponse.point?.lat} ${dataResponse.point?.lon}"
+                )
 
                 placesList.add(
                     Place(
