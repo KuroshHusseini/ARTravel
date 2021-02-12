@@ -58,6 +58,11 @@ class AttractionsDrawRoute : Fragment(), RoutingListener {
         destinationLat = arguments?.getString("lat")
         destinationLng = arguments?.getString("lon")
 
+
+        destinationLat?.let { Log.d("WTF", it) }
+
+        destinationLng?.let { Log.d("WTF", it) }
+
 //        if (lat != null) {
 //            Log.d("DrawRoute", lat)
 //        }
@@ -292,11 +297,12 @@ class AttractionsDrawRoute : Fragment(), RoutingListener {
 
 
             // Add Marker on route starting position
-            var startMarker = MarkerOptions()
+            var startMarker: MarkerOptions? = MarkerOptions()
+
             if (polyLineStartLatLng != null) {
-                startMarker.position(polyLineStartLatLng)
+                startMarker?.position(polyLineStartLatLng)
             }
-            startMarker.title("My Location")
+            startMarker?.title("My Location")
             map.addMarker(startMarker)
 
             // Add Marker on route ending position

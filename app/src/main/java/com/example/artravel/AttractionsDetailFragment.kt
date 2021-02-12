@@ -18,6 +18,7 @@ class AttractionsDetailFragment : Fragment() {
     private var lat: String? = null
     private var lon: String? = null
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -51,6 +52,9 @@ class AttractionsDetailFragment : Fragment() {
 
 
         var description = arguments?.getString("description")
+
+
+
         lat = arguments?.getString("lat")
         lon = arguments?.getString("lon")
 

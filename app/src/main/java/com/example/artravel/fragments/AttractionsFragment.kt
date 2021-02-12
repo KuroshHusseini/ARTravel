@@ -60,8 +60,23 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
     private lateinit var placesList: ArrayList<Place>
     private lateinit var recyclerView: RecyclerView
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+
+    override fun onStart() {
+        super.onStart()
+
+        sendNetworkRequests()
+        Log.d("Lifecycle", "onResume")
+    }
+
+    private fun sendNetworkRequests() {
+
+        /*
+        *
+        * Make a network call to setup Nearby Places
+        *
+        * */
+
+        Log.d("Lifecycle", "sendNetworkRequests")
 
         mFusedLocationClient =
             activity?.let { LocationServices.getFusedLocationProviderClient(it) }!!
@@ -89,13 +104,18 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
         // Inflate the layout for this fragment
         val view: View = inflater.inflate(R.layout.fragment_attractions, container, false)
 
+        sendNetworkRequests()
+
         placesList = ArrayList()
+
+        Log.d("Lifecycle", "onCreateView")
 
         recyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.addItemDecoration(DividerItemDecoration(activity, 1))
-        recyclerView.layoutManager = LinearLayoutManager(view.context)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         recyclerView.adapter = PlaceAdapter(placesList, this)
+
         return view
     }
 
@@ -113,7 +133,10 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
 
         bundle.putByteArray("bytes", bytes)
 
-        bundle.putString("description", item.desc)
+        if (item.desc != null) {
+            bundle.putString("description", item.desc)
+        }
+
         bundle.putString("lat", item.lat)
         bundle.putString("lon", item.lng)
 
@@ -121,32 +144,6 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
             R.id.action_attractionsFragment_to_attractionsDetailFragment,
             bundle
         )
-
-//        var fragment = AttractionsDetailFragment()
-//
-//        fragment.arguments = bundle
-
-//        findNavController().navigate(R.id.action_attractionsFragment_to_attractionsDetailFragment)
-
-//        findNavController().navigate(fragment)
-
-//        val intent = Intent(activity, AttractionsDetailActivity::class.java)
-//
-//        intent.putExtra("PLACENAME", item.name)
-//
-//        Log.d("Place", "${item.lat} ${item.lng}")
-//
-//        // Compress Bitmap as bytearray and uncompress in Detail Activity
-//        var stream = ByteArrayOutputStream()
-//        item.image?.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-//        var bytes: ByteArray = stream.toByteArray()
-//
-//        intent.putExtra("PLACEIMAGE", bytes)
-//        intent.putExtra("PLACEDESC", item.desc)
-//
-//        intent.putExtra("PLACELAT", item.lat)
-//        intent.putExtra("PLACELNG", item.lng)
-//        startActivity(intent)
     }
 
     private fun isLocationEnable(): Boolean {
@@ -159,6 +156,7 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
     }
 
     private fun requestMultiplePermissions() {
+
         Dexter.withActivity(activity)
             .withPermissions(
                 Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -168,8 +166,11 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
                 override fun onPermissionsChecked(report: MultiplePermissionsReport) {
                     // check if all permissions are granted
                     if (report.areAllPermissionsGranted()) {
+
                         requestLocationData()
                     }
+
+
 
                     // check for permanent denial of any permission
                     if (report.isAnyPermissionPermanentlyDenied) {
