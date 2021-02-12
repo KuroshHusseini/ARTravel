@@ -21,10 +21,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.artravel.AttractionsDetailActivity
 import com.example.artravel.AttractionsRC.OnPlaceItemClickListener
 import com.example.artravel.AttractionsRC.Place
 import com.example.artravel.AttractionsRC.PlaceAdapter
@@ -57,8 +57,23 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
     private lateinit var placesList: ArrayList<Place>
     private lateinit var recyclerView: RecyclerView
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+
+    override fun onStart() {
+        super.onStart()
+
+        sendNetworkRequests()
+        Log.d("Lifecycle", "onResume")
+    }
+
+    private fun sendNetworkRequests() {
+
+        /*
+        *
+        * Make a network call to setup Nearby Places
+        *
+        * */
+
+        Log.d("Lifecycle", "sendNetworkRequests")
 
         mFusedLocationClient =
             activity?.let { LocationServices.getFusedLocationProviderClient(it) }!!
@@ -86,35 +101,46 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
         // Inflate the layout for this fragment
         val view: View = inflater.inflate(R.layout.fragment_attractions, container, false)
 
+        sendNetworkRequests()
+
         placesList = ArrayList()
+
+        Log.d("Lifecycle", "onCreateView")
 
         recyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.addItemDecoration(DividerItemDecoration(activity, 1))
-        recyclerView.layoutManager = LinearLayoutManager(view.context)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         recyclerView.adapter = PlaceAdapter(placesList, this)
+
         return view
     }
 
 
     override fun onItemClick(item: Place, position: Int) {
-        val intent = Intent(activity, AttractionsDetailActivity::class.java)
 
-        intent.putExtra("PLACENAME", item.name)
+        var bundle = Bundle()
 
-        Log.d("Place", "${item.lat} ${item.lng}")
+        bundle.putString("name", item.name)
 
         // Compress Bitmap as bytearray and uncompress in Detail Activity
         var stream = ByteArrayOutputStream()
         item.image?.compress(Bitmap.CompressFormat.JPEG, 100, stream)
         var bytes: ByteArray = stream.toByteArray()
 
-        intent.putExtra("PLACEIMAGE", bytes)
-        intent.putExtra("PLACEDESC", item.desc)
-        
-        intent.putExtra("PLACELAT", item.lat)
-        intent.putExtra("PLACELNG", item.lng)
-        startActivity(intent)
+        bundle.putByteArray("bytes", bytes)
+
+        if (item.desc != null) {
+            bundle.putString("description", item.desc)
+        }
+
+        bundle.putString("lat", item.lat)
+        bundle.putString("lon", item.lng)
+
+        findNavController().navigate(
+            R.id.action_attractionsFragment_to_attractionsDetailFragment,
+            bundle
+        )
     }
 
     private fun isLocationEnable(): Boolean {
@@ -127,6 +153,7 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
     }
 
     private fun requestMultiplePermissions() {
+
         Dexter.withActivity(activity)
             .withPermissions(
                 Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -136,8 +163,11 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
                 override fun onPermissionsChecked(report: MultiplePermissionsReport) {
                     // check if all permissions are granted
                     if (report.areAllPermissionsGranted()) {
+
                         requestLocationData()
                     }
+
+
 
                     // check for permanent denial of any permission
                     if (report.isAnyPermissionPermanentlyDenied) {

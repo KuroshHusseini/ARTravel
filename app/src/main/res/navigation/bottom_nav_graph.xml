@@ -15,11 +15,48 @@
         android:id="@+id/attractionsFragment"
         android:name="com.example.artravel.fragments.AttractionsFragment"
         android:label="Attractions"
-        tools:layout="@layout/fragment_attractions" />
+        tools:layout="@layout/fragment_attractions" >
+        <action
+            android:id="@+id/action_attractionsFragment_to_attractionsDetailFragment"
+            app:destination="@id/attractionsDetailFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/weatherFragment"
         android:name="com.example.artravel.fragments.WeatherFragment"
         android:label="Weather"
         tools:layout="@layout/fragment_weather" />
+    <fragment
+        android:id="@+id/attractionsDetailFragment"
+        android:name="com.example.artravel.AttractionsDetailFragment"
+        android:label="Attraction Detail"
+        tools:layout="@layout/fragment_attractions_detail" >
+        <action
+            android:id="@+id/action_attractionsDetailFragment_to_attractionsFragment"
+            app:destination="@id/attractionsFragment" />
+        <argument
+            android:name="name"
+            app:argType="string" />
+        <argument
+            android:name="description"
+            app:argType="string" />
+        <argument
+            android:name="lat"
+            app:argType="string" />
+        <argument
+            android:name="lng"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_attractionsDetailFragment_to_attractionsDrawRoute"
+            app:destination="@id/attractionsDrawRoute" />
+    </fragment>
+    <fragment
+        android:id="@+id/attractionsDrawRoute"
+        android:name="com.example.artravel.AttractionsDrawRoute"
+        android:label="Route to Destination"
+        tools:layout="@layout/fragment_attractions_draw_route" >
+        <action
+            android:id="@+id/action_attractionsDrawRoute_to_attractionsDetailFragment"
+            app:destination="@id/attractionsDetailFragment" />
+    </fragment>
 </navigation>
