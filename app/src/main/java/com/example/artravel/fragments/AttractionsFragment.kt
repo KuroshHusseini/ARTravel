@@ -21,10 +21,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavDirections
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.artravel.AttractionsDetailActivity
+import com.example.artravel.AttractionsDetailFragment
 import com.example.artravel.AttractionsRC.OnPlaceItemClickListener
 import com.example.artravel.AttractionsRC.Place
 import com.example.artravel.AttractionsRC.PlaceAdapter
@@ -98,23 +101,52 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
 
 
     override fun onItemClick(item: Place, position: Int) {
-        val intent = Intent(activity, AttractionsDetailActivity::class.java)
 
-        intent.putExtra("PLACENAME", item.name)
+        var bundle = Bundle()
 
-        Log.d("Place", "${item.lat} ${item.lng}")
+        bundle.putString("name", item.name)
 
         // Compress Bitmap as bytearray and uncompress in Detail Activity
         var stream = ByteArrayOutputStream()
         item.image?.compress(Bitmap.CompressFormat.JPEG, 100, stream)
         var bytes: ByteArray = stream.toByteArray()
 
-        intent.putExtra("PLACEIMAGE", bytes)
-        intent.putExtra("PLACEDESC", item.desc)
-        
-        intent.putExtra("PLACELAT", item.lat)
-        intent.putExtra("PLACELNG", item.lng)
-        startActivity(intent)
+        bundle.putByteArray("bytes", bytes)
+
+        bundle.putString("description", item.desc)
+        bundle.putString("lat", item.lat)
+        bundle.putString("lon", item.lng)
+
+        findNavController().navigate(
+            R.id.action_attractionsFragment_to_attractionsDetailFragment,
+            bundle
+        )
+
+//        var fragment = AttractionsDetailFragment()
+//
+//        fragment.arguments = bundle
+
+//        findNavController().navigate(R.id.action_attractionsFragment_to_attractionsDetailFragment)
+
+//        findNavController().navigate(fragment)
+
+//        val intent = Intent(activity, AttractionsDetailActivity::class.java)
+//
+//        intent.putExtra("PLACENAME", item.name)
+//
+//        Log.d("Place", "${item.lat} ${item.lng}")
+//
+//        // Compress Bitmap as bytearray and uncompress in Detail Activity
+//        var stream = ByteArrayOutputStream()
+//        item.image?.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+//        var bytes: ByteArray = stream.toByteArray()
+//
+//        intent.putExtra("PLACEIMAGE", bytes)
+//        intent.putExtra("PLACEDESC", item.desc)
+//
+//        intent.putExtra("PLACELAT", item.lat)
+//        intent.putExtra("PLACELNG", item.lng)
+//        startActivity(intent)
     }
 
     private fun isLocationEnable(): Boolean {

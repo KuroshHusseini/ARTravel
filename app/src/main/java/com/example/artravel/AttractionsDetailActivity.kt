@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.util.Log
+import androidx.navigation.findNavController
+import androidx.navigation.ui.setupActionBarWithNavController
 import kotlinx.android.synthetic.main.activity_attractions_detail.*
 
 class AttractionsDetailActivity : AppCompatActivity() {
@@ -25,7 +27,9 @@ class AttractionsDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_attractions_detail)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+//        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+        setupActionBarWithNavController(findNavController(R.id.fragment))
 
         name = intent.getStringExtra("PLACENAME")
         // Set bitmap image to ImageView
@@ -39,25 +43,33 @@ class AttractionsDetailActivity : AppCompatActivity() {
         // Set UI elements, which are title, image, description
         setupUI()
 
+        var bundle = Bundle()
 
-        showOnMap_button.setOnClickListener {
-            destinationLat = intent.getStringExtra("PLACELAT")
-            destinationLng = intent.getStringExtra("PLACELNG")
+        bundle.putString("key", "Hello wordl!")
+//        bundle.putByteArray("PLACEIMAGE", bytes)
+//        bundle.putString("PLACEDESC", description)
 
-            val drawRouteIntent = Intent(this, AttractionsDrawRouteActivity::class.java)
+        fragment.arguments = bundle
 
-            drawRouteIntent.putExtra("destinationLatitude", destinationLat)
-            drawRouteIntent.putExtra("destinationLongitude", destinationLng)
 
-            startActivity(drawRouteIntent)
-        }
+//        showOnMap_button.setOnClickListener {
+//            destinationLat = intent.getStringExtra("PLACELAT")
+//            destinationLng = intent.getStringExtra("PLACELNG")
+//
+//            val drawRouteIntent = Intent(this, AttractionsDrawRouteActivity::class.java)
+//
+//            drawRouteIntent.putExtra("destinationLatitude", destinationLat)
+//            drawRouteIntent.putExtra("destinationLongitude", destinationLng)
+//
+//            startActivity(drawRouteIntent)
+//        }
     }
 
     private fun setupUI() {
-        tv_detail_place_name.text = name
-
-        iv_detail_place_image.setImageBitmap(image)
-
-        tv_detail_place_desc.text = description
+//        tv_detail_place_name.text = name
+//
+//        iv_detail_place_image.setImageBitmap(image)
+//
+//        tv_detail_place_desc.text = description
     }
 }
