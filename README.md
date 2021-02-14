@@ -22,3 +22,13 @@ Some people want to know the history, some like to hear stories and others want 
 AR allows everyone to see more of what they want and make every experience unique.
 
 You could even record your adventure and then send it to a friend to walk through it with you.
+
+
+### Adding API KEYS to USE the APP
+
+1. Create gradle.properties file in root of project.
+2. Add three API keys accordingly
+
+<p align="center">
+  <img src="readme_images/api_keys.jpg" alt="api keys" width="300">
+</p>
