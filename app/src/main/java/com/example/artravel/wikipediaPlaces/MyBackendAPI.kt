@@ -21,7 +21,7 @@ public interface MyBackendAPI {
         @Query("src_geom") src_geom: String,
         @Query("src_attr") src_attr: String,
         @Query("rate") rate: Int,
-        @Query("limit") action: Int,
+        @Query("limit") limit: Int,
         @Query("apikey") appid: String?,
     ): Observable<WikipediaResponse>
 }

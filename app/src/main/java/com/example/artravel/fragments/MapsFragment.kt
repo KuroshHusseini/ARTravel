@@ -18,6 +18,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.artravel.R
+import com.example.artravel.constants.Constants
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -34,6 +35,8 @@ import com.google.android.libraries.places.api.net.PlacesClient
 import java.util.*
 
 class MapsFragment : Fragment() {
+
+    val GOOGLE_API_KEY = Constants.GOOGLE_API_KEY
 
     /*
     * Likely Places
@@ -215,14 +218,16 @@ class MapsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val mapFragment = childFragmentManager.findFragmentById(R.id.google_map) as SupportMapFragment?
+        val mapFragment =
+            childFragmentManager.findFragmentById(R.id.google_map) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
 
         // For locating and updating user location
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
+
         // Construct a PlacesClient
-        Places.initialize(requireContext(), getString(R.string.google_maps_key))
+        Places.initialize(requireContext(), GOOGLE_API_KEY)
         placesClient = Places.createClient(requireContext())
     }
 

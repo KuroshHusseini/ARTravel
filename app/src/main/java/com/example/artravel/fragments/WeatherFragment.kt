@@ -79,7 +79,7 @@ class WeatherFragment : Fragment() {
                 retrofit.create(WeatherService::class.java)
 
             val listCall: Call<WeatherResponse> = service.getWeather(
-                latitude, longitude, Constants.METRIC_UNIT, Constants.APP_ID
+                latitude, longitude, Constants.METRIC_UNIT, Constants.OPEN_WEATHER_API_KEY
             )
             showCustomProgressDialog()
             listCall.enqueue(object : Callback<WeatherResponse> {

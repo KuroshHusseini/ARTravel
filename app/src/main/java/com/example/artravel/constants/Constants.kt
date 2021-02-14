@@ -4,15 +4,16 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
+import com.example.artravel.BuildConfig
 
 object Constants {
 
 
-    const val APP_ID: String = "f9ffb10ce3149b190a641828f7900651"
+    const val OPEN_WEATHER_API_KEY: String = "f9ffb10ce3149b190a641828f7900651"
     const val WEATHER_URL: String = "https://api.openweathermap.org/data/"
-    const val WIKIPEDIA_URL: String =
-        "https://en.wikipedia.org/w/api.php?action=query&prop=coordinates|pageimages|description|info&inprop=url&pithumbsize=144&generator=geosearch&ggsradius=10000&ggslimit=10&ggscoord=61.2055|24.6559&format=json"
     const val METRIC_UNIT: String = "metric"
+    const val OPEN_TRIP_MAP_API_KEY = BuildConfig.OPEN_TRIP_MAP_API_KEY
+    const val GOOGLE_API_KEY = BuildConfig.GOOGLE_API_KEY
 
 
     fun isNetworkAvailable(context: Context?): Boolean {

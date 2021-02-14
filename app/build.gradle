@@ -16,6 +16,13 @@ android {
         versionName "1.0"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // Please ensure you have a valid API KEY for themoviedb.org
+        //to use this app
+        // A valid key will need to be entered
+        buildConfigField("String", "GOOGLE_API_KEY", GOOGLE_API_KEY)
+        buildConfigField("String", "OPEN_TRIP_MAP_API_KEY", OPEN_TRIP_MAP_API_KEY)
+        buildConfigField("String", "OPEN_WEATHER_API_KEY", OPEN_WEATHER_API_KEY)
     }
 
     buildTypes {

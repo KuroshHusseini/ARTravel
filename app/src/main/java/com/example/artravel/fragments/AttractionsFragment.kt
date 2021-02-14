@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.artravel.AttractionsRC.OnPlaceItemClickListener
 import com.example.artravel.AttractionsRC.Place
 import com.example.artravel.AttractionsRC.PlaceAdapter
+import com.example.artravel.BuildConfig
 import com.example.artravel.R
 import com.example.artravel.constants.Constants
 import com.example.artravel.wikipediaPlaces.*
@@ -40,6 +41,7 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.*
 import retrofit2.Retrofit
@@ -51,6 +53,8 @@ import java.net.URL
 
 @Suppress("UNREACHABLE_CODE")
 class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
+
+    val OPEN_TRIP_MAP_API_KEY = Constants.OPEN_TRIP_MAP_API_KEY
 
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private var mProgressDialog: Dialog? = null
@@ -93,6 +97,12 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        if (disposable != null)
+            disposable?.dispose()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -100,6 +110,8 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
     ): View {
         // Inflate the layout for this fragment
         val view: View = inflater.inflate(R.layout.fragment_attractions, container, false)
+
+
 
         sendNetworkRequests()
 
@@ -115,6 +127,8 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
 
         return view
     }
+
+    private var disposable: Disposable? = null
 
 
     override fun onItemClick(item: Place, position: Int) {
@@ -166,7 +180,6 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
 
                         requestLocationData()
                     }
-
 
 
                     // check for permanent denial of any permission
@@ -239,6 +252,7 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
     }
 
     private fun hideProgressDialog() {
+
         if (mProgressDialog != null) {
             mProgressDialog!!.dismiss()
         }
@@ -247,11 +261,10 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
     private fun getNearbyPlaces(latitude: Double, longitude: Double) {
 
         if (Constants.isNetworkAvailable(activity)) {
-            val compositeDisposable = CompositeDisposable()
 
             showCustomProgressDialog()
 
-            compositeDisposable.add(
+            disposable =
                 ServiceBuilder.buildService()
                     .getWikiArticles(
                         2000,
@@ -260,23 +273,28 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
                         "wikidata",
                         "wikidata",
                         0,
-                        10,
+                        5,
                         "5ae2e3f221c38a28845f05b63f384c730e6c086fbc1c4ea103a5c463"
                     )
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.newThread())
                     .subscribe({ response ->
+                        disposable?.dispose()
+
                         onResponse(response)
                     },
                         { t ->
                             onFailure(t)
+
+                            disposable?.dispose()
                         })
-            )
+
         }
     }
 
 
     private fun onResponse(response: WikipediaResponse) {
+        // continue working and dispose all subscriptions when the values from the Single objects are not interesting any more
 
         val retrofit = Retrofit.Builder()
             .baseUrl("https://api.opentripmap.com/0.1/en/places/xid/")
@@ -294,12 +312,12 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
             requests.add(
                 backendAPI.getPlaceInfo(
                     response.features[i].properties.xid,
-                    "5ae2e3f221c38a28845f05b63f384c730e6c086fbc1c4ea103a5c463"
+                    OPEN_TRIP_MAP_API_KEY
                 )
             )
         }
 
-        Observable.zip(requests) { objects ->
+        disposable = Observable.zip(requests) { objects ->
             val dataResponses = mutableListOf<PlaceInfoResponse>()
 
             for (o in objects) {
@@ -314,13 +332,21 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
             .observeOn(Schedulers.newThread())
             .subscribe({ placeInfos ->
                 Log.d("DBG", "Success")
+
+                disposable?.dispose()
+
                 setupUI(placeInfos)
 
             }, { t ->
                 t.printStackTrace()
                 Log.d("DBG", "Failure")
-            })
 
+                disposable?.dispose()
+
+                activity?.runOnUiThread {
+                    hideProgressDialog()
+                }
+            })
     }
 
     // extension function to get / download bitmap from url
@@ -350,6 +376,7 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
             GlobalScope.launch(Dispatchers.Main) {
                 // get the downloaded bitmap
 
+
                 val bitmap: Bitmap? = result.await()
 
                 Log.d(
@@ -376,8 +403,45 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
                 )
 
                 recyclerView.adapter?.notifyDataSetChanged()
+
                 hideProgressDialog()
+
             }
+
+//            GlobalScope.launch(Dispatchers.Main) {
+//                // get the downloaded bitmap
+//
+//
+//                val bitmap: Bitmap? = result.await()
+//
+//                Log.d(
+//                    "DEBUGGA",
+//                    "${dataResponse.name}: ${dataResponse.point?.lat} ${dataResponse.point?.lon}"
+//                )
+//
+//                placesList.add(
+//                    Place(
+//                        dataResponse.name,
+//                        bitmap,
+//                        dataResponse.wikipedia_extracts?.text,
+//                        dataResponse.point?.lat,
+//                        dataResponse.point?.lon
+//                    )
+//                )
+//
+//                Log.d(
+//                    "DBG", "${dataResponse.name},\n" +
+//                            "${bitmap},\n" +
+//                            "${dataResponse.wikipedia_extracts?.text},\n" +
+//                            "${dataResponse.point?.lat},\n" +
+//                            "${dataResponse.point?.lon}"
+//                )
+//
+//                recyclerView.adapter?.notifyDataSetChanged()
+//
+//                hideProgressDialog()
+//
+//            }
         }
     }
 

@@ -15,6 +15,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.directions.route.*
+import com.example.artravel.constants.Constants
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -25,6 +26,8 @@ import com.google.android.material.snackbar.Snackbar
 import java.util.*
 
 class AttractionsDrawRoute : Fragment(), RoutingListener {
+
+    val GOOGLE_API_KEY = Constants.GOOGLE_API_KEY
 
     private lateinit var map: GoogleMap
 
@@ -232,7 +235,7 @@ class AttractionsDrawRoute : Fragment(), RoutingListener {
                 .withListener(this)
                 .alternativeRoutes(true)
                 .waypoints(start, end)
-                .key(getString(R.string.google_maps_key))
+                .key(GOOGLE_API_KEY)
                 .build()
             routing!!.execute()
 
