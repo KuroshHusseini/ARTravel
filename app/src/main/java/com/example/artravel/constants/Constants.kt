@@ -35,5 +35,4 @@ object Constants {
             return networkInfo != null && networkInfo.isConnectedOrConnecting
         }
     }
-
 }
