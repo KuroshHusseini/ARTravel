@@ -30,5 +30,5 @@ You could even record your adventure and then send it to a friend to walk throug
 2. Add three API keys accordingly
 
 <p align="center">
-  <img src="readme_images/api_keys.jpg" alt="api keys" width="300">
+  <img src="readme_images/api_keys.png" alt="api keys" width="300">
 </p>
