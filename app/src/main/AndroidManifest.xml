@@ -36,7 +36,7 @@
         <activity
             android:name=".AttractionsDrawRouteActivity"
             android:parentActivityName=".AttractionsDetailActivity"
-            android:label="@string/title_activity_attractions_draw_route"></activity>
+            android:label="@string/title_activity_attractions_draw_route" />
         <activity
             android:name=".AttractionsDetailActivity"
             android:label="@string/title_activity_attraction_draw_route"
