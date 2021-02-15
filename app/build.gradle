@@ -47,6 +47,12 @@ android {
 
 dependencies {
 
+    // Coroutines
+    def coroutines_version = "1.4.2"
+
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+
     // Google Maps Routing
     implementation 'com.github.jd-alexander:library:1.1.0'
 
