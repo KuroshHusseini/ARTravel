@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.artravel">
-
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -12,6 +11,11 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature
+        android:name="android.hardware.camera.ar"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -20,7 +24,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ARTravel">
-
+        <activity
+            android:name=".ArTakeImage"
+            android:label="@string/title_activity_ar_take_image"
+            android:theme="@style/Theme.ARTravel.NoActionBar"></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -33,10 +40,14 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
+        <meta-data
+            android:name="com.google.ar.core"
+            android:value="required"/>
+
         <activity
             android:name=".AttractionsDrawRouteActivity"
-            android:parentActivityName=".AttractionsDetailActivity"
-            android:label="@string/title_activity_attractions_draw_route"></activity>
+            android:label="@string/title_activity_attractions_draw_route"
+            android:parentActivityName=".AttractionsDetailActivity" />
         <activity
             android:name=".AttractionsDetailActivity"
             android:label="@string/title_activity_attraction_draw_route"

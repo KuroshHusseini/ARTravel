@@ -2,6 +2,7 @@ package com.example.artravel.fragments
 
 import android.annotation.SuppressLint
 import android.content.DialogInterface
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -17,6 +18,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.example.artravel.ArTakeImage
 import com.example.artravel.R
 import com.example.artravel.constants.Constants
 import com.google.android.gms.location.*
@@ -32,6 +35,7 @@ import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest
 import com.google.android.libraries.places.api.net.PlacesClient
+import kotlinx.android.synthetic.main.fragment_maps.*
 import java.util.*
 
 class MapsFragment : Fragment() {
@@ -213,8 +217,11 @@ class MapsFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_maps, container, false)
         setHasOptionsMenu(true);
+
         return view
     }
+
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -229,6 +236,16 @@ class MapsFragment : Fragment() {
         // Construct a PlacesClient
         Places.initialize(requireContext(), GOOGLE_API_KEY)
         placesClient = Places.createClient(requireContext())
+
+        take_ar_image_handler.setOnClickListener {
+//            findNavController().navigate(
+//                R.id.action_mapsFragment_to_arTakeImage,
+//            )
+
+            val intent = Intent(context, ArTakeImage::class.java)
+
+            startActivity(intent)
+        }
     }
 
     @SuppressLint("MissingPermission")
