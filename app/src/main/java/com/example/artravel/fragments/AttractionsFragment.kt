@@ -28,11 +28,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.artravel.AttractionsRC.OnPlaceItemClickListener
 import com.example.artravel.AttractionsRC.Place
 import com.example.artravel.AttractionsRC.PlaceAdapter
-import com.example.artravel.BuildConfig
 import com.example.artravel.R
 import com.example.artravel.constants.Constants
 import com.example.artravel.wikipediaPlaces.*
 import com.google.android.gms.location.*
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -40,7 +41,6 @@ import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.*
@@ -48,6 +48,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.ByteArrayOutputStream
 import java.io.IOException
+import java.lang.reflect.Type
 import java.net.URL
 
 
@@ -61,12 +62,35 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
     private lateinit var placesList: ArrayList<Place>
     private lateinit var recyclerView: RecyclerView
 
+    inline fun <reified T> Gson.fromJson(json: String) =
+        fromJson<T>(json, object : TypeToken<T>() {}.type)
 
-    override fun onStart() {
-        super.onStart()
+    override fun onResume() {
+        super.onResume()
 
-        sendNetworkRequests()
-        Log.d("Lifecycle", "onResume")
+//        placesList = ArrayList()
+//
+//        Log.d("PERKELE!", "onResume")
+//        var sharedPreferences = activity?.getSharedPreferences("placesList", Context.MODE_PRIVATE)
+//        var gson = Gson()
+//        var json: String? = sharedPreferences!!.getString("placesList", null)
+////        var type = TypeToken<ArrayList<Place>>() {}.type
+//
+//        val turnsType = object : TypeToken<ArrayList<Place>>() {}.type
+//
+//        var places = gson.fromJson<ArrayList<Place>>(json, turnsType)
+//
+//        Log.d("PERKELE!", "onResume $places")
+//
+//        placesList.clear()
+//
+//        for (place in places) {
+//            placesList.add(place)
+//        }
+//
+//        Log.d("PERKELE!", "After running for loop")
+//
+//        recyclerView?.adapter?.notifyDataSetChanged()
     }
 
     private fun sendNetworkRequests() {
@@ -358,24 +382,22 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
         }
     }
 
-    private fun setupUI(dataResponses: MutableList<PlaceInfoResponse>) {
+    private suspend fun updateUi(dataResponses: MutableList<PlaceInfoResponse>) {
+        val value = GlobalScope.async {
 
-        for (dataResponse in dataResponses) {
-            var url: URL?
-            if (dataResponse.preview?.source == null) {
-                url =
-                    URL("https://cdn-a.william-reed.com/var/wrbm_gb_food_pharma/storage/images/9/2/8/5/235829-6-eng-GB/Feed-Test-SIC-Feed-20142_news_large.jpg")
-            } else {
-                url = URL(dataResponse.preview?.source)
-            }
+            for (dataResponse in dataResponses) {
 
-            var result: Deferred<Bitmap?> = GlobalScope.async {
-                url.toBitmap()
-            }
+                var url: URL?
+                if (dataResponse.preview?.source == null) {
+                    url =
+                        URL("https://cdn-a.william-reed.com/var/wrbm_gb_food_pharma/storage/images/9/2/8/5/235829-6-eng-GB/Feed-Test-SIC-Feed-20142_news_large.jpg")
+                } else {
+                    url = URL(dataResponse.preview?.source)
+                }
 
-            GlobalScope.launch(Dispatchers.Main) {
-                // get the downloaded bitmap
-
+                var result: Deferred<Bitmap?> = GlobalScope.async {
+                    url.toBitmap()
+                }
 
                 val bitmap: Bitmap? = result.await()
 
@@ -401,42 +423,37 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
                             "${dataResponse.point?.lat},\n" +
                             "${dataResponse.point?.lon}"
                 )
-            }
 
-//            GlobalScope.launch(Dispatchers.Main) {
-//                // get the downloaded bitmap
-//
-//
-//                val bitmap: Bitmap? = result.await()
-//
-//                Log.d(
-//                    "DEBUGGA",
-//                    "${dataResponse.name}: ${dataResponse.point?.lat} ${dataResponse.point?.lon}"
-//                )
-//
-//                placesList.add(
-//                    Place(
-//                        dataResponse.name,
-//                        bitmap,
-//                        dataResponse.wikipedia_extracts?.text,
-//                        dataResponse.point?.lat,
-//                        dataResponse.point?.lon
-//                    )
-//                )
-//
-//                Log.d(
-//                    "DBG", "${dataResponse.name},\n" +
-//                            "${bitmap},\n" +
-//                            "${dataResponse.wikipedia_extracts?.text},\n" +
-//                            "${dataResponse.point?.lat},\n" +
-//                            "${dataResponse.point?.lon}"
-//                )
-//
-//                recyclerView.adapter?.notifyDataSetChanged()
-//
-//                hideProgressDialog()
-//
-//            }
+//            recyclerView.adapter?.notifyDataSetChanged()
+
+//            hideProgressDialog()
+            }
+        }
+        Log.d("PERKELE!", value.await().toString())
+        print(value.await())
+
+        recyclerView.adapter?.notifyDataSetChanged()
+
+        hideProgressDialog()
+
+        var sharedPreferences = activity?.getSharedPreferences("placesList", Context.MODE_PRIVATE)
+
+        var editor = sharedPreferences?.edit()
+
+        var gson = Gson()
+
+        var json = gson.toJson(placesList)
+        editor?.putString("placesList", json)
+        editor?.apply()
+
+        Log.d("PERKELE!", json)
+    }
+
+    private fun setupUI(dataResponses: MutableList<PlaceInfoResponse>) {
+
+
+        GlobalScope.launch(Dispatchers.Main) {
+            updateUi(dataResponses)
         }
     }
 
@@ -444,6 +461,4 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
         t.printStackTrace()
         Log.d("DBG", "Failure")
     }
-
-
 }
