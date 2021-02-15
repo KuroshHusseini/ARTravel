@@ -274,7 +274,7 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
                         "wikidata",
                         0,
                         5,
-                        "5ae2e3f221c38a28845f05b63f384c730e6c086fbc1c4ea103a5c463"
+                        OPEN_TRIP_MAP_API_KEY
                     )
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.newThread())
@@ -401,11 +401,6 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
                             "${dataResponse.point?.lat},\n" +
                             "${dataResponse.point?.lon}"
                 )
-
-                recyclerView.adapter?.notifyDataSetChanged()
-
-                hideProgressDialog()
-
             }
 
 //            GlobalScope.launch(Dispatchers.Main) {

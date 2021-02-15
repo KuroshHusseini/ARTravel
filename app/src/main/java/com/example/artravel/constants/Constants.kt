@@ -9,11 +9,11 @@ import com.example.artravel.BuildConfig
 object Constants {
 
 
-    const val OPEN_WEATHER_API_KEY: String = "f9ffb10ce3149b190a641828f7900651"
+    val OPEN_WEATHER_API_KEY: String = BuildConfig.OPEN_WEATHER_API_KEY
     const val WEATHER_URL: String = "https://api.openweathermap.org/data/"
     const val METRIC_UNIT: String = "metric"
-    const val OPEN_TRIP_MAP_API_KEY = BuildConfig.OPEN_TRIP_MAP_API_KEY
-    const val GOOGLE_API_KEY = BuildConfig.GOOGLE_API_KEY
+    val OPEN_TRIP_MAP_API_KEY = BuildConfig.OPEN_TRIP_MAP_API_KEY
+    val GOOGLE_API_KEY = BuildConfig.GOOGLE_API_KEY
 
 
     fun isNetworkAvailable(context: Context?): Boolean {
