@@ -16,9 +16,9 @@ import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -43,6 +43,7 @@ import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.android.synthetic.main.attraction_item.*
 import kotlinx.coroutines.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -62,36 +63,13 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
     private lateinit var placesList: ArrayList<Place>
     private lateinit var recyclerView: RecyclerView
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        setHasOptionsMenu(true)
+        super.onCreate(savedInstanceState)
+    }
+
     inline fun <reified T> Gson.fromJson(json: String) =
         fromJson<T>(json, object : TypeToken<T>() {}.type)
-
-    override fun onResume() {
-        super.onResume()
-
-//        placesList = ArrayList()
-//
-//        Log.d("PERKELE!", "onResume")
-//        var sharedPreferences = activity?.getSharedPreferences("placesList", Context.MODE_PRIVATE)
-//        var gson = Gson()
-//        var json: String? = sharedPreferences!!.getString("placesList", null)
-////        var type = TypeToken<ArrayList<Place>>() {}.type
-//
-//        val turnsType = object : TypeToken<ArrayList<Place>>() {}.type
-//
-//        var places = gson.fromJson<ArrayList<Place>>(json, turnsType)
-//
-//        Log.d("PERKELE!", "onResume $places")
-//
-//        placesList.clear()
-//
-//        for (place in places) {
-//            placesList.add(place)
-//        }
-//
-//        Log.d("PERKELE!", "After running for loop")
-//
-//        recyclerView?.adapter?.notifyDataSetChanged()
-    }
 
     private fun sendNetworkRequests() {
 
@@ -138,9 +116,7 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
 
 
         sendNetworkRequests()
-
         placesList = ArrayList()
-
         Log.d("Lifecycle", "onCreateView")
 
         recyclerView = view.findViewById(R.id.recycler_view)
@@ -151,6 +127,7 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
 
         return view
     }
+
 
     private var disposable: Disposable? = null
 
@@ -392,7 +369,7 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
                     url =
                         URL("https://cdn-a.william-reed.com/var/wrbm_gb_food_pharma/storage/images/9/2/8/5/235829-6-eng-GB/Feed-Test-SIC-Feed-20142_news_large.jpg")
                 } else {
-                    url = URL(dataResponse.preview?.source)
+                    url = URL(dataResponse.preview.source)
                 }
 
                 var result: Deferred<Bitmap?> = GlobalScope.async {
@@ -403,25 +380,25 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
 
                 Log.d(
                     "DEBUGGA",
-                    "${dataResponse.name}: ${dataResponse.point?.lat} ${dataResponse.point?.lon}"
+                    "${dataResponse.name}: ${dataResponse.point.lat} ${dataResponse.point.lon}"
                 )
 
                 placesList.add(
                     Place(
                         dataResponse.name,
                         bitmap,
-                        dataResponse.wikipedia_extracts?.text,
-                        dataResponse.point?.lat,
-                        dataResponse.point?.lon
+                        dataResponse?.wikipedia_extracts?.text,
+                        dataResponse.point.lat,
+                        dataResponse.point.lon
                     )
                 )
 
                 Log.d(
                     "DBG", "${dataResponse.name},\n" +
                             "${bitmap},\n" +
-                            "${dataResponse.wikipedia_extracts?.text},\n" +
-                            "${dataResponse.point?.lat},\n" +
-                            "${dataResponse.point?.lon}"
+                            "${dataResponse?.wikipedia_extracts?.text},\n" +
+                            "${dataResponse.point.lat},\n" +
+                            "${dataResponse.point.lon}"
                 )
 
 //            recyclerView.adapter?.notifyDataSetChanged()
@@ -461,4 +438,23 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
         t.printStackTrace()
         Log.d("DBG", "Failure")
     }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.favorites_places_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    // when button is pressed do this
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_favorites -> {
+                Log.i("Action bar", "Clicked")
+                Toast.makeText(activity, "pressed", Toast.LENGTH_SHORT).show()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+
 }

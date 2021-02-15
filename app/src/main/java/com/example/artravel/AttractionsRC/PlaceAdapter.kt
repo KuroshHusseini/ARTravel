@@ -19,10 +19,6 @@ class PlaceAdapter(var items: ArrayList<Place>, var clickListener: OnPlaceItemCl
     }
 
     override fun onBindViewHolder(holder: PlaceViewHolder, position: Int) {
-        /* holder.placeName.text = items[position].name
-         holder.placeImage.setImageResource(items[position].image)
-         holder.placeDesc.text = items[position].desc
-     */
         holder.initialize(items[position], clickListener)
     }
 
@@ -36,20 +32,13 @@ class PlaceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val placeImage = itemView.place_image
     val placeDesc = itemView.tv_place_desc
 
+
+
     fun initialize(item: Place, action: OnPlaceItemClickListener) {
         placeName.text = item.name
-
         placeImage.setImageBitmap(item.image)
-
-
-//        if (item.image == null) {
-//            placeImage.setImageResource(R.drawable.ic_places_image)
-//        } else {
-//            placeImage.setImageBitmap(item.image)
-//
-//        }
-
         placeDesc.text = item.desc
+
 
         itemView.setOnClickListener {
             action.onItemClick(item, adapterPosition)
