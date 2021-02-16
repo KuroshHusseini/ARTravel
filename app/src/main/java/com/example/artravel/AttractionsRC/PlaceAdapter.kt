@@ -48,7 +48,7 @@ class PlaceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         //adding to favorites
         val addToFavBtn = itemView.findViewById<ImageView>(R.id.add_to_favorites)
         addToFavBtn.setOnClickListener {
-            Toast.makeText(itemView.context, "${item.name}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(itemView.context, item.name, Toast.LENGTH_SHORT).show()
         }
 
     }

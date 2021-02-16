@@ -114,9 +114,6 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
         // Inflate the layout for this fragment
         val view: View = inflater.inflate(R.layout.fragment_attractions, container, false)
 
-        view.findViewById<ImageView>(R.id.add_to_favorites).setOnClickListener {
-            Toast.makeText(activity, "${view.id}", Toast.LENGTH_SHORT).show()
-        }
 
         sendNetworkRequests()
         placesList = ArrayList()
