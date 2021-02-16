@@ -116,26 +116,26 @@ class ArTakeImage : AppCompatActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        // ARCore requires camera permissions to operate. If we did not yet obtain runtime
-        // permission on Android M and above, now is a good time to ask the user for it.
-        if (ARLocationPermissionHelper.hasPermission(this)) {
-            if (locationScene != null) locationScene.resume()
-            if (mSession != null) {
-                showLoadingMessage()
-                // Note that order matters - see the note in onPause(), the reverse applies here.
-                try {
-                    mSession!!.resume()
-                } catch (e: CameraNotAvailableException) {
-                    e.printStackTrace()
-                }
-            }
-            mSurfaceView.onResume()
-            mDisplayRotationHelper.onResume()
-        } else {
-            ARLocationPermissionHelper.requestPermission(this)
-        }
-    }
+//    override fun onResume() {
+//        super.onResume()
+//
+//        // ARCore requires camera permissions to operate. If we did not yet obtain runtime
+//        // permission on Android M and above, now is a good time to ask the user for it.
+//        if (ARLocationPermissionHelper.hasPermission(this)) {
+//            if (locationScene != null) locationScene.resume()
+//            if (mSession != null) {
+//                showLoadingMessage()
+//                // Note that order matters - see the note in onPause(), the reverse applies here.
+//                try {
+//                    mSession!!.resume()
+//                } catch (e: CameraNotAvailableException) {
+//                    e.printStackTrace()
+//                }
+//            }
+//            mSurfaceView.onResume()
+//            mDisplayRotationHelper.onResume()
+//        } else {
+//            ARLocationPermissionHelper.requestPermission(this)
+//        }
+//    }
 }
