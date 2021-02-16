@@ -5,21 +5,21 @@ import androidx.room.*
 
 
 @Dao
-interface DBDao {
+interface PlaceDao {
 
     @Query("SELECT * FROM place")
-    fun getAll(): LiveData<List<RoomPlace>>
+    fun readAllData(): LiveData<List<DBPlace>>
 
     @Query("SELECT * FROM place WHERE place.id = :placeId")
-    suspend fun getPlaceById(placeId: Int): RoomPlace
+    suspend fun getPlaceById(placeId: Int): DBPlace
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(place: RoomPlace): Long
+    fun addPlace(DBPlace: DBPlace): Long
 
     @Update
-    fun update(place: RoomPlace)
+    fun update(DBPlace: DBPlace)
 
     @Delete
-    fun delete(place: RoomPlace)
+    fun delete(DBPlace: DBPlace)
 
 }

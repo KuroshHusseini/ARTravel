@@ -6,7 +6,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "PLACE")
-data class RoomPlace(
+data class DBPlace(
     @NonNull
     @PrimaryKey(autoGenerate = true)
     var id: Int,

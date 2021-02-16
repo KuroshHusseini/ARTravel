@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.artravel.AttractionsRC.OnPlaceItemClickListener
 import com.example.artravel.AttractionsRC.Place
 import com.example.artravel.AttractionsRC.PlaceAdapter
+import com.example.artravel.FavoritesActivity
 import com.example.artravel.R
 import com.example.artravel.constants.Constants
 import com.example.artravel.wikipediaPlaces.*
@@ -113,7 +114,9 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
         // Inflate the layout for this fragment
         val view: View = inflater.inflate(R.layout.fragment_attractions, container, false)
 
-
+        view.findViewById<ImageView>(R.id.add_to_favorites).setOnClickListener {
+            Toast.makeText(activity, "${view.id}", Toast.LENGTH_SHORT).show()
+        }
 
         sendNetworkRequests()
         placesList = ArrayList()
@@ -122,8 +125,8 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
         recyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.addItemDecoration(DividerItemDecoration(activity, 1))
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-
         recyclerView.adapter = PlaceAdapter(placesList, this)
+
 
         return view
     }
@@ -448,8 +451,8 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_favorites -> {
-                Log.i("Action bar", "Clicked")
-                Toast.makeText(activity, "pressed", Toast.LENGTH_SHORT).show()
+                val intent = Intent(activity, FavoritesActivity::class.java)
+                startActivity(intent)
                 true
             }
             else -> super.onOptionsItemSelected(item)

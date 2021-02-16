@@ -1,9 +1,11 @@
 package com.example.artravel.AttractionsRC
 
-import android.util.Log
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.artravel.R
 import kotlinx.android.synthetic.main.attraction_item.view.*
@@ -33,7 +35,6 @@ class PlaceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val placeDesc = itemView.tv_place_desc
 
 
-
     fun initialize(item: Place, action: OnPlaceItemClickListener) {
         placeName.text = item.name
         placeImage.setImageBitmap(item.image)
@@ -43,5 +44,12 @@ class PlaceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         itemView.setOnClickListener {
             action.onItemClick(item, adapterPosition)
         }
+
+        //adding to favorites
+        val addToFavBtn = itemView.findViewById<ImageView>(R.id.add_to_favorites)
+        addToFavBtn.setOnClickListener {
+            Toast.makeText(itemView.context, "${item.name}", Toast.LENGTH_SHORT).show()
+        }
+
     }
 }
