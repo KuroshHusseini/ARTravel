@@ -10,10 +10,10 @@ data class DBPlace(
     @NonNull
     @PrimaryKey(autoGenerate = true)
     var id: Int,
-    var dbName: String,
-    var dbImage: Bitmap?,
-    var DBDesc: String?,
-    var DBLat: String?,
-    var DBLng: String?
+    var name: String,
+    var image: Bitmap?,
+    var desc: String?,
+    var lat: String?,
+    var lng: String?
 
 )

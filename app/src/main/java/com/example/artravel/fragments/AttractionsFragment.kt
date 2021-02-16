@@ -26,11 +26,11 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.artravel.AttractionsRC.OnPlaceItemClickListener
-import com.example.artravel.AttractionsRC.Place
 import com.example.artravel.AttractionsRC.PlaceAdapter
 import com.example.artravel.FavoritesActivity
 import com.example.artravel.R
 import com.example.artravel.constants.Constants
+import com.example.artravel.database.DBPlace
 import com.example.artravel.wikipediaPlaces.*
 import com.google.android.gms.location.*
 import com.google.gson.Gson
@@ -61,7 +61,7 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
 
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private var mProgressDialog: Dialog? = null
-    private lateinit var placesList: ArrayList<Place>
+    private lateinit var placesList: ArrayList<DBPlace>
     private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -132,7 +132,7 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
     private var disposable: Disposable? = null
 
 
-    override fun onItemClick(item: Place, position: Int) {
+    override fun onItemClick(item: DBPlace, position: Int) {
 
         var bundle = Bundle()
 
@@ -384,7 +384,8 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
                 )
 
                 placesList.add(
-                    Place(
+                    DBPlace(
+                        0,
                         dataResponse.name,
                         bitmap,
                         dataResponse?.wikipedia_extracts?.text,

@@ -8,9 +8,10 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.artravel.R
+import com.example.artravel.database.DBPlace
 import kotlinx.android.synthetic.main.attraction_item.view.*
 
-class PlaceAdapter(var items: ArrayList<Place>, var clickListener: OnPlaceItemClickListener) :
+class PlaceAdapter(var items: ArrayList<DBPlace>, var clickListener: OnPlaceItemClickListener) :
     RecyclerView.Adapter<PlaceViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaceViewHolder {
         return PlaceViewHolder(
@@ -35,7 +36,7 @@ class PlaceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val placeDesc = itemView.tv_place_desc
 
 
-    fun initialize(item: Place, action: OnPlaceItemClickListener) {
+    fun initialize(item: DBPlace, action: OnPlaceItemClickListener) {
         placeName.text = item.name
         placeImage.setImageBitmap(item.image)
         placeDesc.text = item.desc
