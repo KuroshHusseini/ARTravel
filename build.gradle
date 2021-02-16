@@ -20,6 +20,9 @@ allprojects {
     repositories {
         google()
         jcenter()
+
+        // ARCore Location
+        maven { url 'https://jitpack.io'}
     }
 }
 
