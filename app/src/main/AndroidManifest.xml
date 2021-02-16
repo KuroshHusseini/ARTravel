@@ -42,7 +42,7 @@
 
         <meta-data
             android:name="com.google.ar.core"
-            android:value="required"/>
+            android:value="required" />
 
         <activity
             android:name=".AttractionsDrawRouteActivity"

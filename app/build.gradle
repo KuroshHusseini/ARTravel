@@ -43,13 +43,9 @@ android {
         //noinspection DataBindingWithoutKapt
         dataBinding true
     }
-
 }
 
 dependencies {
-
-    // ARCore Location Third-Party Github dependencies
-    implementation "com.github.appoly:ARCore-Location:0.2.1"
 
     // AR Core & SceneForm
     implementation "com.google.ar:core:1.22.0"

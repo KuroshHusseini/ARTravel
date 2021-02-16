@@ -135,11 +135,10 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
         // Inflate the layout for this fragment
         val view: View = inflater.inflate(R.layout.fragment_attractions, container, false)
 
-
+        placesList = ArrayList()
 
         sendNetworkRequests()
 
-        placesList = ArrayList()
 
         Log.d("Lifecycle", "onCreateView")
 
@@ -285,6 +284,8 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
     private fun getNearbyPlaces(latitude: Double, longitude: Double) {
 
         if (Constants.isNetworkAvailable(activity)) {
+
+            Log.d("PERKELE!", "$latitude $longitude")
 
             showCustomProgressDialog()
 
