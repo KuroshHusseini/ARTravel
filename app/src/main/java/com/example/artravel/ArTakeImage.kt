@@ -52,8 +52,6 @@ class ArTakeImage : AppCompatActivity() {
     * */
     private lateinit var sceneView: SceneView
 
-//    private var PYRAMID_URL: String =
-//        "https://raw.githubusercontent.com/thelockymichael/gltf-Sample_models/main/2.0/fox.gltf?raw=true"
 
     /*
     *
@@ -64,7 +62,6 @@ class ArTakeImage : AppCompatActivity() {
     private var PYRAMID_URL: String =
         "https://raw.githubusercontent.com/thelockymichael/gltf-Sample_models/main/2.0/PUSHILIN_pyramid.gltf"
 
-//    private var pyramidNode: TransformableNode? = null
 
     // Model
     private var pyramidRenderable: ModelRenderable? = null
@@ -84,7 +81,6 @@ class ArTakeImage : AppCompatActivity() {
     private var COLOSSEUM_URL: String =
         "https://raw.githubusercontent.com/thelockymichael/gltf-Sample_models/main/2.0/colosseum002.gltf"
 
-//    private var duckNode: TransformableNode? = null
 
     // Model
     private var colosseumRenderable: ModelRenderable? = null
@@ -102,7 +98,7 @@ class ArTakeImage : AppCompatActivity() {
     * */
 
     private var WALLS_CHINA: String =
-        "https://raw.githubusercontent.com/thelockymichael/gltf-Sample_models/main/2.0/colosseum002.gltf"
+        "https://raw.githubusercontent.com/thelockymichael/gltf-Sample_models/main/2.0/wallsOfChina004_lego.gltf"
 //    private var foxNode: TransformableNode? = null
 
     // Model
@@ -120,12 +116,11 @@ class ArTakeImage : AppCompatActivity() {
     *
     * */
 
-    private var LANTERN_URL: String =
-        "https://raw.githubusercontent.com/thelockymichael/gltf-Sample_models/main/2.0/PUSHILIN_pyramid.gltf"
-//    private var lanternNode: TransformableNode? = null
+    private var TAJ_MAHAL_URL: String =
+        "https://raw.githubusercontent.com/thelockymichael/gltf-Sample_models/main/2.0/tajMahal001_lego.gltf"
 
     // Model
-    private var lanternRenderable: ModelRenderable? = null
+    private var tajMahalRenderable: ModelRenderable? = null
 
     /*
     *
@@ -135,21 +130,6 @@ class ArTakeImage : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ar_take_image)
-
-
-        /*
-        *  Ask permision for writing to external storage
-        * */
-
-//        if (ActivityCompat.checkSelfPermission(
-//                this,
-//                Manifest.permission.WRITE_EXTERNAL_STORAGE
-//            ) != PackageManager.PERMISSION_GRANTED
-//        )
-//            ActivityCompat.requestPermissions(
-//                this, arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
-//                1
-//            )
 
         arFragment = supportFragmentManager.findFragmentById(
             R.id.sceneform_fragment
@@ -210,8 +190,8 @@ class ArTakeImage : AppCompatActivity() {
             Log.d("Finishus", "fox $selectedRenderable")
         }
 
-        selectLantern_btn.setOnClickListener {
-            selectedRenderable = lanternRenderable
+        goBack_btn.setOnClickListener {
+            selectedRenderable = tajMahalRenderable
 
             Log.d("Finishus", " lantern $selectedRenderable")
         }
@@ -228,6 +208,14 @@ class ArTakeImage : AppCompatActivity() {
 
         takePicture_btn.setOnClickListener {
             takePicture()
+        }
+
+        hideUI_btn.setOnClickListener {
+            // TODO: Hide all UI elements except hideUI_btn
+        }
+
+        goBack_btn.setOnClickListener {
+            finish()
         }
     }
 
@@ -349,8 +337,6 @@ class ArTakeImage : AppCompatActivity() {
                 .thenAccept { renderable: ModelRenderable ->
                     pyramidRenderable = renderable
 
-//                    selectedRenderable = pyramidRenderable
-
                     Log.d("Finishus", "finished $pyramidRenderable")
                     Log.d("Finishus", "finished $selectedRenderable")
 
@@ -372,7 +358,7 @@ class ArTakeImage : AppCompatActivity() {
                         ),
                         RenderableSource.SourceType.GLTF2
                     )
-                        .setScale(0.25f)
+                        .setScale(0.1f)
                         .setRecenterMode(RenderableSource.RecenterMode.ROOT)
                         .build()
                 ).setRegistryId(COLOSSEUM_URL)
@@ -381,8 +367,6 @@ class ArTakeImage : AppCompatActivity() {
                     colosseumRenderable = renderable
 
                     selectedRenderable = colosseumRenderable
-
-//                    selectedRenderable = pyramidRenderable
 
                     Log.d("Finishus", "finished duck $colosseumRenderable")
                     Log.d("Finishus", "finished duck $colosseumRenderable")
@@ -411,11 +395,8 @@ class ArTakeImage : AppCompatActivity() {
                 .thenAccept { renderable: ModelRenderable ->
                     wallsOfChinaRenderable = renderable
 
-//                    selectedRenderable = pyramidRenderable
-
                     Log.d("Finishus", "finished fox $wallsOfChinaRenderable")
                     Log.d("Finishus", "finished fox $wallsOfChinaRenderable")
-
                 }
                 .exceptionally {
                     Log.i("Model", "cant load")
@@ -425,117 +406,33 @@ class ArTakeImage : AppCompatActivity() {
                 }
 
 
-//            ModelRenderable.builder()
-//                .setSource(
-//                    applicationContext,
-//                    RenderableSource.builder().setSource(
-//                        applicationContext,
-//                        Uri.parse(PYRAMID_URL),
-//                        RenderableSource.SourceType.GLTF2
-//                    )
-//                        .setScale(0.75f)
-//                        .setRecenterMode(RenderableSource.RecenterMode.ROOT)
-//                        .build()
-//                ).setRegistryId(PYRAMID_URL)
-//                .build()
-//                .thenAccept { renderable: ModelRenderable ->
-//                    pyramidRenderable = renderable
-//                }
-//                .exceptionally {
-//                    Log.i("Model", "cant load")
-//                    Toast.makeText(applicationContext, "Model can't be Loaded", Toast.LENGTH_SHORT)
-//                        .show()
-//                    null
-//                }
+            ModelRenderable.builder()
+                .setSource(
+                    applicationContext,
+                    RenderableSource.builder().setSource(
+                        applicationContext,
+                        Uri.parse(TAJ_MAHAL_URL),
+                        RenderableSource.SourceType.GLTF2
+                    )
+                        .setScale(0.75f)
+                        .setRecenterMode(RenderableSource.RecenterMode.ROOT)
+                        .build()
+                ).setRegistryId(TAJ_MAHAL_URL)
+                .build()
+                .thenAccept { renderable: ModelRenderable ->
+                    tajMahalRenderable = renderable
 
-//            selectedRenderable = pyramidRenderable
-
-//            Log.d("Finishus", "pyramid $pyramidRenderable")
-//            Log.d("Finishus", "selectedRenderable $selectedRenderable")
-//        }
-//
-//        var jotain = model.await()
-//
-//        if (jotain == 1) {
-//            Log.d("Finishus", "I AM FINISHED")
-//            Log.d("Finishus", "pyramid $pyramidRenderable")
-//            Log.d("Finishus", "selectedRenderable $selectedRenderable")
-//
-//        }
-//        Log.d("Finishus", model.await().toString())
-//            ModelRenderable.builder()
-//                .setSource(
-//                    applicationContext,
-//                    RenderableSource.builder().setSource(
-//                        applicationContext,
-//                        Uri.parse(COLOSSEUM_URL),
-//                        RenderableSource.SourceType.GLTF2
-//                    )
-//                        .setScale(0.75f)
-//                        .setRecenterMode(RenderableSource.RecenterMode.ROOT)
-//                        .build()
-//                ).setRegistryId(COLOSSEUM_URL)
-//                .build()
-//                .thenAccept { renderable: ModelRenderable ->
-//                    colosseumRenderable = renderable
-//                }
-//                .exceptionally {
-//                    Log.i("Model", "cant load")
-//                    Toast.makeText(applicationContext, "Model can't be Loaded", Toast.LENGTH_SHORT)
-//                        .show()
-//                    null
-//                }
-//
-//            ModelRenderable.builder()
-//                .setSource(
-//                    applicationContext,
-//                    RenderableSource.builder().setSource(
-//                        applicationContext,
-//                        Uri.parse(WALLS_CHINA),
-//                        RenderableSource.SourceType.GLTF2
-//                    )
-//                        .setScale(0.75f)
-//                        .setRecenterMode(RenderableSource.RecenterMode.ROOT)
-//                        .build()
-//                ).setRegistryId(WALLS_CHINA)
-//                .build()
-//                .thenAccept { renderable: ModelRenderable ->
-//                    wallsOfChinaRenderable = renderable
-//                }
-//                .exceptionally {
-//                    Log.i("Model", "cant load")
-//                    Toast.makeText(applicationContext, "Model can't be Loaded", Toast.LENGTH_SHORT)
-//                        .show()
-//                    null
-//                }
-//
-//            ModelRenderable.builder()
-//                .setSource(
-//                    applicationContext,
-//                    RenderableSource.builder().setSource(
-//                        applicationContext,
-//                        Uri.parse(LANTERN_URL),
-//                        RenderableSource.SourceType.GLTF2
-//                    )
-//                        .setScale(0.75f)
-//                        .setRecenterMode(RenderableSource.RecenterMode.ROOT)
-//                        .build()
-//                ).setRegistryId(LANTERN_URL)
-//                .build()
-//                .thenAccept { renderable: ModelRenderable ->
-//                    lanternRenderable = renderable
-//                }
-//                .exceptionally {
-//                    Log.i("Model", "cant load")
-//                    Toast.makeText(applicationContext, "Model can't be Loaded", Toast.LENGTH_SHORT)
-//                        .show()
-//                    null
-//                }
-
+                    Log.d("Finishus", "finished fox $tajMahalRenderable")
+                    Log.d("Finishus", "finished fox $tajMahalRenderable")
+                }
+                .exceptionally {
+                    Log.i("Model", "cant load")
+                    Toast.makeText(applicationContext, "Model can't be Loaded", Toast.LENGTH_SHORT)
+                        .show()
+                    null
+                }
         }
     }
-
-    private var renderableAstronaut: RenderableSource.Builder? = null
 
     private fun setUpPlane() {
         arFragment.setOnTapArPlaneListener { hitResult: HitResult, plane: Plane?, motionEvent: MotionEvent? ->
@@ -569,6 +466,4 @@ class ArTakeImage : AppCompatActivity() {
             }
         }
     }
-
-
 }
