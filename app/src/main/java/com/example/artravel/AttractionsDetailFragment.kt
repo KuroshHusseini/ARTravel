@@ -38,15 +38,11 @@ class AttractionsDetailFragment : Fragment() {
                 R.id.action_attractionsDetailFragment_to_attractionsDrawRoute,
                 bundle
             )
-
-
-//            findNavController().navigate(R.id.action_attractionsDetailFragment_to_attractionsDrawRoute)
         }
 
         var name = arguments?.getString("name")
         var bytes = arguments?.getByteArray("bytes")
 
-//        bytes = intent.getByteArrayExtra("PLACEIMAGE")
 
         var image = BitmapFactory.decodeByteArray(bytes, 0, bytes!!.size)
 

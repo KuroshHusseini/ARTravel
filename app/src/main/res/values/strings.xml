@@ -38,4 +38,27 @@
     <string name="title_activity_attraction_draw_route">Map</string>
     <string name="title_activity_attractions_draw_route">Map</string>
     <string name="favorites_actionbar_txt">Favorites</string>
+    <string name="title_activity_ar_take_image">ArTakeImage</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+
+    <!--    ARCore Scene Strings -->
+    <string name="hello">Hello world!</string>
+    <string name="take_image">Take image</string>
+    <string name="pyramid">Pyramid</string>
+    <string name="walls_of_china">Walls of china</string>
+    <string name="taj_mahal">Taj Mahal</string>
+    <string name="go_back">Go back</string>
+    <string name="colosseum">Colosseum</string>
+    <string name="title_activity_take_image">Take image</string>
+    <string name="hide_ui">Hide UI</string>
+
+
 </resources>

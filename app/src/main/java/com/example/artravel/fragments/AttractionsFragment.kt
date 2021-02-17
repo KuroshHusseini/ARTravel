@@ -263,6 +263,8 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
 
         if (Constants.isNetworkAvailable(activity)) {
 
+            Log.d("PERKELE!", "$latitude $longitude")
+
             showCustomProgressDialog()
 
             disposable =
