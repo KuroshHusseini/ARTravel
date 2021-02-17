@@ -1,11 +1,16 @@
 package com.example.artravel
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.graphics.Color
+import android.media.CamcorderProfile
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import com.google.android.material.slider.RangeSlider
 import com.google.ar.core.HitResult
 import com.google.ar.core.Plane
@@ -25,7 +30,7 @@ import kotlinx.coroutines.launch
 class ArTakeImage : AppCompatActivity() {
 
     private lateinit var arFragment: ArFragment
-
+    private var videoRecorder: VideoRecorder? = null
 
     private var anchorNode: AnchorNode? = null
 
@@ -117,6 +122,22 @@ class ArTakeImage : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ar_take_image)
 
+
+
+        /*
+        *  Ask permision for writing to external storage
+        * */
+
+//        if (ActivityCompat.checkSelfPermission(
+//                this,
+//                Manifest.permission.WRITE_EXTERNAL_STORAGE
+//            ) != PackageManager.PERMISSION_GRANTED
+//        )
+//            ActivityCompat.requestPermissions(
+//                this, arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
+//                1
+//            )
+
         arFragment = supportFragmentManager.findFragmentById(
             R.id.sceneform_fragment
         ) as ArFragment
@@ -124,6 +145,8 @@ class ArTakeImage : AppCompatActivity() {
         GlobalScope.launch(Dispatchers.Main) {
             setupAndDownloadAllModels()
         }
+
+        setUpPlane()
 
         // RangeSlider
         modelSizeSlider.addOnSliderTouchListener(object :
@@ -177,6 +200,48 @@ class ArTakeImage : AppCompatActivity() {
 
             Log.d("Finishus", " lantern $selectedRenderable")
         }
+
+//        toggleRecording_btn.setOnClickListener {
+//            if (videoRecorder == null) {
+//                videoRecorder = VideoRecorder()
+//
+//                videoRecorder?.setSceneView(arFragment.arSceneView)
+//
+//                var orientation = resources.configuration.orientation
+//
+//                videoRecorder!!.setVideoQuality(CamcorderProfile.QUALITY_HIGH, orientation)
+//            }
+//
+//            var isRecording = videoRecorder!!.onToggleRecord()
+//
+//
+//            if (isRecording) {
+//                toggleRecording_btn.setBackgroundColor(
+//                    getColor(R.color.quantum_googredA700)
+//                )
+//                Toast.makeText(this, "Started Recording", Toast.LENGTH_SHORT).show()
+//            } else {
+//
+//                toggleRecording_btn.setBackgroundColor(
+//                    getColor(R.color.purple_500)
+//                )
+//                Toast.makeText(this, "Recording stopped", Toast.LENGTH_SHORT).show()
+//            }
+//        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        )
+            ActivityCompat.requestPermissions(
+                this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                80085
+            )
     }
 
     private suspend fun setupAndDownloadAllModels() {
@@ -393,7 +458,6 @@ class ArTakeImage : AppCompatActivity() {
             anchorNode =
                 AnchorNode(anchor)
             anchorNode?.setParent(arFragment.arSceneView.scene)
-
 
             detectPlane(anchorNode)
         }
