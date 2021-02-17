@@ -50,5 +50,6 @@
 
     <!--    ARCore Testing Strings -->
     <string name="hello">Hello world!</string>
+    <string name="title_activity_take_image">TakeImage</string>
 
 </resources>

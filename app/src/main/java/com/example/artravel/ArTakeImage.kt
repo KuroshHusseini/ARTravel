@@ -1,13 +1,16 @@
 package com.example.artravel
 
 import android.Manifest
+import android.content.ContentValues
 import android.content.pm.PackageManager
-import android.graphics.Color
+import android.graphics.Bitmap
 import android.media.CamcorderProfile
 import android.net.Uri
-import android.os.Bundle
+import android.os.*
+import android.provider.MediaStore
 import android.util.Log
 import android.view.MotionEvent
+import android.view.PixelCopy
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -15,6 +18,8 @@ import com.google.android.material.slider.RangeSlider
 import com.google.ar.core.HitResult
 import com.google.ar.core.Plane
 import com.google.ar.sceneform.AnchorNode
+import com.google.ar.sceneform.ArSceneView
+import com.google.ar.sceneform.SceneView
 import com.google.ar.sceneform.assets.RenderableSource
 import com.google.ar.sceneform.math.Vector3
 import com.google.ar.sceneform.rendering.ModelRenderable
@@ -25,6 +30,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.OutputStream
 
 
 class ArTakeImage : AppCompatActivity() {
@@ -37,6 +46,11 @@ class ArTakeImage : AppCompatActivity() {
     private var selectedNode: TransformableNode? = null
     private var selectedRenderable: ModelRenderable? = null
 
+
+    /*
+    *   SceneView
+    * */
+    private lateinit var sceneView: SceneView
 
 //    private var PYRAMID_URL: String =
 //        "https://raw.githubusercontent.com/thelockymichael/gltf-Sample_models/main/2.0/fox.gltf?raw=true"
@@ -67,13 +81,13 @@ class ArTakeImage : AppCompatActivity() {
     *
     * */
 
-    private var DUCK_URL: String =
-        "https://raw.githubusercontent.com/thelockymichael/gltf-Sample_models/main/2.0/PUSHILIN_pyramid.gltf"
+    private var COLOSSEUM_URL: String =
+        "https://raw.githubusercontent.com/thelockymichael/gltf-Sample_models/main/2.0/colosseum002.gltf"
 
 //    private var duckNode: TransformableNode? = null
 
     // Model
-    private var duckRenderable: ModelRenderable? = null
+    private var colosseumRenderable: ModelRenderable? = null
 
     /*
     *
@@ -87,12 +101,12 @@ class ArTakeImage : AppCompatActivity() {
     *
     * */
 
-    private var FOX_URL: String =
-        "https://raw.githubusercontent.com/thelockymichael/gltf-Sample_models/main/2.0/PUSHILIN_pyramid.gltf"
+    private var WALLS_CHINA: String =
+        "https://raw.githubusercontent.com/thelockymichael/gltf-Sample_models/main/2.0/colosseum002.gltf"
 //    private var foxNode: TransformableNode? = null
 
     // Model
-    private var foxRenderable: ModelRenderable? = null
+    private var wallsOfChinaRenderable: ModelRenderable? = null
 
     /*
     *
@@ -123,7 +137,6 @@ class ArTakeImage : AppCompatActivity() {
         setContentView(R.layout.activity_ar_take_image)
 
 
-
         /*
         *  Ask permision for writing to external storage
         * */
@@ -141,6 +154,8 @@ class ArTakeImage : AppCompatActivity() {
         arFragment = supportFragmentManager.findFragmentById(
             R.id.sceneform_fragment
         ) as ArFragment
+
+        sceneView = arFragment.arSceneView
 
         GlobalScope.launch(Dispatchers.Main) {
             setupAndDownloadAllModels()
@@ -184,13 +199,13 @@ class ArTakeImage : AppCompatActivity() {
         }
 
         selectDuck_btn.setOnClickListener {
-            selectedRenderable = duckRenderable
+            selectedRenderable = colosseumRenderable
 
             Log.d("Finishus", "duck $selectedRenderable")
         }
 
         selectFox_btn.setOnClickListener {
-            selectedRenderable = foxRenderable
+            selectedRenderable = wallsOfChinaRenderable
 
             Log.d("Finishus", "fox $selectedRenderable")
         }
@@ -201,33 +216,103 @@ class ArTakeImage : AppCompatActivity() {
             Log.d("Finishus", " lantern $selectedRenderable")
         }
 
-//        toggleRecording_btn.setOnClickListener {
-//            if (videoRecorder == null) {
-//                videoRecorder = VideoRecorder()
-//
-//                videoRecorder?.setSceneView(arFragment.arSceneView)
-//
-//                var orientation = resources.configuration.orientation
-//
-//                videoRecorder!!.setVideoQuality(CamcorderProfile.QUALITY_HIGH, orientation)
-//            }
-//
-//            var isRecording = videoRecorder!!.onToggleRecord()
-//
-//
-//            if (isRecording) {
-//                toggleRecording_btn.setBackgroundColor(
-//                    getColor(R.color.quantum_googredA700)
-//                )
-//                Toast.makeText(this, "Started Recording", Toast.LENGTH_SHORT).show()
-//            } else {
-//
-//                toggleRecording_btn.setBackgroundColor(
-//                    getColor(R.color.purple_500)
-//                )
-//                Toast.makeText(this, "Recording stopped", Toast.LENGTH_SHORT).show()
-//            }
-//        }
+        if (videoRecorder == null) {
+            videoRecorder = VideoRecorder()
+
+            videoRecorder?.setSceneView(arFragment.arSceneView)
+
+            var orientation = resources.configuration.orientation
+
+            videoRecorder!!.setVideoQuality(CamcorderProfile.QUALITY_HIGH, orientation)
+        }
+
+        takePicture_btn.setOnClickListener {
+            takePicture()
+        }
+    }
+
+    /*
+*
+*   Capture Image
+*
+* */
+
+    private fun takePicture() {
+        var view: ArSceneView = arFragment.arSceneView
+
+        // Create a bitmap the size of the scene view.
+        val bitmap: Bitmap = Bitmap.createBitmap(
+            sceneView?.width, sceneView?.height,
+            Bitmap.Config.ARGB_8888
+        )
+
+        // Create a handler thread to offload the processing of the image.
+        val handlerThread = HandlerThread("PixelCopier")
+
+        handlerThread.start()
+
+        // Make the request to copy.
+
+        PixelCopy.request(view, bitmap, { copyResult ->
+
+            if (copyResult == PixelCopy.SUCCESS) {
+
+                try {
+                    saveMediaToStorage(bitmap)
+                } catch (e: IOException) {
+
+                    Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show()
+                    return@request
+                }
+
+                Toast.makeText(this, "Photo saved", Toast.LENGTH_SHORT).show()
+
+
+            } else {
+                Toast.makeText(
+                    this,
+                    "Failed to copyPixels: " + copyResult, Toast.LENGTH_LONG
+                ).show()
+            }
+
+            handlerThread.quitSafely()
+        }, Handler())
+    }
+
+    private fun saveMediaToStorage(bitmap: Bitmap?) {
+        val filename = "${System.currentTimeMillis()}.jpg"
+        var fos: OutputStream? = null
+
+        Log.d("DBG", "saveMediaToStorage")
+        Log.d("DBG", "filename $filename")
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            contentResolver?.also { resolver ->
+                val contentValues = ContentValues().apply {
+                    put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
+                    put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
+                    put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+                }
+
+                val imageUri: Uri? =
+                    resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+                fos = imageUri?.let { resolver.openOutputStream(it) }
+
+                Log.d("DBG", "imageUri $imageUri")
+                Log.d("DBG", "fos $fos")
+            }
+        } else {
+            val imagesDir =
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+
+            val image = File(imagesDir, filename)
+
+            fos = FileOutputStream(image)
+        }
+        fos?.use {
+            bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, it)
+            Toast.makeText(this, "Saved to photos", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onResume() {
@@ -240,13 +325,13 @@ class ArTakeImage : AppCompatActivity() {
         )
             ActivityCompat.requestPermissions(
                 this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                80085
+                54
             )
     }
 
-    private suspend fun setupAndDownloadAllModels() {
+    private fun setupAndDownloadAllModels() {
 
-        var model = GlobalScope.async(Dispatchers.Main) {
+        GlobalScope.async(Dispatchers.Main) {
 
             ModelRenderable.builder()
                 .setSource(
@@ -283,24 +368,24 @@ class ArTakeImage : AppCompatActivity() {
                     RenderableSource.builder().setSource(
                         applicationContext,
                         Uri.parse(
-                            "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/CesiumMan/glTF/CesiumMan.gltf"
+                            COLOSSEUM_URL
                         ),
                         RenderableSource.SourceType.GLTF2
                     )
-                        .setScale(0.75f)
+                        .setScale(0.25f)
                         .setRecenterMode(RenderableSource.RecenterMode.ROOT)
                         .build()
-                ).setRegistryId("CesiumMan")
+                ).setRegistryId(COLOSSEUM_URL)
                 .build()
                 .thenAccept { renderable: ModelRenderable ->
-                    duckRenderable = renderable
+                    colosseumRenderable = renderable
 
-                    selectedRenderable = duckRenderable
+                    selectedRenderable = colosseumRenderable
 
 //                    selectedRenderable = pyramidRenderable
 
-                    Log.d("Finishus", "finished duck $duckRenderable")
-                    Log.d("Finishus", "finished duck $duckRenderable")
+                    Log.d("Finishus", "finished duck $colosseumRenderable")
+                    Log.d("Finishus", "finished duck $colosseumRenderable")
 
                 }
                 .exceptionally {
@@ -310,34 +395,34 @@ class ArTakeImage : AppCompatActivity() {
                     null
                 }
 
-//            ModelRenderable.builder()
-//                .setSource(
-//                    applicationContext,
-//                    RenderableSource.builder().setSource(
-//                        applicationContext,
-//                        Uri.parse(FOX_URL),
-//                        RenderableSource.SourceType.GLTF2
-//                    )
-//                        .setScale(0.75f)
-//                        .setRecenterMode(RenderableSource.RecenterMode.ROOT)
-//                        .build()
-//                ).setRegistryId(FOX_URL)
-//                .build()
-//                .thenAccept { renderable: ModelRenderable ->
-//                    foxRenderable = renderable
-//
-////                    selectedRenderable = pyramidRenderable
-//
-//                    Log.d("Finishus", "finished fox $foxRenderable")
-//                    Log.d("Finishus", "finished fox $foxRenderable")
-//
-//                }
-//                .exceptionally {
-//                    Log.i("Model", "cant load")
-//                    Toast.makeText(applicationContext, "Model can't be Loaded", Toast.LENGTH_SHORT)
-//                        .show()
-//                    null
-//                }
+            ModelRenderable.builder()
+                .setSource(
+                    applicationContext,
+                    RenderableSource.builder().setSource(
+                        applicationContext,
+                        Uri.parse(WALLS_CHINA),
+                        RenderableSource.SourceType.GLTF2
+                    )
+                        .setScale(0.75f)
+                        .setRecenterMode(RenderableSource.RecenterMode.ROOT)
+                        .build()
+                ).setRegistryId(WALLS_CHINA)
+                .build()
+                .thenAccept { renderable: ModelRenderable ->
+                    wallsOfChinaRenderable = renderable
+
+//                    selectedRenderable = pyramidRenderable
+
+                    Log.d("Finishus", "finished fox $wallsOfChinaRenderable")
+                    Log.d("Finishus", "finished fox $wallsOfChinaRenderable")
+
+                }
+                .exceptionally {
+                    Log.i("Model", "cant load")
+                    Toast.makeText(applicationContext, "Model can't be Loaded", Toast.LENGTH_SHORT)
+                        .show()
+                    null
+                }
 
 
 //            ModelRenderable.builder()
@@ -383,16 +468,16 @@ class ArTakeImage : AppCompatActivity() {
 //                    applicationContext,
 //                    RenderableSource.builder().setSource(
 //                        applicationContext,
-//                        Uri.parse(DUCK_URL),
+//                        Uri.parse(COLOSSEUM_URL),
 //                        RenderableSource.SourceType.GLTF2
 //                    )
 //                        .setScale(0.75f)
 //                        .setRecenterMode(RenderableSource.RecenterMode.ROOT)
 //                        .build()
-//                ).setRegistryId(DUCK_URL)
+//                ).setRegistryId(COLOSSEUM_URL)
 //                .build()
 //                .thenAccept { renderable: ModelRenderable ->
-//                    duckRenderable = renderable
+//                    colosseumRenderable = renderable
 //                }
 //                .exceptionally {
 //                    Log.i("Model", "cant load")
@@ -406,16 +491,16 @@ class ArTakeImage : AppCompatActivity() {
 //                    applicationContext,
 //                    RenderableSource.builder().setSource(
 //                        applicationContext,
-//                        Uri.parse(FOX_URL),
+//                        Uri.parse(WALLS_CHINA),
 //                        RenderableSource.SourceType.GLTF2
 //                    )
 //                        .setScale(0.75f)
 //                        .setRecenterMode(RenderableSource.RecenterMode.ROOT)
 //                        .build()
-//                ).setRegistryId(FOX_URL)
+//                ).setRegistryId(WALLS_CHINA)
 //                .build()
 //                .thenAccept { renderable: ModelRenderable ->
-//                    foxRenderable = renderable
+//                    wallsOfChinaRenderable = renderable
 //                }
 //                .exceptionally {
 //                    Log.i("Model", "cant load")
@@ -484,4 +569,6 @@ class ArTakeImage : AppCompatActivity() {
             }
         }
     }
+
+
 }

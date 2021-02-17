@@ -6,6 +6,7 @@ import android.media.MediaRecorder
 import android.os.Environment
 import android.util.Log
 import android.util.Size
+import android.view.PixelCopy
 import android.view.Surface
 import com.google.ar.sceneform.SceneView
 import java.io.File

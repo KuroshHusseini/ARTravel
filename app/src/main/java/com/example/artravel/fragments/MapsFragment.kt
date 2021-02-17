@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.artravel.ArTakeImage
 import com.example.artravel.R
+import com.example.artravel.TakeImage
 import com.example.artravel.constants.Constants
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -243,6 +244,12 @@ class MapsFragment : Fragment() {
 //            )
 
             val intent = Intent(context, ArTakeImage::class.java)
+
+            startActivity(intent)
+        }
+
+        captureImage_activity_btn.setOnClickListener {
+            val intent = Intent(context, TakeImage::class.java)
 
             startActivity(intent)
         }

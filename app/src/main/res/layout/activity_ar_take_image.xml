@@ -10,14 +10,16 @@
     app:layout_constraintTop_toTopOf="parent">
 
     <Button
-        android:id="@+id/toggleRecording_btn"
+        android:id="@+id/takePicture_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Toggle Recording"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="Take picture"
+        app:layout_constraintBottom_toTopOf="@+id/modelSizeSlider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/selectPyramid_btn"
