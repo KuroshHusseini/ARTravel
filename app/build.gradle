@@ -3,6 +3,8 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-android-extensions'
     id "com.google.ar.sceneform.plugin"
+    id 'kotlin-kapt'
+
 }
 
 android {
@@ -111,7 +113,10 @@ dependencies {
     def lifecycle_version = "2.1.0"
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
     implementation "android.arch.lifecycle:runtime:$lifecycle_version"
+    implementation 'androidx.room:room-ktx:2.2.5'
+    kapt "androidx.room:room-compiler:2.2.5"
 
+    implementation("io.coil-kt:coil:1.0.0-rc3")
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
