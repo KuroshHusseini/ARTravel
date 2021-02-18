@@ -37,6 +37,7 @@
     <string name="show_on_map_btn_txt">Show on map</string>
     <string name="title_activity_attraction_draw_route">Map</string>
     <string name="title_activity_attractions_draw_route">Map</string>
+    <string name="title_activity_favourites_activity">Favourites</string>
     <string name="favorites_actionbar_txt">Favorites</string>
     <string name="title_activity_ar_take_image">ArTakeImage</string>
     <!-- Strings used for fragments for navigation -->

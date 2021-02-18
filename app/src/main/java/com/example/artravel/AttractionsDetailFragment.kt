@@ -49,15 +49,12 @@ class AttractionsDetailFragment : Fragment() {
 
         var description = arguments?.getString("description")
 
-
-
         lat = arguments?.getString("lat")
         lon = arguments?.getString("lon")
 
 
-
         Log.d("DBEGGUS", name!!)
-        Log.d("DBEGGUS", image.toString())
+//        Log.d("DBEGGUS", image.toString())
         if (description != null) {
             Log.d("DBEGGUS", description)
         }
@@ -72,7 +69,8 @@ class AttractionsDetailFragment : Fragment() {
 
         view.tv_detail_place_name.text = name
 
-        view.iv_detail_place_image.setImageBitmap(image)
+        if (image != null)
+            view.iv_detail_place_image.setImageBitmap(image)
 
         view.tv_detail_place_desc.text = description
 
