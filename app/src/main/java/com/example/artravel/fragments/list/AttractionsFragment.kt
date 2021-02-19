@@ -21,7 +21,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.artravel.AttractionsRC.OnPlaceItemClickListener
@@ -56,7 +55,7 @@ import java.net.URL
 @Suppress("UNREACHABLE_CODE")
 class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
 
-    val OPEN_TRIP_MAP_API_KEY = Constants.OPEN_TRIP_MAP_API_KEY
+    private val OPEN_TRIP_MAP_API_KEY = Constants.OPEN_TRIP_MAP_API_KEY
 
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private var mProgressDialog: Dialog? = null
@@ -114,26 +113,12 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        val view: View = inflater.inflate(R.layout.fragment_attractions, container, false)
 
-//        placesList = ArrayList()
-//        Log.d("Lifecycle", "onCreateView")
-//
-//        recyclerView = view.findViewById(R.id.recycler_view)
-//        recyclerView.addItemDecoration(DividerItemDecoration(activity, 1))
-//        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-//        recyclerView.adapter = PlaceAdapter(requireContext(), placesList, this)
-
-        return view
+        return inflater.inflate(R.layout.fragment_attractions, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        GlobalScope.launch {
-            attractionsDatabase.attractionDao()
-                .deleteAllAttractions()
-        }
 
         sendNetworkRequests()
 
@@ -149,20 +134,7 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
 
             recycler_view.layoutManager = LinearLayoutManager(requireContext())
         })
-
-//        // AttractionsViewModel
-//        val ump = ViewModelProviders.of(this).get(AttractionsViewModel::class.java)
-//
-//        ump.readAllData.observe(this, {
-//            recycler_view.adapter = PlaceAdapter(
-//                requireContext(),
-//                it.sortedBy { that ->
-//                    that.name
-//                }, this
-//            )
-//        })
     }
-
 
     private var disposable: Disposable? = null
 
@@ -399,7 +371,14 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
     }
 
     private suspend fun updateUi(dataResponses: MutableList<PlaceInfoResponse>) {
-        val value = GlobalScope.async {
+
+
+        GlobalScope.launch {
+            attractionsDatabase.attractionDao()
+                .deleteAllAttractions()
+        }
+
+        GlobalScope.async {
 
             for (dataResponse in dataResponses) {
 
@@ -464,25 +443,6 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
         }
 
         hideProgressDialog()
-
-//        Log.d("PERKELE!", value.await().toString())
-//        print(value.await())
-//
-//        recyclerView.adapter?.notifyDataSetChanged()
-//
-//        hideProgressDialog()
-//
-//        var sharedPreferences = activity?.getSharedPreferences("placesList", Context.MODE_PRIVATE)
-//
-//        var editor = sharedPreferences?.edit()
-//
-//        var gson = Gson()
-//
-//        var json = gson.toJson(placesList)
-//        editor?.putString("placesList", json)
-//        editor?.apply()
-//
-//        Log.d("PERKELE!", json)
     }
 
     private fun setupUI(dataResponses: MutableList<PlaceInfoResponse>) {
