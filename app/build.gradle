@@ -50,7 +50,7 @@ android {
 dependencies {
 
     // AR Core & SceneForm
-    implementation "com.google.ar:core:1.22.0"
+    implementation "com.google.ar:core:1.23.0"
     implementation "com.google.ar.sceneform.ux:sceneform-ux:1.17.1"
     implementation "com.google.ar.sceneform:assets:1.17.1"
 
@@ -73,7 +73,7 @@ dependencies {
 
     def nav_version = "2.1.0"
     // GMS Play Services Location
-    implementation 'com.google.android.gms:play-services-location:17.1.0'
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
 
     // Places API
     implementation 'com.google.android.libraries.places:places:2.4.0'
@@ -92,7 +92,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
-    implementation 'com.google.android.gms:play-services-location:17.1.0'
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
     implementation 'com.karumi:dexter:6.2.2'
 
     final retrofit_version = '2.9.0'
@@ -112,25 +112,17 @@ dependencies {
     def room_version = "2.2.6"
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
     implementation "android.arch.lifecycle:runtime:$lifecycle_version"
-
-    implementation 'androidx.room:room-ktx:2.2.5'
-
+    implementation 'androidx.room:room-ktx:2.2.6'
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
-
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
-
-    implementation("io.coil-kt:coil:1.0.0-rc3")
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0"
+    //Coil
+    implementation "io.coil-kt:coil:1.1.1"
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
 
-    // Extensions = ViewModel + LiveData
-//    implementation "android.arch.lifecycle:extensions:1.1.0"
-//    kapt "android.arch.lifecycle:compiler:1.1.0"
-//// Room
-//    implementation "android.arch.persistence.room:runtime:1.0.0"
-//    kapt "android.arch.persistence.room:compiler:1.0.0"
+
 }

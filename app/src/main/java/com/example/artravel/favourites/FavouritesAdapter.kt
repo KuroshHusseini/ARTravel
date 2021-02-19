@@ -18,10 +18,9 @@ import kotlinx.coroutines.launch
 class FavouritesAdapter(
     var context: Context,
     private val favouritesList: List<DBPlace>,
-    var clickListener: OnPlaceItemClickListener
+    private var clickListener: OnPlaceItemClickListener
 ) :
     RecyclerView.Adapter<FavouritesAdapter.MyViewHolder>() {
-
     private val favouritesDatabase by lazy { FavouritesDatabase.getDatabase(context) }
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
@@ -33,21 +32,15 @@ class FavouritesAdapter(
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val currentItem = favouritesList?.get(position)
+        val currentItem = favouritesList[position]
         if (currentItem != null) {
             holder.itemView.place_image.load(currentItem.image)
-        }
-        if (currentItem != null) {
             holder.itemView.tv_place_name.text = currentItem.name
-        }
-        if (currentItem != null) {
             holder.itemView.tv_place_desc.text = currentItem.desc
         }
-
         holder.itemView.setOnClickListener {
             clickListener.onItemClick(currentItem, position)
         }
-
         holder.itemView.add_to_favorites.setOnClickListener {
             AlertDialog.Builder(context)
                 .setPositiveButton("Yes") { _, _ ->
@@ -76,6 +69,5 @@ class FavouritesAdapter(
                 .show()
         }
     }
-
-    override fun getItemCount() = favouritesList?.size ?: 0
+    override fun getItemCount() = favouritesList.size
 }
