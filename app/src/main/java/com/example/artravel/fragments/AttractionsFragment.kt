@@ -17,8 +17,6 @@ import android.os.Looper
 import android.provider.Settings
 import android.util.Log
 import android.view.*
-import android.widget.Button
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -27,7 +25,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.artravel.AttractionsRC.OnPlaceItemClickListener
 import com.example.artravel.AttractionsRC.PlaceAdapter
-import com.example.artravel.FavoritesActivity
 import com.example.artravel.R
 import com.example.artravel.constants.Constants
 import com.example.artravel.database.DBPlace
@@ -50,7 +47,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.ByteArrayOutputStream
 import java.io.IOException
-import java.lang.reflect.Type
 import java.net.URL
 
 
@@ -114,7 +110,6 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
         // Inflate the layout for this fragment
         val view: View = inflater.inflate(R.layout.fragment_attractions, container, false)
 
-
         sendNetworkRequests()
         placesList = ArrayList()
         Log.d("Lifecycle", "onCreateView")
@@ -122,8 +117,7 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
         recyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.addItemDecoration(DividerItemDecoration(activity, 1))
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = PlaceAdapter(placesList, this)
-
+        recyclerView.adapter = PlaceAdapter(requireContext(), placesList, this)
 
         return view
     }
@@ -448,8 +442,10 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_favorites -> {
-                val intent = Intent(activity, FavoritesActivity::class.java)
-                startActivity(intent)
+//                val intent = Intent(activity, FavoritesActivity::class.java)
+//                startActivity(intent)
+
+                findNavController().navigate(R.id.action_attractionsFragment_to_favouritesFragment)
                 true
             }
             else -> super.onOptionsItemSelected(item)

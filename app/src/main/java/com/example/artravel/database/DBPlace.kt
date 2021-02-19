@@ -15,5 +15,4 @@ data class DBPlace(
     var desc: String?,
     var lat: String?,
     var lng: String?
-
 )

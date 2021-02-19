@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_attractionsFragment_to_attractionsDetailFragment"
             app:destination="@id/attractionsDetailFragment" />
+        <action
+            android:id="@+id/action_attractionsFragment_to_favouritesFragment"
+            app:destination="@id/favouritesFragment" />
     </fragment>
 
     <fragment
@@ -49,6 +52,9 @@
         <action
             android:id="@+id/action_attractionsDetailFragment_to_attractionsDrawRoute"
             app:destination="@id/attractionsDrawRoute" />
+        <action
+            android:id="@+id/action_attractionsDetailFragment_to_favouritesFragment"
+            app:destination="@id/favouritesFragment" />
     </fragment>
     <fragment
         android:id="@+id/attractionsDrawRoute"
@@ -57,6 +63,18 @@
         tools:layout="@layout/fragment_attractions_draw_route" >
         <action
             android:id="@+id/action_attractionsDrawRoute_to_attractionsDetailFragment"
+            app:destination="@id/attractionsDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/favouritesFragment"
+        android:name="com.example.artravel.favourites.FavouritesFragment"
+        android:label="@string/title_activity_favourites_activity"
+        tools:layout="@layout/fragment_favourites">
+        <action
+            android:id="@+id/action_favouritesFragment_to_attractionsFragment"
+            app:destination="@id/attractionsFragment" />
+        <action
+            android:id="@+id/action_favouritesFragment_to_attractionsDetailFragment"
             app:destination="@id/attractionsDetailFragment" />
     </fragment>
 </navigation>

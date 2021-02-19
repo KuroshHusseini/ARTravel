@@ -35,7 +35,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ARTravel">
-        <activity android:name=".FavoritesActivity" />
+        <activity android:name=".FavoritesActivity"
+            android:label="@string/title_activity_favourites_activity"/>
 <!--        android:requestLegacyExternalStorage="true"-->
 
         <provider
