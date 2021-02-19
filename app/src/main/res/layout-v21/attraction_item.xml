@@ -26,7 +26,8 @@
                 android:adjustViewBounds="true"
                 android:elevation="10dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/ic_place_holder" />
+                android:src="@drawable/ic_place_holder"
+                android:contentDescription="@string/iv_desc_atd" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -45,7 +46,6 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="name"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
                         android:textStyle="bold" />
 
@@ -54,7 +54,9 @@
                         android:layout_width="35dp"
                         android:layout_height="35dp"
                         android:clickable="true"
-                        android:src="@drawable/ic_baseline_favorite_24" />
+                        android:src="@drawable/ic_baseline_favorite_24"
+                        android:focusable="true"
+                        android:contentDescription="@string/iv_favorites_btn" />
                 </LinearLayout>
 
                 <TextView
@@ -64,7 +66,6 @@
                     android:layout_marginTop="@dimen/card_view_marginTop"
                     android:ellipsize="end"
                     android:maxLines="5"
-                    android:text="desc"
                     android:textSize="15sp" />
             </LinearLayout>
         </androidx.appcompat.widget.LinearLayoutCompat>

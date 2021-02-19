@@ -311,7 +311,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/sunrise_marginTop"
                     android:orientation="vertical"
-                    tools:ignore="RtlCompat">
+                    tools:ignore="RtlCompat,UseCompoundDrawables">
 
                     <ImageView
                         android:id="@+id/iv_sunrise"
@@ -336,7 +336,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/sunset_marginStart"
                     android:orientation="vertical"
-                    tools:ignore="RtlCompat">
+                    tools:ignore="RtlCompat,UseCompoundDrawables">
 
                     <ImageView
                         android:id="@+id/iv_sunset"

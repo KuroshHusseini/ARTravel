@@ -64,4 +64,7 @@
     <string name="get_string">Photo saved</string>
     <string name="routing_failed">Routing failed!</string>
     <string name="finding_routing">Finding Route&#8230;</string>
+    <string name="iv_desc_atd">Image of a place</string>
+    <string name="iv_favorites_btn">Favorites button</string>
+    <string name="failed_to_copy_pixels">Failed to copy pixels!</string>
 </resources>

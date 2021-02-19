@@ -4,7 +4,6 @@
     <dimen name="progress_bar_size">50dp</dimen>
     <dimen name="progress_bar_marginEnd">10dp</dimen>
     <dimen name="progress_bar_text_size">16sp</dimen>
-
     <dimen name="main_screen_content_padding">16dp</dimen>
     <dimen name="card_view_marginStartEnd">5dp</dimen>
     <dimen name="card_view_marginTop">16dp</dimen>

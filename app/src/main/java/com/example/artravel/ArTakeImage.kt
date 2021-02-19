@@ -53,7 +53,6 @@ class ArTakeImage : AppCompatActivity() {
             "https://raw.githubusercontent.com/thelockymichael/gltf-Sample_models/main/2.0/wallsOfChina004_lego.gltf"
         private var TAJ_MAHAL_URL: String =
             "https://raw.githubusercontent.com/thelockymichael/gltf-Sample_models/main/2.0/tajMahal001_lego.gltf"
-
     }
 
     // Model
