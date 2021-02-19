@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/attractionsFragment"
-        android:name="com.example.artravel.fragments.AttractionsFragment"
+        android:name="com.example.artravel.fragments.list.AttractionsFragment"
         android:label="Attractions"
         tools:layout="@layout/fragment_attractions" >
         <action
@@ -67,7 +67,7 @@
     </fragment>
     <fragment
         android:id="@+id/favouritesFragment"
-        android:name="com.example.artravel.favourites.FavouritesFragment"
+        android:name="com.example.artravel.fragments.list.FavouritesFragment"
         android:label="@string/title_activity_favourites_activity"
         tools:layout="@layout/fragment_favourites">
         <action

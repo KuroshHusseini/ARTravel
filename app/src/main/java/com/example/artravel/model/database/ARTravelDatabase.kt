@@ -1,4 +1,4 @@
-package com.example.artravel.favourites
+package com.example.artravel.model.database
 
 import android.content.Context
 import android.util.Log
@@ -7,20 +7,23 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.artravel.Converters
-import com.example.artravel.database.DBPlace
+import com.example.artravel.model.dao.AttractionDao
+import com.example.artravel.model.entity.DBPlace
+import com.example.artravel.model.dao.FavouritesDao
+import com.example.artravel.model.entity.DBAttraction
 
-@Database(entities = [DBPlace::class], version = 1, exportSchema = false)
+@Database(entities = [DBPlace::class, DBAttraction::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
-abstract class FavouritesDatabase : RoomDatabase() {
-    
+abstract class ARTravelDatabase : RoomDatabase() {
+
     abstract fun favouriteDao(): FavouritesDao
-//    abstract fun contactDao(): ContactInfoDao
+    abstract fun attractionDao(): AttractionDao
 
     companion object {
         @Volatile
-        private var INSTANCE: FavouritesDatabase? = null
+        private var INSTANCE: ARTravelDatabase? = null
 
-        fun getDatabase(context: Context): FavouritesDatabase {
+        fun getDatabase(context: Context): ARTravelDatabase {
             val tempInstance = INSTANCE
             Log.d("DBG", "tempInstance = INSTANCE")
 
@@ -39,8 +42,8 @@ abstract class FavouritesDatabase : RoomDatabase() {
             synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
-                    FavouritesDatabase::class.java,
-                    "favourites_database"
+                    ARTravelDatabase::class.java,
+                    "database.db"
                 ).build()
                 INSTANCE = instance
                 return instance
