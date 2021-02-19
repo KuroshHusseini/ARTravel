@@ -18,10 +18,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.example.artravel.ArTakeImage
 import com.example.artravel.R
-
 import com.example.artravel.constants.Constants
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -40,9 +38,10 @@ import kotlinx.android.synthetic.main.fragment_maps.*
 import java.util.*
 
 class MapsFragment : Fragment() {
-
-    val GOOGLE_API_KEY = Constants.GOOGLE_API_KEY
-
+    companion object {
+        val GOOGLE_API_KEY = Constants.GOOGLE_API_KEY
+        private const val LOCATION_PERMISSION_REQUEST = 1
+    }
     /*
     * Likely Places
     * */
@@ -52,30 +51,15 @@ class MapsFragment : Fragment() {
     private lateinit var likelyPlaceLatLngs: Array<LatLng?>
 
     private lateinit var map: GoogleMap
-
-    private val LOCATION_PERMISSION_REQUEST = 1
-
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationCallback: LocationCallback
 
     // Place Detection Client
-
     private lateinit var placesClient: PlacesClient
-
-
     private val callback = OnMapReadyCallback { googleMap ->
-        /**
-         * Manipulates the map once available.
-         * This callback is triggered when the map is ready to be used.
-         * This is where we can add markers or lines, add listeners or move the camera.
-         * If Google Play services is not installed on the device, the user will be prompted to
-         * install it inside the SupportMapFragment. This method will only be triggered once the
-         * user has installed Google Play services and returned to the app.
-         */
         map = googleMap
         getLocationAccess()
-
         // Use a custom info window adapter to handle multiple lines of text in the
         // info window contents.
         this.map.setInfoWindowAdapter(object : GoogleMap.InfoWindowAdapter {
@@ -98,7 +82,6 @@ class MapsFragment : Fragment() {
             }
         })
     }
-
     private fun getLocationAccess() {
         if (ContextCompat.checkSelfPermission(
                 requireContext(),
@@ -122,7 +105,6 @@ class MapsFragment : Fragment() {
                 LOCATION_PERMISSION_REQUEST
             )
     }
-
     @SuppressLint("MissingPermission")
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -142,35 +124,25 @@ class MapsFragment : Fragment() {
             }
         }
     }
-
     private fun getLocationUpdates() {
         locationRequest = LocationRequest()
         locationRequest.interval = 30000
         locationRequest.fastestInterval = 20000
         locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-
         locationCallback = object : LocationCallback() {
-
             override fun onLocationResult(locationResult: LocationResult) {
                 // Geocode user location address
                 val addresses: List<Address>
-
                 activity ?: return
                 val geocoder = Geocoder(activity!!.application, Locale.getDefault())
-
                 if (locationResult.locations.isNotEmpty()) {
                     val location = locationResult.lastLocation
-
                     if (location != null) {
                         val latLng = LatLng(location.latitude, location.longitude)
-
                         addresses =
                             geocoder.getFromLocation(location.latitude, location.longitude, 1)
-
                         val address: String = addresses[0].getAddressLine(0)
-
                         Log.d("DBG", address)
-
                         map.addMarker(
                             MarkerOptions().position(latLng).title("You are here.")
                                 .icon(
@@ -189,7 +161,6 @@ class MapsFragment : Fragment() {
             }
         }
     }
-
     @SuppressLint("MissingPermission")
     private fun startLocationUpdates() {
         fusedLocationClient.requestLocationUpdates(
@@ -201,7 +172,7 @@ class MapsFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.current_place_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater);
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -217,11 +188,10 @@ class MapsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_maps, container, false)
-        setHasOptionsMenu(true);
+        setHasOptionsMenu(true)
 
         return view
     }
-
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -247,23 +217,16 @@ class MapsFragment : Fragment() {
 
     @SuppressLint("MissingPermission")
     private fun showCurrentPlace() {
-        if (map == null) {
-            return
-        }
-
         // Use fields to define the data types to return.
         val placeFields = listOf(Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG)
-
         // Use the builder to create a FindCurrentPlaceRequest.
         val request = FindCurrentPlaceRequest.newInstance(placeFields)
-
         // Get the likely places - that is, the businesses and other points of interest that
         // are the best match for the device's current location.
         val placeResult = placesClient.findCurrentPlace(request)
         placeResult.addOnCompleteListener { task ->
             if (task.isSuccessful && task.result != null) {
                 val likelyPlaces = task.result
-
                 // Set the count, handling cases where less than 5 entries are returned.
                 val count = if (likelyPlaces != null && likelyPlaces.placeLikelihoods.size < 5) {
                     likelyPlaces.placeLikelihoods.size
@@ -286,7 +249,6 @@ class MapsFragment : Fragment() {
                         break
                     }
                 }
-
                 // Show a dialog offering the user the list of likely places, and add a
                 // marker at the selected place.
                 openPlacesDialog()
@@ -299,7 +261,7 @@ class MapsFragment : Fragment() {
     private fun openPlacesDialog() {
         // Ask the user to choose the place where they are now.
         val listener =
-            DialogInterface.OnClickListener { dialog, which -> // The "which" argument contains the position of the selected item.
+            DialogInterface.OnClickListener { _, which -> // The "which" argument contains the position of the selected item.
                 val markerLatLng = likelyPlaceLatLngs[which]
                 var markerSnippet = likelyPlaceAddresses[which]
                 if (likelyPlaceAttributions[which] != null) {
@@ -308,7 +270,6 @@ class MapsFragment : Fragment() {
                 ${likelyPlaceAttributions[which]}
                 """.trimIndent()
                 }
-
                 // Add a marker for the selected place, with an info window
                 // showing information about that place.
                 map.addMarker(
@@ -317,7 +278,6 @@ class MapsFragment : Fragment() {
                         .position(markerLatLng!!)
                         .snippet(markerSnippet)
                 )
-
                 // Position the map's camera at the location of the marker.
                 map.moveCamera(
                     CameraUpdateFactory.newLatLngZoom(
@@ -332,7 +292,6 @@ class MapsFragment : Fragment() {
             .setItems(likelyPlaceNames, listener)
             .show()
     }
-
     fun resizeMapIcons(iconName: String?, width: Int, height: Int): Bitmap? {
         val imageBitmap = BitmapFactory.decodeResource(
             resources,
