@@ -60,6 +60,7 @@
     <string name="colosseum">Colosseum</string>
     <string name="title_activity_take_image">Take image</string>
     <string name="hide_ui">Hide UI</string>
+    <string name="takes_you_to_AR_view">This Button will take you to AR view</string>
 
 
 </resources>

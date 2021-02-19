@@ -35,7 +35,6 @@ abstract class FavouritesDatabase : RoomDatabase() {
             * locks, only 1 instance of the database
             * runs on a seperate thread than main
             * */
-
             synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
