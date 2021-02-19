@@ -62,8 +62,6 @@
     <string name="hide_ui">Hide UI</string>
     <string name="takes_you_to_AR_view">This Button will take you to AR view</string>
     <string name="get_string">Photo saved</string>
-    <string name="failed_to_copy_pixels">Failed to copyPixels:</string>
-    <string name="failed_to_copy_pixels">Failed to copyPixels:</string>
-
-
+    <string name="routing_failed">Routing failed!</string>
+    <string name="finding_routing">Finding Route&#8230;</string>
 </resources>
