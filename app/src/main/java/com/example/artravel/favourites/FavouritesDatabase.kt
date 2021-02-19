@@ -12,10 +12,7 @@ import com.example.artravel.database.DBPlace
 @Database(entities = [DBPlace::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class FavouritesDatabase : RoomDatabase() {
-    
     abstract fun favouriteDao(): FavouritesDao
-//    abstract fun contactDao(): ContactInfoDao
-
     companion object {
         @Volatile
         private var INSTANCE: FavouritesDatabase? = null
@@ -27,14 +24,7 @@ abstract class FavouritesDatabase : RoomDatabase() {
             if (tempInstance != null) {
                 return tempInstance
             }
-
             Log.d("DBG", "tempInstance is not NULL")
-
-            /*@Synchronized
-            *
-            * locks, only 1 instance of the database
-            * runs on a seperate thread than main
-            * */
             synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,

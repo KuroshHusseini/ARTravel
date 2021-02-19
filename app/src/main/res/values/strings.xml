@@ -61,6 +61,9 @@
     <string name="title_activity_take_image">Take image</string>
     <string name="hide_ui">Hide UI</string>
     <string name="takes_you_to_AR_view">This Button will take you to AR view</string>
+    <string name="get_string">Photo saved</string>
+    <string name="failed_to_copy_pixels">Failed to copyPixels:</string>
+    <string name="failed_to_copy_pixels">Failed to copyPixels:</string>
 
 
 </resources>

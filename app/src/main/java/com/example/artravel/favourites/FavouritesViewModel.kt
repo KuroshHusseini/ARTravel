@@ -12,10 +12,9 @@ class FavouritesViewModel (application: Application) : AndroidViewModel(
     application
 ) {
     val readAllData: LiveData<List<DBPlace>>
-    val repository: FavouritesRepository
+    private val repository: FavouritesRepository
 
     init {
-
         val favouritesDao = FavouritesDatabase.getDatabase(application).favouriteDao()
         repository = FavouritesRepository(favouritesDao)
         readAllData = repository.readAllData

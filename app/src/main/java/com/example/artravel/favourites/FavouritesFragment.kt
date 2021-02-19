@@ -17,21 +17,15 @@ import java.io.ByteArrayOutputStream
 
 
 class FavouritesFragment : Fragment(), OnPlaceItemClickListener {
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_favourites, container, false)
-
-
-        return view
+        return inflater.inflate(R.layout.fragment_favourites, container, false)
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         // FavouritesViewModel
         val ump = ViewModelProviders.of(this).get(FavouritesViewModel::class.java)
         ump.readAllData.observe(this, {
@@ -41,32 +35,23 @@ class FavouritesFragment : Fragment(), OnPlaceItemClickListener {
                     that.name
                 }, this
             )
-
             recycler_view.layoutManager = LinearLayoutManager(requireContext())
-
         })
     }
-
     override fun onItemClick(item: DBPlace, position: Int) {
-
-        var bundle = Bundle()
-
+        val bundle = Bundle()
         bundle.putString("name", item.name)
-
         // Compress Bitmap as bytearray and uncompress in Detail Activity
-        var stream = ByteArrayOutputStream()
+        val stream = ByteArrayOutputStream()
         item.image?.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-        var bytes: ByteArray = stream.toByteArray()
-
+        val bytes: ByteArray = stream.toByteArray()
         bundle.putByteArray("bytes", bytes)
 
         if (item.desc != null) {
             bundle.putString("description", item.desc)
         }
-
         bundle.putString("lat", item.lat)
         bundle.putString("lon", item.lng)
-
         findNavController().navigate(
             R.id.action_favouritesFragment_to_attractionsDetailFragment,
             bundle

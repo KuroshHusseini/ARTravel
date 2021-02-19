@@ -13,7 +13,6 @@ import android.view.PixelCopy
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.view.isGone
 import com.google.android.material.slider.RangeSlider
 import com.google.ar.core.HitResult
 import com.google.ar.core.Plane
@@ -36,96 +35,33 @@ import java.io.IOException
 import java.io.OutputStream
 
 
+@Suppress("DEPRECATION")
 class ArTakeImage : AppCompatActivity() {
-
     private lateinit var arFragment: ArFragment
-
     private var anchorNode: AnchorNode? = null
-
     private var selectedNode: TransformableNode? = null
     private var selectedRenderable: ModelRenderable? = null
 
-
-    /*
-    *   SceneView
-    * */
     private lateinit var sceneView: SceneView
 
+    companion object {
+        private var PYRAMID_URL: String =
+            "https://raw.githubusercontent.com/thelockymichael/gltf-Sample_models/main/2.0/PUSHILIN_pyramid.gltf"
+        private var COLOSSEUM_URL: String =
+            "https://raw.githubusercontent.com/thelockymichael/gltf-Sample_models/main/2.0/colosseum002.gltf"
+        private var WALLS_CHINA: String =
+            "https://raw.githubusercontent.com/thelockymichael/gltf-Sample_models/main/2.0/wallsOfChina004_lego.gltf"
+        private var TAJ_MAHAL_URL: String =
+            "https://raw.githubusercontent.com/thelockymichael/gltf-Sample_models/main/2.0/tajMahal001_lego.gltf"
 
-    /*
-    *
-    * Pyramid URL and Model
-    *
-    * */
-
-    private var PYRAMID_URL: String =
-        "https://raw.githubusercontent.com/thelockymichael/gltf-Sample_models/main/2.0/PUSHILIN_pyramid.gltf"
-
+    }
 
     // Model
     private var pyramidRenderable: ModelRenderable? = null
-
-    /*
-    *
-    * END
-    *
-    * */
-
-    /*
-    *
-    * Duck URL and Model
-    *
-    * */
-
-    private var COLOSSEUM_URL: String =
-        "https://raw.githubusercontent.com/thelockymichael/gltf-Sample_models/main/2.0/colosseum002.gltf"
-
-
-    // Model
     private var colosseumRenderable: ModelRenderable? = null
-
-    /*
-    *
-    * END
-    *
-    * */
-
-    /*
-    *
-    * Pyramid URL and Model
-    *
-    * */
-
-    private var WALLS_CHINA: String =
-        "https://raw.githubusercontent.com/thelockymichael/gltf-Sample_models/main/2.0/wallsOfChina004_lego.gltf"
-//    private var foxNode: TransformableNode? = null
-
-    // Model
     private var wallsOfChinaRenderable: ModelRenderable? = null
-
-    /*
-    *
-    * END
-    *
-    * */
-
-    /*
-    *
-    * Pyramid URL and Model
-    *
-    * */
-
-    private var TAJ_MAHAL_URL: String =
-        "https://raw.githubusercontent.com/thelockymichael/gltf-Sample_models/main/2.0/tajMahal001_lego.gltf"
-
-    // Model
     private var tajMahalRenderable: ModelRenderable? = null
 
-    /*
-    *
-    * END
-    *
-    * */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ar_take_image)
@@ -157,7 +93,7 @@ class ArTakeImage : AppCompatActivity() {
             }
         })
 
-        modelSizeSlider.addOnChangeListener { slider, value, fromUser ->
+        modelSizeSlider.addOnChangeListener { _, value, _ ->
 
             Log.d("From", value.toString())
             Log.d("From", "pyramid $pyramidRenderable")
@@ -209,47 +145,33 @@ class ArTakeImage : AppCompatActivity() {
         }
     }
 
-    /*
-*
-*   Capture Image
-*
-* */
 
+    // Capture Image
     private fun takePicture() {
-        var view: ArSceneView = arFragment.arSceneView
-
+        val view: ArSceneView = arFragment.arSceneView
         // Create a bitmap the size of the scene view.
         val bitmap: Bitmap = Bitmap.createBitmap(
             sceneView?.width, sceneView?.height,
             Bitmap.Config.ARGB_8888
         )
-
         // Create a handler thread to offload the processing of the image.
         val handlerThread = HandlerThread("PixelCopier")
-
         handlerThread.start()
-
         // Make the request to copy.
 
         PixelCopy.request(view, bitmap, { copyResult ->
-
             if (copyResult == PixelCopy.SUCCESS) {
-
                 try {
                     saveMediaToStorage(bitmap)
                 } catch (e: IOException) {
-
                     Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show()
                     return@request
                 }
-
-                Toast.makeText(this, "Photo saved", Toast.LENGTH_SHORT).show()
-
-
+                Toast.makeText(this, getString(R.string.get_string), Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(
                     this,
-                    "Failed to copyPixels: " + copyResult, Toast.LENGTH_LONG
+                    getString(R.string.failed_to_copy_pixels) + copyResult, Toast.LENGTH_LONG
                 ).show()
             }
 
@@ -355,12 +277,9 @@ class ArTakeImage : AppCompatActivity() {
                 .build()
                 .thenAccept { renderable: ModelRenderable ->
                     colosseumRenderable = renderable
-
                     selectedRenderable = colosseumRenderable
-
                     Log.d("Finishus", "finished duck $colosseumRenderable")
                     Log.d("Finishus", "finished duck $colosseumRenderable")
-
                 }
                 .exceptionally {
                     Log.i("Model", "cant load")
@@ -425,28 +344,24 @@ class ArTakeImage : AppCompatActivity() {
     }
 
     private fun setUpPlane() {
-        arFragment.setOnTapArPlaneListener { hitResult: HitResult, plane: Plane?, motionEvent: MotionEvent? ->
+        arFragment.setOnTapArPlaneListener { hitResult: HitResult, _: Plane?, _: MotionEvent? ->
             val anchor = hitResult.createAnchor()
             anchorNode =
                 AnchorNode(anchor)
             anchorNode?.setParent(arFragment.arSceneView.scene)
-
             detectPlane(anchorNode)
         }
     }
 
     private fun detectPlane(anchorNode: AnchorNode?) {
-
         if (selectedRenderable?.equals(pyramidRenderable) == true) {
             Log.d("Finishus", "This is a pyramid")
         }
-
         // Create the Transformable model
         selectedNode = TransformableNode(arFragment.transformationSystem)
         selectedNode!!.setParent(anchorNode)
         selectedNode!!.renderable = selectedRenderable
-        selectedNode!!.setOnTapListener { hitTestResult, motionEvent ->
-
+        selectedNode!!.setOnTapListener { _, _ ->
             // Add OnTap listener to 3D model
             Toast.makeText(this, "Model was touched", Toast.LENGTH_SHORT).show()
             arFragment.arSceneView.scene.removeChild(anchorNode)
