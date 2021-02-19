@@ -54,14 +54,9 @@ import java.net.URL
 
 @Suppress("UNREACHABLE_CODE", "DEPRECATION")
 class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
-<<<<<<< HEAD:app/src/main/java/com/example/artravel/fragments/AttractionsFragment.kt
     companion object {
         private val OPEN_TRIP_MAP_API_KEY = Constants.OPEN_TRIP_MAP_API_KEY
     }
-=======
-
-    private val OPEN_TRIP_MAP_API_KEY = Constants.OPEN_TRIP_MAP_API_KEY
->>>>>>> 6d944558bdb5ed1dce663805791705d2d443c1a1:app/src/main/java/com/example/artravel/fragments/list/AttractionsFragment.kt
 
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private var mProgressDialog: Dialog? = null
@@ -107,22 +102,6 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-<<<<<<< HEAD:app/src/main/java/com/example/artravel/fragments/AttractionsFragment.kt
-        val view: View = inflater.inflate(R.layout.fragment_attractions, container, false)
-        sendNetworkRequests()
-        placesList = ArrayList()
-        Log.d("Lifecycle", "onCreateView")
-        recyclerView = view.findViewById(R.id.recycler_view)
-        recyclerView.addItemDecoration(DividerItemDecoration(activity, 1))
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = PlaceAdapter(requireContext(), placesList, this)
-        return view
-    }
-
-    private var disposable: Disposable? = null
-    override fun onItemClick(item: DBPlace, position: Int) {
-        val bundle = Bundle()
-=======
 
         return inflater.inflate(R.layout.fragment_attractions, container, false)
     }
@@ -155,7 +134,6 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
 
         var bundle = Bundle()
 
->>>>>>> 6d944558bdb5ed1dce663805791705d2d443c1a1:app/src/main/java/com/example/artravel/fragments/list/AttractionsFragment.kt
         bundle.putString("name", item.name)
         // Compress Bitmap as bytearray and uncompress in Detail Activity
         val stream = ByteArrayOutputStream()
@@ -351,9 +329,6 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
         }
     }
     private suspend fun updateUi(dataResponses: MutableList<PlaceInfoResponse>) {
-<<<<<<< HEAD:app/src/main/java/com/example/artravel/fragments/AttractionsFragment.kt
-        val value = GlobalScope.async {
-=======
 
 
         GlobalScope.launch {
@@ -363,7 +338,6 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
 
         GlobalScope.async {
 
->>>>>>> 6d944558bdb5ed1dce663805791705d2d443c1a1:app/src/main/java/com/example/artravel/fragments/list/AttractionsFragment.kt
             for (dataResponse in dataResponses) {
                 val url: URL = if (dataResponse.preview?.source == null) {
                     URL("https://cdn-a.william-reed.com/var/wrbm_gb_food_pharma/storage/images/9/2/8/5/235829-6-eng-GB/Feed-Test-SIC-Feed-20142_news_large.jpg")
@@ -378,18 +352,6 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
                     "DEBUG",
                     "${dataResponse.name}: ${dataResponse.point.lat} ${dataResponse.point.lon}"
                 )
-<<<<<<< HEAD:app/src/main/java/com/example/artravel/fragments/AttractionsFragment.kt
-                placesList.add(
-                    DBPlace(
-                        0,
-                        dataResponse.name,
-                        bitmap,
-                        dataResponse?.wikipedia_extracts?.text,
-                        dataResponse.point.lat,
-                        dataResponse.point.lon
-                    )
-                )
-=======
 
 
                 GlobalScope.launch {
@@ -417,7 +379,6 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
 //                        dataResponse.point.lon
 //                    )
 //                )
->>>>>>> 6d944558bdb5ed1dce663805791705d2d443c1a1:app/src/main/java/com/example/artravel/fragments/list/AttractionsFragment.kt
 
                 Log.d(
                     "DEBUG", "${dataResponse.name},\n" +
@@ -426,21 +387,6 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
                             "${dataResponse.point.lat},\n" +
                             dataResponse.point.lon
                 )
-<<<<<<< HEAD:app/src/main/java/com/example/artravel/fragments/AttractionsFragment.kt
-            }
-        }
-        Log.d("PERKELE!", value.await().toString())
-        print(value.await())
-        recyclerView.adapter?.notifyDataSetChanged()
-        hideProgressDialog()
-        val sharedPreferences = activity?.getSharedPreferences("placesList", Context.MODE_PRIVATE)
-        val editor = sharedPreferences?.edit()
-        val gson = Gson()
-        val json = gson.toJson(placesList)
-        editor?.putString("placesList", json)
-        editor?.apply()
-        Log.d("PERKELE!", json)
-=======
 //
 //                recycler_view.adapter?.notifyDataSetChanged()
 //
@@ -449,7 +395,6 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
         }
 
         hideProgressDialog()
->>>>>>> 6d944558bdb5ed1dce663805791705d2d443c1a1:app/src/main/java/com/example/artravel/fragments/list/AttractionsFragment.kt
     }
 
     private fun setupUI(dataResponses: MutableList<PlaceInfoResponse>) {

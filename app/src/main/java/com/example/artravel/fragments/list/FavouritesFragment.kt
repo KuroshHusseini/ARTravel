@@ -40,10 +40,6 @@ class FavouritesFragment : Fragment(), OnPlaceItemClickListener {
             recycler_view.layoutManager = LinearLayoutManager(requireContext())
         })
     }
-<<<<<<< HEAD:app/src/main/java/com/example/artravel/favourites/FavouritesFragment.kt
-    override fun onItemClick(item: DBPlace, position: Int) {
-        val bundle = Bundle()
-=======
 
     override fun onItemClick(item: Any, position: Int) {
 
@@ -51,7 +47,6 @@ class FavouritesFragment : Fragment(), OnPlaceItemClickListener {
 
         var bundle = Bundle()
 
->>>>>>> 6d944558bdb5ed1dce663805791705d2d443c1a1:app/src/main/java/com/example/artravel/fragments/list/FavouritesFragment.kt
         bundle.putString("name", item.name)
         // Compress Bitmap as bytearray and uncompress in Detail Activity
         val stream = ByteArrayOutputStream()

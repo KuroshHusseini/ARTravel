@@ -22,12 +22,8 @@ class FavouritesAdapter(
     private var clickListener: OnPlaceItemClickListener
 ) :
     RecyclerView.Adapter<FavouritesAdapter.MyViewHolder>() {
-<<<<<<< HEAD:app/src/main/java/com/example/artravel/favourites/FavouritesAdapter.kt
-    private val favouritesDatabase by lazy { FavouritesDatabase.getDatabase(context) }
-=======
 
     private val favouritesDatabase by lazy { ARTravelDatabase.getDatabase(context) }
->>>>>>> 6d944558bdb5ed1dce663805791705d2d443c1a1:app/src/main/java/com/example/artravel/fragments/list/FavouritesAdapter.kt
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 

@@ -20,14 +20,6 @@ import kotlinx.coroutines.launch
 
 class PlaceAdapter(
     var context: Context,
-<<<<<<< HEAD:app/src/main/java/com/example/artravel/AttractionsRC/PlaceAdapter.kt
-    private var items: ArrayList<DBPlace>,
-    private var clickListener: OnPlaceItemClickListener
-) :
-    RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder>() {
-    //Favourites Database
-    private val favouritesDatabase by lazy { FavouritesDatabase.getDatabase(context) }
-=======
     var items: List<DBAttraction>,
     var clickListener: OnPlaceItemClickListener
 ) :
@@ -39,7 +31,6 @@ class PlaceAdapter(
 
     private val favouritesDatabase by lazy { ARTravelDatabase.getDatabase(context) }
 
->>>>>>> 6d944558bdb5ed1dce663805791705d2d443c1a1:app/src/main/java/com/example/artravel/fragments/list/PlaceAdapter.kt
     inner class PlaceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaceViewHolder {
         return PlaceViewHolder(
