@@ -1,4 +1,4 @@
-package com.example.artravel.favourites
+package com.example.artravel.fragments.list
 
 import android.app.AlertDialog
 import android.content.Context
@@ -10,7 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.artravel.AttractionsRC.OnPlaceItemClickListener
 import com.example.artravel.R
-import com.example.artravel.database.DBPlace
+import com.example.artravel.model.entity.DBPlace
+import com.example.artravel.model.database.ARTravelDatabase
 import kotlinx.android.synthetic.main.attraction_item.view.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -21,7 +22,12 @@ class FavouritesAdapter(
     private var clickListener: OnPlaceItemClickListener
 ) :
     RecyclerView.Adapter<FavouritesAdapter.MyViewHolder>() {
+<<<<<<< HEAD:app/src/main/java/com/example/artravel/favourites/FavouritesAdapter.kt
     private val favouritesDatabase by lazy { FavouritesDatabase.getDatabase(context) }
+=======
+
+    private val favouritesDatabase by lazy { ARTravelDatabase.getDatabase(context) }
+>>>>>>> 6d944558bdb5ed1dce663805791705d2d443c1a1:app/src/main/java/com/example/artravel/fragments/list/FavouritesAdapter.kt
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 

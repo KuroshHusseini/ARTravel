@@ -1,4 +1,4 @@
-package com.example.artravel.AttractionsRC
+package com.example.artravel.fragments.list
 
 
 import android.app.AlertDialog
@@ -9,21 +9,37 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.example.artravel.favourites.FavouritesDatabase
+import com.example.artravel.AttractionsRC.OnPlaceItemClickListener
+import com.example.artravel.model.database.ARTravelDatabase
 import com.example.artravel.R
-import com.example.artravel.database.DBPlace
+import com.example.artravel.model.entity.DBAttraction
+import com.example.artravel.model.entity.DBPlace
 import kotlinx.android.synthetic.main.attraction_item.view.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class PlaceAdapter(
     var context: Context,
+<<<<<<< HEAD:app/src/main/java/com/example/artravel/AttractionsRC/PlaceAdapter.kt
     private var items: ArrayList<DBPlace>,
     private var clickListener: OnPlaceItemClickListener
 ) :
     RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder>() {
     //Favourites Database
     private val favouritesDatabase by lazy { FavouritesDatabase.getDatabase(context) }
+=======
+    var items: List<DBAttraction>,
+    var clickListener: OnPlaceItemClickListener
+) :
+    RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder>() {
+
+    /*
+    *  Favourites Database
+    * */
+
+    private val favouritesDatabase by lazy { ARTravelDatabase.getDatabase(context) }
+
+>>>>>>> 6d944558bdb5ed1dce663805791705d2d443c1a1:app/src/main/java/com/example/artravel/fragments/list/PlaceAdapter.kt
     inner class PlaceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaceViewHolder {
         return PlaceViewHolder(

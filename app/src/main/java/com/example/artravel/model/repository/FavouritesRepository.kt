@@ -1,7 +1,8 @@
-package com.example.artravel.favourites
+package com.example.artravel.model.repository
 
 import androidx.lifecycle.LiveData
-import com.example.artravel.database.DBPlace
+import com.example.artravel.model.entity.DBPlace
+import com.example.artravel.model.dao.FavouritesDao
 
 class FavouritesRepository(
     private val FavouritesDao: FavouritesDao

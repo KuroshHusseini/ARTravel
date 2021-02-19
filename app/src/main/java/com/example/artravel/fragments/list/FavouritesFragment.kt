@@ -1,4 +1,4 @@
-package com.example.artravel.favourites
+package com.example.artravel.fragments.list
 
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -11,7 +11,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.artravel.AttractionsRC.OnPlaceItemClickListener
 import com.example.artravel.R
-import com.example.artravel.database.DBPlace
+import com.example.artravel.model.entity.DBAttraction
+import com.example.artravel.model.entity.DBPlace
+import com.example.artravel.model.viewmodel.FavouritesViewModel
 import kotlinx.android.synthetic.main.fragment_favourites.*
 import java.io.ByteArrayOutputStream
 
@@ -38,8 +40,18 @@ class FavouritesFragment : Fragment(), OnPlaceItemClickListener {
             recycler_view.layoutManager = LinearLayoutManager(requireContext())
         })
     }
+<<<<<<< HEAD:app/src/main/java/com/example/artravel/favourites/FavouritesFragment.kt
     override fun onItemClick(item: DBPlace, position: Int) {
         val bundle = Bundle()
+=======
+
+    override fun onItemClick(item: Any, position: Int) {
+
+        var item = item as DBPlace
+
+        var bundle = Bundle()
+
+>>>>>>> 6d944558bdb5ed1dce663805791705d2d443c1a1:app/src/main/java/com/example/artravel/fragments/list/FavouritesFragment.kt
         bundle.putString("name", item.name)
         // Compress Bitmap as bytearray and uncompress in Detail Activity
         val stream = ByteArrayOutputStream()
