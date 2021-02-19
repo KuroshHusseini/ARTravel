@@ -1,7 +1,7 @@
 package com.example.artravel.AttractionsRC
 
-import com.example.artravel.database.DBPlace
+import com.example.artravel.model.entity.DBAttraction
 
 interface OnPlaceItemClickListener {
-    fun onItemClick(item: DBPlace, position: Int)
+    fun onItemClick(item: Any, position: Int)
 }

@@ -1,4 +1,4 @@
-package com.example.artravel.fragments
+package com.example.artravel.fragments.list
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -19,15 +19,17 @@ import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.artravel.AttractionsRC.OnPlaceItemClickListener
-import com.example.artravel.AttractionsRC.PlaceAdapter
 import com.example.artravel.R
 import com.example.artravel.constants.Constants
-import com.example.artravel.database.DBPlace
+import com.example.artravel.model.database.ARTravelDatabase
+import com.example.artravel.model.entity.DBAttraction
+import com.example.artravel.model.viewmodel.AttractionViewModel
 import com.example.artravel.wikipediaPlaces.*
 import com.google.android.gms.location.*
 import com.google.gson.Gson
@@ -42,6 +44,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.attraction_item.*
+import kotlinx.android.synthetic.main.fragment_attractions.*
 import kotlinx.coroutines.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -57,7 +60,10 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
 
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private var mProgressDialog: Dialog? = null
-    private lateinit var placesList: ArrayList<DBPlace>
+
+    //    private lateinit var placesList: ArrayList<DBAttraction>
+    private val attractionsDatabase by lazy { ARTravelDatabase.getDatabase(requireContext()) }
+
     private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -110,23 +116,60 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
         // Inflate the layout for this fragment
         val view: View = inflater.inflate(R.layout.fragment_attractions, container, false)
 
-        sendNetworkRequests()
-        placesList = ArrayList()
-        Log.d("Lifecycle", "onCreateView")
-
-        recyclerView = view.findViewById(R.id.recycler_view)
-        recyclerView.addItemDecoration(DividerItemDecoration(activity, 1))
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = PlaceAdapter(requireContext(), placesList, this)
+//        placesList = ArrayList()
+//        Log.d("Lifecycle", "onCreateView")
+//
+//        recyclerView = view.findViewById(R.id.recycler_view)
+//        recyclerView.addItemDecoration(DividerItemDecoration(activity, 1))
+//        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+//        recyclerView.adapter = PlaceAdapter(requireContext(), placesList, this)
 
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        GlobalScope.launch {
+            attractionsDatabase.attractionDao()
+                .deleteAllAttractions()
+        }
+
+        sendNetworkRequests()
+
+        val ump = ViewModelProviders.of(this).get(AttractionViewModel::class.java)
+
+        ump.readAllData.observe(this, {
+            recycler_view.adapter = PlaceAdapter(
+                requireContext(),
+                it.sortedBy { that ->
+                    that.name
+                }, this
+            )
+
+            recycler_view.layoutManager = LinearLayoutManager(requireContext())
+        })
+
+//        // AttractionsViewModel
+//        val ump = ViewModelProviders.of(this).get(AttractionsViewModel::class.java)
+//
+//        ump.readAllData.observe(this, {
+//            recycler_view.adapter = PlaceAdapter(
+//                requireContext(),
+//                it.sortedBy { that ->
+//                    that.name
+//                }, this
+//            )
+//        })
     }
 
 
     private var disposable: Disposable? = null
 
 
-    override fun onItemClick(item: DBPlace, position: Int) {
+    override fun onItemClick(item: Any, position: Int) {
+
+        var item = item as DBAttraction
 
         var bundle = Bundle()
 
@@ -379,16 +422,32 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
                     "${dataResponse.name}: ${dataResponse.point.lat} ${dataResponse.point.lon}"
                 )
 
-                placesList.add(
-                    DBPlace(
-                        0,
-                        dataResponse.name,
-                        bitmap,
-                        dataResponse?.wikipedia_extracts?.text,
-                        dataResponse.point.lat,
-                        dataResponse.point.lon
-                    )
-                )
+
+                GlobalScope.launch {
+                    attractionsDatabase.attractionDao()
+                        .addAttraction(
+                            DBAttraction(
+                                0,
+                                dataResponse.name,
+                                bitmap,
+                                dataResponse?.wikipedia_extracts?.text,
+                                dataResponse.point.lat,
+                                dataResponse.point.lon
+                            )
+                        )
+                }
+
+
+//                placesList.add(
+//                    DBAttraction(
+//                        0,
+//                        dataResponse.name,
+//                        bitmap,
+//                        dataResponse?.wikipedia_extracts?.text,
+//                        dataResponse.point.lat,
+//                        dataResponse.point.lon
+//                    )
+//                )
 
                 Log.d(
                     "DBG", "${dataResponse.name},\n" +
@@ -397,30 +456,33 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
                             "${dataResponse.point.lat},\n" +
                             "${dataResponse.point.lon}"
                 )
-
-//            recyclerView.adapter?.notifyDataSetChanged()
-
-//            hideProgressDialog()
+//
+//                recycler_view.adapter?.notifyDataSetChanged()
+//
+//                hideProgressDialog()
             }
         }
-        Log.d("PERKELE!", value.await().toString())
-        print(value.await())
-
-        recyclerView.adapter?.notifyDataSetChanged()
 
         hideProgressDialog()
 
-        var sharedPreferences = activity?.getSharedPreferences("placesList", Context.MODE_PRIVATE)
-
-        var editor = sharedPreferences?.edit()
-
-        var gson = Gson()
-
-        var json = gson.toJson(placesList)
-        editor?.putString("placesList", json)
-        editor?.apply()
-
-        Log.d("PERKELE!", json)
+//        Log.d("PERKELE!", value.await().toString())
+//        print(value.await())
+//
+//        recyclerView.adapter?.notifyDataSetChanged()
+//
+//        hideProgressDialog()
+//
+//        var sharedPreferences = activity?.getSharedPreferences("placesList", Context.MODE_PRIVATE)
+//
+//        var editor = sharedPreferences?.edit()
+//
+//        var gson = Gson()
+//
+//        var json = gson.toJson(placesList)
+//        editor?.putString("placesList", json)
+//        editor?.apply()
+//
+//        Log.d("PERKELE!", json)
     }
 
     private fun setupUI(dataResponses: MutableList<PlaceInfoResponse>) {

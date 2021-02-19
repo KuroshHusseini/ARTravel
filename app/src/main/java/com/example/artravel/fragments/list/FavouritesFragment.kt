@@ -1,4 +1,4 @@
-package com.example.artravel.favourites
+package com.example.artravel.fragments.list
 
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -11,7 +11,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.artravel.AttractionsRC.OnPlaceItemClickListener
 import com.example.artravel.R
-import com.example.artravel.database.DBPlace
+import com.example.artravel.model.entity.DBAttraction
+import com.example.artravel.model.entity.DBPlace
+import com.example.artravel.model.viewmodel.FavouritesViewModel
 import kotlinx.android.synthetic.main.fragment_favourites.*
 import java.io.ByteArrayOutputStream
 
@@ -47,7 +49,9 @@ class FavouritesFragment : Fragment(), OnPlaceItemClickListener {
         })
     }
 
-    override fun onItemClick(item: DBPlace, position: Int) {
+    override fun onItemClick(item: Any, position: Int) {
+
+        var item = item as DBPlace
 
         var bundle = Bundle()
 
