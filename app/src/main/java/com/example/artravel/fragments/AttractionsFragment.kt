@@ -298,7 +298,6 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
 
     private fun onResponse(response: WikipediaResponse) {
         // continue working and dispose all subscriptions when the values from the Single objects are not interesting any more
-
         val retrofit = Retrofit.Builder()
             .baseUrl("https://api.opentripmap.com/0.1/en/places/xid/")
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
@@ -306,9 +305,7 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
             .build()
 
         val backendAPI = retrofit.create(MyBackendAPI::class.java)
-
         val requests = ArrayList<Observable<PlaceInfoResponse>>()
-
         for (i in response.features.indices) {
             Log.d("DBG", response.features[i].properties.xid)
 

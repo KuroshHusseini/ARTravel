@@ -13,6 +13,7 @@ import android.view.PixelCopy
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.view.isGone
 import com.google.android.material.slider.RangeSlider
 import com.google.ar.core.HitResult
 import com.google.ar.core.Plane
