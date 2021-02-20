@@ -10,6 +10,9 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.MotionEvent
 import android.view.PixelCopy
+import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -61,6 +64,35 @@ class ArTakeImage : AppCompatActivity() {
     private var wallsOfChinaRenderable: ModelRenderable? = null
     private var tajMahalRenderable: ModelRenderable? = null
 
+    //Animation for floating buttons
+    private val rotateOpen: Animation by lazy {
+        AnimationUtils.loadAnimation(
+            this,
+            R.anim.rotate_open_anim
+        )
+    }
+    private val rotateClose: Animation by lazy {
+        AnimationUtils.loadAnimation(
+            this,
+            R.anim.rotate_close_anim
+        )
+    }
+    private val fromBottom: Animation by lazy {
+        AnimationUtils.loadAnimation(
+            this,
+            R.anim.from_bottom_anim
+        )
+    }
+    private val toBottom: Animation by lazy {
+        AnimationUtils.loadAnimation(
+            this,
+            R.anim.to_bottom_anim
+        )
+    }
+
+    private var clicked = false
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ar_take_image)
@@ -76,7 +108,6 @@ class ArTakeImage : AppCompatActivity() {
         }
 
         setUpPlane()
-
         // RangeSlider
         modelSizeSlider.addOnSliderTouchListener(object :
 
@@ -105,28 +136,27 @@ class ArTakeImage : AppCompatActivity() {
         /*
         *  Setup all the buttons
         * */
+        id_add_button.setOnClickListener {
+            onAddButtonClicked()
+        }
 
         selectPyramid_btn.setOnClickListener {
             selectedRenderable = pyramidRenderable
-
             Log.d("Finishus", "pyramid $selectedRenderable")
         }
 
         selectColosseum_btn.setOnClickListener {
             selectedRenderable = colosseumRenderable
-
             Log.d("Finishus", "collosseum $selectedRenderable")
         }
 
         selectWallsOfChina_btn.setOnClickListener {
             selectedRenderable = wallsOfChinaRenderable
-
             Log.d("Finishus", "walls $selectedRenderable")
         }
 
         selectTajMahal_btn.setOnClickListener {
             selectedRenderable = tajMahalRenderable
-
             Log.d("Finishus", "taj $selectedRenderable")
         }
 
@@ -135,15 +165,63 @@ class ArTakeImage : AppCompatActivity() {
             takePicture()
         }
 
-        hideUI_btn.setOnClickListener {
-            // TODO: Hide all UI elements except hideUI_btn
-        }
 
         goBack_btn.setOnClickListener {
             finish()
         }
     }
 
+    private fun onAddButtonClicked() {
+        setVisiblity(clicked)
+        setAnimation(clicked)
+        setClicable(clicked)
+        clicked = !clicked
+
+    }
+
+    private fun setVisiblity(clicked: Boolean) {
+        if (!clicked) {
+            selectPyramid_btn.visibility = View.VISIBLE
+            selectColosseum_btn.visibility = View.VISIBLE
+            selectWallsOfChina_btn.visibility = View.VISIBLE
+            selectTajMahal_btn.visibility = View.VISIBLE
+        } else {
+            selectPyramid_btn.visibility = View.INVISIBLE
+            selectColosseum_btn.visibility = View.INVISIBLE
+            selectWallsOfChina_btn.visibility = View.INVISIBLE
+            selectTajMahal_btn.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun setAnimation(clicked: Boolean) {
+        if (!clicked) {
+            selectPyramid_btn.startAnimation(fromBottom)
+            selectColosseum_btn.startAnimation(fromBottom)
+            selectWallsOfChina_btn.startAnimation(fromBottom)
+            selectTajMahal_btn.startAnimation(fromBottom)
+            id_add_button.startAnimation(rotateOpen)
+        } else {
+            selectPyramid_btn.startAnimation(toBottom)
+            selectColosseum_btn.startAnimation(toBottom)
+            selectWallsOfChina_btn.startAnimation(toBottom)
+            selectTajMahal_btn.startAnimation(toBottom)
+            id_add_button.startAnimation(rotateClose)
+        }
+    }
+
+    private fun setClicable(clicked: Boolean) {
+        if (!clicked) {
+            selectPyramid_btn.isClickable = false
+            selectColosseum_btn.isClickable = false
+            selectWallsOfChina_btn.isClickable = false
+            selectTajMahal_btn.isClickable = false
+        } else {
+            selectPyramid_btn.isClickable = true
+            selectColosseum_btn.isClickable = true
+            selectWallsOfChina_btn.isClickable = true
+            selectTajMahal_btn.isClickable = true
+        }
+    }
 
     // Capture Image
     private fun takePicture() {

@@ -54,7 +54,7 @@
     <string name="hello">Hello world!</string>
     <string name="take_image">Take image</string>
     <string name="pyramid">Pyramid</string>
-    <string name="walls_of_china">Walls of china</string>
+    <string name="walls_of_china">Wall of china</string>
     <string name="taj_mahal">Taj Mahal</string>
     <string name="go_back">Go back</string>
     <string name="colosseum">Colosseum</string>
@@ -67,4 +67,5 @@
     <string name="iv_desc_atd">Image of a place</string>
     <string name="iv_favorites_btn">Favorites button</string>
     <string name="failed_to_copy_pixels">Failed to copy pixels!</string>
+    <string name="AR_models">AR Models +</string>
 </resources>
