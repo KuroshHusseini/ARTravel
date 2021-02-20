@@ -172,11 +172,10 @@ class ArTakeImage : AppCompatActivity() {
     }
 
     private fun onAddButtonClicked() {
+        clicked = !clicked
         setVisiblity(clicked)
         setAnimation(clicked)
-        setClicable(clicked)
-        clicked = !clicked
-
+        setClickable(clicked)
     }
 
     private fun setVisiblity(clicked: Boolean) {
@@ -209,8 +208,8 @@ class ArTakeImage : AppCompatActivity() {
         }
     }
 
-    private fun setClicable(clicked: Boolean) {
-        if (!clicked) {
+    private fun setClickable(clicked: Boolean) {
+        if (clicked) {
             selectPyramid_btn.isClickable = false
             selectColosseum_btn.isClickable = false
             selectWallsOfChina_btn.isClickable = false

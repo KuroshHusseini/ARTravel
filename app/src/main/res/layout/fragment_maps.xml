@@ -21,13 +21,13 @@
             android:id="@+id/take_ar_image_handler"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="32dp"
             android:backgroundTint="@color/purple_200"
-            android:src="@drawable/ic_add"
+            android:contentDescription="@string/takes_you_to_AR_view"
+            android:src="@drawable/ic_ar_plus_icon"
             android:tint="@android:color/white"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            android:contentDescription="@string/takes_you_to_AR_view" />
+            app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
