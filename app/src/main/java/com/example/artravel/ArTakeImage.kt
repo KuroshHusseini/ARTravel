@@ -124,7 +124,6 @@ class ArTakeImage : AppCompatActivity() {
         })
 
         modelSizeSlider.addOnChangeListener { _, value, _ ->
-
             Log.d("From", value.toString())
             Log.d("From", "pyramid $pyramidRenderable")
 
@@ -132,7 +131,6 @@ class ArTakeImage : AppCompatActivity() {
             selectedNode?.localScale = Vector3(value, value, value)
             selectedNode?.setParent(anchorNode)
         }
-
         /*
         *  Setup all the buttons
         * */
