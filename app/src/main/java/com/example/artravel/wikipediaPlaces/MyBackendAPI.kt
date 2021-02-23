@@ -5,8 +5,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-public interface MyBackendAPI {
-
+interface MyBackendAPI {
     @GET("{xid}?")
     fun getPlaceInfo(
         @Path(value = "xid") xid: String,

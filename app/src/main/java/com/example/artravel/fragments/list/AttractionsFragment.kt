@@ -59,10 +59,12 @@ import java.net.URL
  * @date 23.02.2021
  */
 
-@Suppress("UNREACHABLE_CODE", "DEPRECATION")
+@Suppress("UNREACHABLE_CODE", "DEPRECATION", "NAME_SHADOWING",
+    "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS"
+)
 class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
     companion object {
-        private val OPEN_TRIP_MAP_API_KEY = Constants.OPEN_TRIP_MAP_API_KEY
+        private const val OPEN_TRIP_MAP_API_KEY = Constants.OPEN_TRIP_MAP_API_KEY
     }
 
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
@@ -151,10 +153,8 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
      */
 
     override fun onItemClick(item: Any, position: Int) {
-
-        var item = item as DBAttraction
-
-        var bundle = Bundle()
+        val item = item as DBAttraction
+        val bundle = Bundle()
 
         bundle.putString("name", item.name)
         // Compress Bitmap as bytearray and uncompress in Detail Activity
@@ -173,8 +173,13 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
         )
     }
 
+    /**
+     * provides access to the system location services.
+     *
+     * @author Kurosh Husseini
+     * @date 23.02.2021
+     */
     private fun isLocationEnable(): Boolean {
-        //provides access to the system location services.
         val locationManager: LocationManager =
             activity!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
@@ -182,6 +187,13 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
         )
     }
 
+    /**
+     * Checks the permissions
+     * If permission was denied shows alert dialog and navigates to the setting
+     *
+     * @author Kurosh Husseini
+     * @date 23.02.2021
+     */
     private fun requestMultiplePermissions() {
         Dexter.withActivity(activity)
             .withPermissions(
@@ -213,7 +225,14 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
             .check()
     }
 
-    //getting the location
+    /**
+     * Gets the users current location
+     *
+     *
+     * @author Kurosh Husseini
+     * @date 23.02.2021
+     */
+
     @SuppressLint("MissingPermission")
     private fun requestLocationData() {
         val mLocationRequest = LocationRequest()
@@ -224,6 +243,14 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
             Looper.myLooper()
         )
     }
+
+    /**
+     * Custom Alert dialog for permissions
+     *
+     *
+     * @author Kurosh Husseini
+     * @date 23.02.2021
+     */
 
     private fun showRationalDialogForPermission() {
         AlertDialog.Builder(activity)
@@ -444,11 +471,20 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
     private fun onFailure(t: Throwable) {
         t.printStackTrace()
     }
+
+    /**
+     * Action bar for attraction view
+     *
+     *
+     * @author Kurosh Husseini
+     * @date 23.02.2021
+     */
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.favorites_places_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
-    // when button is pressed do this
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_favorites -> {

@@ -15,7 +15,6 @@ import com.example.artravel.model.entity.DBAttraction
 @Database(entities = [DBPlace::class, DBAttraction::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class ARTravelDatabase : RoomDatabase() {
-
     abstract fun favouriteDao(): FavouritesDao
     abstract fun attractionDao(): AttractionDao
 

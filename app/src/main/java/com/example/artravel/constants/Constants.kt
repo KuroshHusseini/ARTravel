@@ -9,6 +9,14 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import com.example.artravel.BuildConfig
 
+
+/**
+ * Checks for permissions such as: Network,Version, WIFI, Internet
+ *
+ * @author Kurosh Husseini
+ * @date 23.02.2021
+ */
+
 object Constants {
     const val OPEN_WEATHER_API_KEY: String = BuildConfig.OPEN_WEATHER_API_KEY
     const val OPEN_TRIP_MAP_API_KEY = BuildConfig.OPEN_TRIP_MAP_API_KEY

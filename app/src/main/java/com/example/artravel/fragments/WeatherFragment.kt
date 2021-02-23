@@ -34,8 +34,14 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * WeatherFragment uses OpenWeatherAPI Services to show current weather
+ *
+ * @author Kurosh Husseini
+ * @date 23.02.2021
+ */
 
-@Suppress("DEPRECATION", "NAME_SHADOWING")
+@Suppress("DEPRECATION", "NAME_SHADOWING", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class WeatherFragment : Fragment() {
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private var mProgressDialog: Dialog? = null
@@ -68,7 +74,6 @@ class WeatherFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_weather, container, false)
     }
 
-
     private fun getLocationWeatherDetails(latitude: Double, longitude: Double) {
         if (Constants.isNetworkAvailable(activity)) {
             val retrofit: Retrofit = Retrofit.Builder()
@@ -93,7 +98,6 @@ class WeatherFragment : Fragment() {
                         val weatherList: WeatherResponse? = response.body()
                         setupUI(weatherList!!)
                         Log.i("Response Result", "$weatherList")
-
                     } else {
                         when (response.code()) {
                             400 -> {
@@ -124,8 +128,8 @@ class WeatherFragment : Fragment() {
         }
     }
 
+
     private fun isLocationEnable(): Boolean {
-        //provides access to the system location services.
         val locationManager: LocationManager =
             activity!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
@@ -145,10 +149,8 @@ class WeatherFragment : Fragment() {
                     if (report.areAllPermissionsGranted()) {
                         requestLocationData()
                     }
-
                     // check for permanent denial of any permission
                     if (report.isAnyPermissionPermanentlyDenied) {
-                        // show alert dialog navigating to Settings
                         showRationalDialogForPermission()
                     }
                 }
@@ -182,7 +184,7 @@ class WeatherFragment : Fragment() {
             }.show()
     }
 
-    //getting the location data
+    //Request location data
     @SuppressLint("MissingPermission")
     private fun requestLocationData() {
         val mLocationRequest = LocationRequest()

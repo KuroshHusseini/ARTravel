@@ -21,9 +21,4 @@ interface FavouritesDao {
 
     @Query("SELECT * FROM place ORDER BY id ASC")
     fun readAllData(): LiveData<List<DBPlace>>
-
-/*    @Query("SELECT * FROM user_table WHERE user_table.uid = :userid")
-    // the @Relation do the INNER JOIN for you ;)
-    fun getUserContacts(userid: Int): UserContact*/
-
 }

@@ -1,6 +1,9 @@
+@file:Suppress("PLUGIN_IS_NOT_ENABLED")
+
 package com.example.artravel.wikipediaPlaces
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+
 
 @Serializable
 data class Address(

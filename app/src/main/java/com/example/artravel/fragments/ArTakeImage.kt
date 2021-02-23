@@ -137,9 +137,16 @@ class ArTakeImage : AppCompatActivity() {
             selectedNode?.localScale = Vector3(value, value, value)
             selectedNode?.setParent(anchorNode)
         }
-        /*
-        *  Setup all the buttons
-        * */
+
+        /**
+         * Modified michaels code
+         * Floating buttons for choosing AR models
+         * Floating buttons for going back and taking image
+         *
+         * @author Kurosh Husseini
+         * @date 23.02.2021
+         */
+
         id_add_button.setOnClickListener {
             onAddButtonClicked()
         }
