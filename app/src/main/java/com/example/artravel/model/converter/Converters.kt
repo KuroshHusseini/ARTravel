@@ -1,4 +1,4 @@
-package com.example.artravel
+package com.example.artravel.model.converter
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory

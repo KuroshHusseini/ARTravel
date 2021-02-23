@@ -54,7 +54,7 @@
             android:label="@string/title_activity_take_image"
             android:theme="@style/Theme.ARTravel.NoActionBar"></activity>
         <activity
-            android:name=".ArTakeImage"
+            android:name=".fragments.ArTakeImage"
             android:label="@string/title_activity_ar_take_image"
             android:theme="@style/Theme.ARTravel.NoActionBar" />
         <!--

@@ -20,7 +20,7 @@ android {
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        // Please ensure you have a valid API KEY for themoviedb.org
+        // Please ensure you have a valid API KEY for Opentrip and Google APIs
         //to use this app
         // A valid key will need to be entered
         buildConfigField("String", "GOOGLE_API_KEY", GOOGLE_API_KEY)
