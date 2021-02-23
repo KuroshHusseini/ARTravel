@@ -1,4 +1,4 @@
-package com.example.artravel
+package com.example.artravel.fragments
 
 import android.Manifest
 import android.content.ContentValues
@@ -16,6 +16,7 @@ import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import com.example.artravel.R
 import com.google.android.material.slider.RangeSlider
 import com.google.ar.core.HitResult
 import com.google.ar.core.Plane
@@ -36,7 +37,12 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
-
+/**
+ * ArTakeImage class handles UI and functionality of the AR
+ *
+ * @author Michael Lock & Kurosh Husseini
+ * @date 23.02.2021
+ */
 
 @Suppress("DEPRECATION")
 class ArTakeImage : AppCompatActivity() {
@@ -140,22 +146,22 @@ class ArTakeImage : AppCompatActivity() {
 
         selectPyramid_btn.setOnClickListener {
             selectedRenderable = pyramidRenderable
-            Log.d("Finishus", "pyramid $selectedRenderable")
+
         }
 
         selectColosseum_btn.setOnClickListener {
             selectedRenderable = colosseumRenderable
-            Log.d("Finishus", "collosseum $selectedRenderable")
+
         }
 
         selectWallsOfChina_btn.setOnClickListener {
             selectedRenderable = wallsOfChinaRenderable
-            Log.d("Finishus", "walls $selectedRenderable")
+
         }
 
         selectTajMahal_btn.setOnClickListener {
             selectedRenderable = tajMahalRenderable
-            Log.d("Finishus", "taj $selectedRenderable")
+
         }
 
 
@@ -169,6 +175,15 @@ class ArTakeImage : AppCompatActivity() {
         }
     }
 
+    /**
+     * Take screenshot of ARSCene and save it to gallery.
+     * Uses PixelCopy.
+     *
+     * Method is called when user presses takePicture_btn.
+     *
+     * @author Michael Lock
+     * @date 23.02.2021
+     */
     private fun onAddButtonClicked() {
         clicked = !clicked
         setVisiblity(clicked)
@@ -253,6 +268,16 @@ class ArTakeImage : AppCompatActivity() {
         }, Handler())
     }
 
+    /**
+     * Compress and save captured AR image as jpeg and store it in Gallery.
+     *
+     * This method always saves an image when called.
+     *
+     * @param bitmap bitmap image that was captured in AR
+     * @author Michael Lock
+     * @date 23.02.2021
+     */
+
     private fun saveMediaToStorage(bitmap: Bitmap?) {
         val filename = "${System.currentTimeMillis()}.jpg"
         var fos: OutputStream? = null
@@ -302,6 +327,14 @@ class ArTakeImage : AppCompatActivity() {
                 54
             )
     }
+
+    /**
+     * Creates network thread for downloading and
+     * assigning the 4 world wonder model 3D model renderables.
+     *
+     * @author Michael Lock
+     * @date 23.02.2021
+     */
 
     private fun setupAndDownloadAllModels() {
 
@@ -416,6 +449,13 @@ class ArTakeImage : AppCompatActivity() {
                 }
         }
     }
+
+    /**
+     * Methods for setting up AR.
+     *
+     * @author Michael Lock
+     * @date 23.02.2021
+     */
 
     private fun setUpPlane() {
         arFragment.setOnTapArPlaneListener { hitResult: HitResult, _: Plane?, _: MotionEvent? ->

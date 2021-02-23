@@ -51,6 +51,13 @@ import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.net.URL
 
+/**
+ * AttractionsFragment handles attractions i.e interesting places,
+ * which are close by to the user.
+ *
+ * @author Michael Lock & Kurosh Husseini
+ * @date 23.02.2021
+ */
 
 @Suppress("UNREACHABLE_CODE", "DEPRECATION")
 class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
@@ -72,7 +79,13 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
     //What is this?
     inline fun <reified T> Gson.fromJson(json: String) = fromJson<T>(json, object : TypeToken<T>() {}.type)
     private fun sendNetworkRequests() {
-        Log.d("Lifecycle", "sendNetworkRequests")
+
+        /*
+        *
+        * Make a network call to setup Nearby Places
+        *
+        * */
+
         mFusedLocationClient =
             activity?.let { LocationServices.getFusedLocationProviderClient(it) }!!
         //Checking if location is enabled
@@ -127,6 +140,15 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
 
     private var disposable: Disposable? = null
 
+    /**
+     * OnItemClick listener is defined in OnPlaceItemClickListener interface
+     * and assigned to PlaceAdapter
+     *
+     * Method is called when Attraction Card Item is pressed.
+     *
+     * @author Michael Lock & Kurosh Husseini
+     * @date 23.02.2021
+     */
 
     override fun onItemClick(item: Any, position: Int) {
 
@@ -245,9 +267,22 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
         }
     }
 
+
+    /**
+     * getNearbyPlaces makes GET request to https://api.opentripmap.com/0.1/en/places/
+     * and receives array of places.
+     *
+     * Method is called when fragment is started
+     *
+     * @param latitude latitude of user location
+     * @param longitude longitude of user location
+     *
+     * @author Michael Lock
+     * @date 23.02.2021
+     */
+
     private fun getNearbyPlaces(latitude: Double, longitude: Double) {
         if (Constants.isNetworkAvailable(activity)) {
-            Log.d("PERKELE!", "$latitude $longitude")
             showCustomProgressDialog()
             disposable =
                 ServiceBuilder.buildService()
@@ -276,6 +311,18 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
         }
     }
 
+    /**
+     * onResponse makes GET HTTP request to each place by xid property and
+     * returns an array of places with a significant amount of properties.
+     *
+     * Method is called when getNearbyPlaces receives
+     * response successfully.
+     *
+     * @param response array of places
+     *
+     * @author Michael Lock
+     * @date 23.02.2021
+     */
 
     private fun onResponse(response: WikipediaResponse) {
         // continue working and dispose all subscriptions when the values from the Single objects are not interesting any more
@@ -320,6 +367,16 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
                 }
             })
     }
+
+    /**
+     * URL method converts URL to bitmap
+     *
+     * @return the bitmap image
+     *
+     * @author Michael Lock
+     * @date 23.02.2021
+     */
+
     // extension function to get / download bitmap from url
     private fun URL.toBitmap(): Bitmap? {
         return try {
@@ -328,7 +385,19 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
             null
         }
     }
-    private suspend fun updateUi(dataResponses: MutableList<PlaceInfoResponse>) {
+
+    /**
+     * Inserts new place items to database with fetched place details.
+     *
+     * Method is called when onResponse method successfully creates array of objects.
+     *
+     * @param dataResponses array of places with properties (e.g. image, title, desc, lat, lng etc)
+     *
+     * @author Michael Lock
+     * @date 23.02.2021
+     */
+
+    private suspend fun updateUI(dataResponses: MutableList<PlaceInfoResponse>) {
 
 
         GlobalScope.launch {
@@ -348,11 +417,6 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
                     url.toBitmap()
                 }
                 val bitmap: Bitmap? = result.await()
-                Log.d(
-                    "DEBUG",
-                    "${dataResponse.name}: ${dataResponse.point.lat} ${dataResponse.point.lon}"
-                )
-
 
                 GlobalScope.launch {
                     attractionsDatabase.attractionDao()
@@ -367,44 +431,18 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
                             )
                         )
                 }
-
-
-//                placesList.add(
-//                    DBAttraction(
-//                        0,
-//                        dataResponse.name,
-//                        bitmap,
-//                        dataResponse?.wikipedia_extracts?.text,
-//                        dataResponse.point.lat,
-//                        dataResponse.point.lon
-//                    )
-//                )
-
-                Log.d(
-                    "DEBUG", "${dataResponse.name},\n" +
-                            "${bitmap},\n" +
-                            "${dataResponse?.wikipedia_extracts?.text},\n" +
-                            "${dataResponse.point.lat},\n" +
-                            dataResponse.point.lon
-                )
-//
-//                recycler_view.adapter?.notifyDataSetChanged()
-//
-//                hideProgressDialog()
             }
         }
-
         hideProgressDialog()
     }
 
     private fun setupUI(dataResponses: MutableList<PlaceInfoResponse>) {
         GlobalScope.launch(Dispatchers.Main) {
-            updateUi(dataResponses)
+            updateUI(dataResponses)
         }
     }
     private fun onFailure(t: Throwable) {
         t.printStackTrace()
-        Log.d("DBG", "Failure")
     }
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.favorites_places_menu, menu)

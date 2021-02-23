@@ -32,3 +32,36 @@ You could even record your adventure and then send it to a friend to walk throug
 <p align="center">
   <img src="readme_images/api_keys.png" alt="api keys" width="800%">
 </p>
+
+
+You also need to add google_maps_api.xml file to values directory
+<p align="center">
+  <img src="readme_images/google_maps_api.png" alt="api keys" width="800%">
+</p>
+
+```
+<resources>
+    <!--
+    TODO: Before you run your application, you need a Google Maps API key.
+
+    To get one, follow this link, follow the directions and press "Create" at the end:
+
+    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=52:27:87:89:EA:3C:59:91:09:F9:3D:31:5D:EC:D6:AD:22:4A:C8:21%3Bcom.example.artravel
+
+    You can also add your credentials to an existing key, using these values:
+
+    Package name:
+    com.example.artravel
+
+    SHA-1 certificate fingerprint:
+    52:27:87:89:EA:3C:59:91:09:F9:3D:31:5D:EC:D6:AD:22:4A:C8:21
+
+    Alternatively, follow the directions here:
+    https://developers.google.com/maps/documentation/android/start#get-key
+
+    Once you have your key (it starts with "AIza"), replace the "google_maps_key"
+    string in this file.
+    -->
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">GOOGLE API KEY</string>
+</resources>
+```

@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.location.Address
-import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -18,7 +17,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.example.artravel.ArTakeImage
 import com.example.artravel.R
 import com.example.artravel.constants.Constants
 import com.google.android.gms.location.*
@@ -35,7 +33,13 @@ import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest
 import com.google.android.libraries.places.api.net.PlacesClient
 import kotlinx.android.synthetic.main.fragment_maps.*
-import java.util.*
+
+/**
+ * MapsFragment uses Google Maps Services to locate user and look for places
+ *
+ * @author Michael Lock
+ * @date 23.02.2021
+ */
 
 class MapsFragment : Fragment() {
     companion object {
@@ -82,6 +86,15 @@ class MapsFragment : Fragment() {
             }
         })
     }
+
+    /**
+     * Calls methods that locate user and request frequent location updates
+     *
+     * This method is called when google maps is ready.
+     * @author Michael Lock
+     * @date 23.02.2021
+     */
+
     private fun getLocationAccess() {
         if (ContextCompat.checkSelfPermission(
                 requireContext(),
@@ -124,6 +137,16 @@ class MapsFragment : Fragment() {
             }
         }
     }
+
+    /**
+     * getLocationUpdates method requests user location every 3 seconds and
+     * updates the drawn route from user to destination.
+     *
+     * This method is called when user has accepted the location permissions
+     * @author Michael Lock
+     * @date 23.02.2021
+     */
+
     private fun getLocationUpdates() {
         locationRequest = LocationRequest()
         locationRequest.interval = 30000
@@ -134,15 +157,10 @@ class MapsFragment : Fragment() {
                 // Geocode user location address
                 val addresses: List<Address>
                 activity ?: return
-                val geocoder = Geocoder(activity!!.application, Locale.getDefault())
                 if (locationResult.locations.isNotEmpty()) {
                     val location = locationResult.lastLocation
                     if (location != null) {
                         val latLng = LatLng(location.latitude, location.longitude)
-                        addresses =
-                            geocoder.getFromLocation(location.latitude, location.longitude, 1)
-                        val address: String = addresses[0].getAddressLine(0)
-                        Log.d("DBG", address)
                         map.addMarker(
                             MarkerOptions().position(latLng).title("You are here.")
                                 .icon(
@@ -215,6 +233,17 @@ class MapsFragment : Fragment() {
         }
     }
 
+    /**
+     * Creates user AlertDialog of 5 places near to user
+     *
+     * This method is called when user pressed menu button in
+     * right corner of the action bar
+     *
+     * This method is called when user location has been found.
+     * @author Michael Lock
+     * @date 23.02.2021
+     */
+
     @SuppressLint("MissingPermission")
     private fun showCurrentPlace() {
         // Use fields to define the data types to return.
@@ -258,6 +287,16 @@ class MapsFragment : Fragment() {
         }
     }
 
+    /**
+     * openPlacesDialog draws AlertDialog screen for user to choose where
+     * wants to set Marker on Map
+     *
+     * This method is called at end of showCurrentPlace method.
+     *
+     * @author Michael Lock
+     * @date 23.02.2021
+     */
+
     private fun openPlacesDialog() {
         // Ask the user to choose the place where they are now.
         val listener =
@@ -292,6 +331,23 @@ class MapsFragment : Fragment() {
             .setItems(likelyPlaceNames, listener)
             .show()
     }
+
+    /**
+     * resizeMapIcons draws AlertDialog screen for user to choose where
+     * wants to set Marker on Map
+     *
+     * This method is called at end of showCurrentPlace method.
+     *
+     * @param iconName name of icon in drawable in resources
+     * @param width width in pixels
+     * @param height height in pixels
+     *
+     * @return       custom map marker
+     *
+     * @author Michael Lock
+     * @date 23.02.2021
+     */
+
     fun resizeMapIcons(iconName: String?, width: Int, height: Int): Bitmap? {
         val imageBitmap = BitmapFactory.decodeResource(
             resources,

@@ -31,7 +31,7 @@
         tools:layout="@layout/fragment_weather" />
     <fragment
         android:id="@+id/attractionsDetailFragment"
-        android:name="com.example.artravel.AttractionsDetailFragment"
+        android:name="com.example.artravel.fragments.AttractionsDetailFragment"
         android:label="Attraction Detail"
         tools:layout="@layout/fragment_attractions_detail" >
         <action
@@ -58,7 +58,7 @@
     </fragment>
     <fragment
         android:id="@+id/attractionsDrawRoute"
-        android:name="com.example.artravel.AttractionsDrawRoute"
+        android:name="com.example.artravel.fragments.AttractionsDrawRoute"
         android:label="Route to Destination"
         tools:layout="@layout/fragment_attractions_draw_route" >
         <action

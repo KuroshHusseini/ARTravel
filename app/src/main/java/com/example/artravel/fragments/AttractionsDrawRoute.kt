@@ -1,4 +1,4 @@
-package com.example.artravel
+package com.example.artravel.fragments
 
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
@@ -15,6 +15,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.directions.route.*
+import com.example.artravel.R
 import com.example.artravel.constants.Constants
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -24,6 +25,12 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.material.snackbar.Snackbar
 import java.util.*
+/**
+ * Fragment for drawing a route from user to destination.
+ *
+ * @author Michael Lock
+ * @date 23.02.2021
+ */
 
 @Suppress("DEPRECATION", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class AttractionsDrawRoute : Fragment(), RoutingListener {
@@ -41,6 +48,7 @@ class AttractionsDrawRoute : Fragment(), RoutingListener {
     private var destinationLng: String? = null
     // Destination
     private val polylines = mutableListOf<Polyline>()
+
     private var userLocation: Location? = null
     private var start: LatLng? = null
     private var end: LatLng? = null
@@ -55,6 +63,7 @@ class AttractionsDrawRoute : Fragment(), RoutingListener {
         destinationLng = arguments?.getString("lon")
         destinationLat?.let { Log.d("WTF", it) }
         destinationLng?.let { Log.d("WTF", it) }
+
         parentLayout = view?.findViewById(android.R.id.content)
         return inflater.inflate(R.layout.fragment_attractions_draw_route, container, false)
     }
@@ -93,6 +102,13 @@ class AttractionsDrawRoute : Fragment(), RoutingListener {
         })
     }
 
+    /**
+     * Calls methods that locate user and request frequent location updates
+     *
+     * This method is called when google maps is ready.
+     * @author Michael Lock
+     * @date 23.02.2021
+     */
     private fun getLocationAccess() {
         if (ContextCompat.checkSelfPermission(
                 requireContext(),
@@ -136,6 +152,15 @@ class AttractionsDrawRoute : Fragment(), RoutingListener {
         }
     }
 
+    /**
+     * getLocationUpdates method requests user location every 3 seconds and
+     * updates the drawn route from user to destination.
+     *
+     * This method is called when user has accepted the location permissions
+     * @author Michael Lock
+     * @date 23.02.2021
+     */
+
     private fun getLocationUpdates() {
         locationRequest = LocationRequest()
         locationRequest.interval = 30000
@@ -150,7 +175,9 @@ class AttractionsDrawRoute : Fragment(), RoutingListener {
 
                     if (userLocation != null) {
                         activity ?: return
+
                         val latLng = LatLng(userLocation!!.latitude, userLocation!!.longitude)
+
                         map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
                         setDestination()
                     }
@@ -158,6 +185,14 @@ class AttractionsDrawRoute : Fragment(), RoutingListener {
             }
         }
     }
+
+    /**
+     * setDestination method sets route to destination.
+     *
+     * This method is called when user location has been found.
+     * @author Michael Lock
+     * @date 23.02.2021
+     */
 
     private fun setDestination() {
         userLocation ?: return
@@ -181,6 +216,15 @@ class AttractionsDrawRoute : Fragment(), RoutingListener {
 
         }
     }
+
+    /**
+     * startLocationUpdates method attaches client to Google Play Services for location updates.
+     *
+     * This method is called when user accepted location permissions.
+     * @author Michael Lock
+     * @date 23.02.2021
+     */
+
     @SuppressLint("MissingPermission")
     private fun startLocationUpdates() {
         fusedLocationClient.requestLocationUpdates(
