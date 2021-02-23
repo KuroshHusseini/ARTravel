@@ -35,6 +35,10 @@ You could even record your adventure and then send it to a friend to walk throug
 
 
 You also need to add google_maps_api.xml file to values directory
+<p align="center">
+  <img src="readme_images/google_maps_api.png" alt="api keys" width="800%">
+</p>
+
 ```
 <resources>
     <!--
