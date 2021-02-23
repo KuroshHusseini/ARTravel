@@ -32,7 +32,6 @@ class PlaceAdapter(
     private val favouritesDatabase by lazy { ARTravelDatabase.getDatabase(context) }
 
     inner class PlaceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaceViewHolder {
         return PlaceViewHolder(
             LayoutInflater
@@ -42,8 +41,6 @@ class PlaceAdapter(
     }
 
     override fun onBindViewHolder(holder: PlaceViewHolder, position: Int) {
-//        holder.initialize(items[position], clickListener)
-
         holder.itemView.tv_place_desc.text = items[position].desc
         holder.itemView.tv_place_name.text = items[position].name
         holder.itemView.place_image.load(items[position].image)
@@ -53,13 +50,10 @@ class PlaceAdapter(
         }
 
         holder.itemView.add_to_favorites.setOnClickListener {
-
-
             AlertDialog.Builder(context)
                 .setPositiveButton("Yes") { _, _ ->
 
                     GlobalScope.launch {
-
                         favouritesDatabase.favouriteDao().addFavourite(
                             DBPlace(
                                 items[position].id,
@@ -81,54 +75,11 @@ class PlaceAdapter(
                 .setMessage("Are you sure you want to add ${items[position].name} to favourites?")
                 .create()
                 .show()
-
-//                val favId = favouritesDatabase.favouriteDao()
-//                    .addFavourite(
-//                        DBPlace(
-//                            0,
-//                            items[position].name,
-//                            null,
-//                            items[position].desc,
-//                            items[position].lat,
-//                            items[position].lng,
-//                        )
-//                    )
-
-//                Log.d("WAZAAP", "placeAdapter favId $favId")
-
         }
-//        holder.itemView.tv_place_desc.text = items[position].desc
-//        holder.itemView.tv_place_desc.text = items[position].desc
-
     }
-
 
     override fun getItemCount(): Int {
         return items.size
     }
 }
-//
-//class PlaceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-//    val placeName = itemView.tv_place_name
-//    val placeImage = itemView.place_image
-//    val placeDesc = itemView.tv_place_desc
-//
-//
-//    fun initialize(item: DBPlace, action: OnPlaceItemClickListener) {
-//        placeName.text = item.name
-//        placeImage.setImageBitmap(item.image)
-//        placeDesc.text = item.desc
-//
-//
-//        itemView.setOnClickListener {
-//            action.onItemClick(item, adapterPosition)
-//        }
-//
-//        //adding to favorites
-//        val addToFavBtn = itemView.findViewById<ImageView>(R.id.add_to_favorites)
-//        addToFavBtn.setOnClickListener {
-//            Toast.makeText(itemView.context, item.name, Toast.LENGTH_SHORT).show()
-//        }
-//
-//    }
-//}
+

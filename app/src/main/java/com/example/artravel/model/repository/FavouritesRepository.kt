@@ -9,8 +9,7 @@ class FavouritesRepository(
 ) {
 
     val readAllData: LiveData<List<DBPlace>> = FavouritesDao.readAllData()
-
-    suspend fun addUser(favourite: DBPlace) {
+    fun addUser(favourite: DBPlace) {
         FavouritesDao.addFavourite(favourite)
     }
 
@@ -25,6 +24,4 @@ class FavouritesRepository(
     suspend fun deleteAllUsers() {
         FavouritesDao.deleteAllFavourites()
     }
-
-
 }

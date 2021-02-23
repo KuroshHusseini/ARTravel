@@ -32,30 +32,26 @@ import java.util.*
  * @date 23.02.2021
  */
 
+@Suppress("DEPRECATION", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class AttractionsDrawRoute : Fragment(), RoutingListener {
-
-    val GOOGLE_API_KEY = Constants.GOOGLE_API_KEY
+    companion object {
+        val GOOGLE_API_KEY = Constants.GOOGLE_API_KEY
+        private const val LOCATION_PERMISSION_REQUEST = 1
+    }
 
     private lateinit var map: GoogleMap
-
-    private val LOCATION_PERMISSION_REQUEST = 1
-
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationCallback: LocationCallback
-
     // Destination LatLng
     private var destinationLat: String? = null
     private var destinationLng: String? = null
-
     // Destination
     private val polylines = mutableListOf<Polyline>()
 
     private var userLocation: Location? = null
-
     private var start: LatLng? = null
     private var end: LatLng? = null
-
     private var parentLayout: View? = null
 
     override fun onCreateView(
@@ -65,14 +61,10 @@ class AttractionsDrawRoute : Fragment(), RoutingListener {
         // Inflate the layout for this fragment
         destinationLat = arguments?.getString("lat")
         destinationLng = arguments?.getString("lon")
-
-
         destinationLat?.let { Log.d("WTF", it) }
-
         destinationLng?.let { Log.d("WTF", it) }
 
         parentLayout = view?.findViewById(android.R.id.content)
-
         return inflater.inflate(R.layout.fragment_attractions_draw_route, container, false)
     }
 
@@ -81,31 +73,12 @@ class AttractionsDrawRoute : Fragment(), RoutingListener {
         val mapFragment =
             childFragmentManager.findFragmentById(R.id.google_map_draw_route) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
-
         // For locating and updating user location
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
     }
-
     private val callback = OnMapReadyCallback { googleMap ->
-        /**
-         * Manipulates the map once available.
-         * This callback is triggered when the map is ready to be used.
-         * This is where we can add markers or lines, add listeners or move the camera.
-         * If Google Play services is not installed on the device, the user will be prompted to
-         * install it inside the SupportMapFragment. This method will only be triggered once the
-         * user has installed Google Play services and returned to the app.
-         */
-        /**
-         * Manipulates the map once available.
-         * This callback is triggered when the map is ready to be used.
-         * This is where we can add markers or lines, add listeners or move the camera.
-         * If Google Play services is not installed on the device, the user will be prompted to
-         * install it inside the SupportMapFragment. This method will only be triggered once the
-         * user has installed Google Play services and returned to the app.
-         */
         map = googleMap
         getLocationAccess()
-
         // Use a custom info window adapter to handle multiple lines of text in the
         // info window contents.
         this.map.setInfoWindowAdapter(object : GoogleMap.InfoWindowAdapter {
@@ -166,7 +139,6 @@ class AttractionsDrawRoute : Fragment(), RoutingListener {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-
         if (requestCode == LOCATION_PERMISSION_REQUEST) {
             if (grantResults.contains(PackageManager.PERMISSION_GRANTED)) {
                 map.isMyLocationEnabled = true
@@ -198,21 +170,15 @@ class AttractionsDrawRoute : Fragment(), RoutingListener {
         locationCallback = object : LocationCallback() {
 
             override fun onLocationResult(locationResult: LocationResult) {
-                // Geocode user location address
-//                val addresses: List<Address>
-
                 if (locationResult.locations.isNotEmpty()) {
                     userLocation = locationResult.lastLocation
 
                     if (userLocation != null) {
-
-
                         activity ?: return
 
                         val latLng = LatLng(userLocation!!.latitude, userLocation!!.longitude)
 
                         map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
-
                         setDestination()
                     }
                 }
@@ -229,13 +195,9 @@ class AttractionsDrawRoute : Fragment(), RoutingListener {
      */
 
     private fun setDestination() {
-
         userLocation ?: return
-
         start = LatLng(userLocation!!.latitude, userLocation!!.longitude)
-
         end = LatLng(destinationLat!!.toDouble(), destinationLng!!.toDouble())
-
         findRoute(start, end)
     }
 
@@ -243,8 +205,7 @@ class AttractionsDrawRoute : Fragment(), RoutingListener {
         if (start == null || end == null) {
             Toast.makeText(activity, "Unable to get location", Toast.LENGTH_LONG).show()
         } else {
-
-            var routing: Routing? = Routing.Builder()
+            val routing: Routing? = Routing.Builder()
                 .travelMode(AbstractRouting.TravelMode.DRIVING)
                 .withListener(this)
                 .alternativeRoutes(true)
@@ -274,58 +235,48 @@ class AttractionsDrawRoute : Fragment(), RoutingListener {
     }
 
     override fun onRoutingFailure(e: RouteException?) {
-
         if (parentLayout != null) {
-            val snackbar: Snackbar = Snackbar.make(parentLayout!!, e.toString(), Snackbar.LENGTH_LONG)
+            val snackbar: Snackbar =
+                Snackbar.make(parentLayout!!, e.toString(), Snackbar.LENGTH_LONG)
             snackbar.show()
-
         } else {
-            Toast.makeText(activity, "Routing failed.", Toast.LENGTH_LONG).show();
-
+            Toast.makeText(activity, getString(R.string.routing_failed), Toast.LENGTH_LONG).show()
         }
-
     }
 
     override fun onRoutingStart() {
-        Toast.makeText(activity, "Finding Route...", Toast.LENGTH_LONG).show();
+        Toast.makeText(activity, getString(R.string.finding_routing), Toast.LENGTH_LONG).show()
     }
 
     override fun onRoutingSuccess(route: ArrayList<Route>?, shortestRouteIndex: Int) {
-
         polylines.clear()
-
-        var polyOptions = PolylineOptions()
+        val polyOptions = PolylineOptions()
         var polyLineStartLatLng: LatLng? = null
-        var polylineEndLatLng:LatLng? = null
-
+        var polylineEndLatLng: LatLng? = null
         for (i in 0 until route!!.size) {
 
             if (i == shortestRouteIndex) {
                 polyOptions.color(resources.getColor(R.color.colorPrimary))
                 polyOptions.width(7f)
                 polyOptions.addAll(route[shortestRouteIndex].points)
-                var polyline = map.addPolyline(polyOptions)
+
+                val polyline = map.addPolyline(polyOptions)
+
                 polyLineStartLatLng = polyline.points[0]
+                val k: Int = polyline.points.size
 
-                var k: Int = polyline.points.size
-
-                polylineEndLatLng = polyline.points[k-1]
-
+                polylineEndLatLng = polyline.points[k - 1]
                 polylines.add(polyline)
             }
-
-
             // Add Marker on route starting position
-            var startMarker: MarkerOptions? = MarkerOptions()
-
+            val startMarker = MarkerOptions()
             if (polyLineStartLatLng != null) {
-                startMarker?.position(polyLineStartLatLng)
+                startMarker.position(polyLineStartLatLng)
             }
-            startMarker?.title("My Location")
+            startMarker.title("My Location")
             map.addMarker(startMarker)
-
             // Add Marker on route ending position
-            var endMarker = MarkerOptions()
+            val endMarker = MarkerOptions()
             if (polylineEndLatLng != null) {
                 endMarker.position(polylineEndLatLng)
             }
@@ -335,6 +286,6 @@ class AttractionsDrawRoute : Fragment(), RoutingListener {
     }
 
     override fun onRoutingCancelled() {
-        findRoute(start, end);
+        findRoute(start, end)
     }
 }

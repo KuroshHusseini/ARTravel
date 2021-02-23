@@ -42,7 +42,7 @@ class WeatherFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true);
+        setHasOptionsMenu(true)
         mFusedLocationClient =
             activity?.let { LocationServices.getFusedLocationProviderClient(it) }!!
         //Checking if location is enabled
@@ -242,17 +242,14 @@ class WeatherFragment : Fragment() {
             }
         }
     }
-
     //get the right unit
     private fun getUnit(value: String): String {
-        var value: String = "°C"
+        var vl = "°C"
         if ("US" == value || "LR" == value || "MM" == value) {
-            value = "°F"
+            vl = "°F"
         }
-        return value
+        return vl
     }
-
-
     // getting time
     private fun unixTime(timex: Long): String {
         val date = Date(timex * 1000L)
@@ -260,14 +257,12 @@ class WeatherFragment : Fragment() {
         sdf.timeZone = TimeZone.getDefault()
         return sdf.format(date)
     }
-
     //custom dialog
     private fun showCustomProgressDialog() {
         mProgressDialog = Dialog(activity!!)
         mProgressDialog!!.setContentView(R.layout.dialog_custom_progress)
         mProgressDialog!!.show()
     }
-
 
     private fun hideProgressDialog() {
         if (mProgressDialog != null) {
@@ -280,7 +275,7 @@ class WeatherFragment : Fragment() {
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    // when button is pressed do this
+    // Refresh button
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return if (item.itemId == R.id.action_refresh) {
             requestLocationData()

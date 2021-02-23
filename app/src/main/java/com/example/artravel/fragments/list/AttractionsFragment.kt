@@ -59,10 +59,11 @@ import java.net.URL
  * @date 23.02.2021
  */
 
-@Suppress("UNREACHABLE_CODE")
+@Suppress("UNREACHABLE_CODE", "DEPRECATION")
 class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
-
-    private val OPEN_TRIP_MAP_API_KEY = Constants.OPEN_TRIP_MAP_API_KEY
+    companion object {
+        private val OPEN_TRIP_MAP_API_KEY = Constants.OPEN_TRIP_MAP_API_KEY
+    }
 
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private var mProgressDialog: Dialog? = null
@@ -71,15 +72,12 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
     private val attractionsDatabase by lazy { ARTravelDatabase.getDatabase(requireContext()) }
 
     private lateinit var recyclerView: RecyclerView
-
     override fun onCreate(savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)
         super.onCreate(savedInstanceState)
     }
-
-    inline fun <reified T> Gson.fromJson(json: String) =
-        fromJson<T>(json, object : TypeToken<T>() {}.type)
-
+    //What is this?
+    inline fun <reified T> Gson.fromJson(json: String) = fromJson<T>(json, object : TypeToken<T>() {}.type)
     private fun sendNetworkRequests() {
 
         /*
@@ -90,7 +88,6 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
 
         mFusedLocationClient =
             activity?.let { LocationServices.getFusedLocationProviderClient(it) }!!
-
         //Checking if location is enabled
         if (!isLocationEnable()) {
             Toast.makeText(
@@ -160,21 +157,16 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
         var bundle = Bundle()
 
         bundle.putString("name", item.name)
-
         // Compress Bitmap as bytearray and uncompress in Detail Activity
-        var stream = ByteArrayOutputStream()
+        val stream = ByteArrayOutputStream()
         item.image?.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-        var bytes: ByteArray = stream.toByteArray()
-
+        val bytes: ByteArray = stream.toByteArray()
         bundle.putByteArray("bytes", bytes)
-
         if (item.desc != null) {
             bundle.putString("description", item.desc)
         }
-
         bundle.putString("lat", item.lat)
         bundle.putString("lon", item.lng)
-
         findNavController().navigate(
             R.id.action_attractionsFragment_to_attractionsDetailFragment,
             bundle
@@ -191,7 +183,6 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
     }
 
     private fun requestMultiplePermissions() {
-
         Dexter.withActivity(activity)
             .withPermissions(
                 Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -204,8 +195,6 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
 
                         requestLocationData()
                     }
-
-
                     // check for permanent denial of any permission
                     if (report.isAnyPermissionPermanentlyDenied) {
                         // show alert dialog navigating to Settings
@@ -229,7 +218,6 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
     private fun requestLocationData() {
         val mLocationRequest = LocationRequest()
         mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-
         mFusedLocationClient.requestLocationUpdates(
             mLocationRequest,
             mLocationCallback,
@@ -250,7 +238,6 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
                     e.printStackTrace()
                 }
             }
-
             .setNegativeButton(getString(R.string.negative_button_for_alert_txt)) { dialog, _ ->
                 dialog.dismiss()
             }.show()
@@ -261,7 +248,6 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
             val mLastLocation: Location = locationResult.lastLocation
             val latitude = mLastLocation.latitude
             Log.i("Current Latitude", "$latitude")
-
             val longitude = mLastLocation.longitude
             Log.i("Current longitude", "$longitude")
             getNearbyPlaces(latitude, longitude)
@@ -276,7 +262,6 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
     }
 
     private fun hideProgressDialog() {
-
         if (mProgressDialog != null) {
             mProgressDialog!!.dismiss()
         }
@@ -297,11 +282,8 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
      */
 
     private fun getNearbyPlaces(latitude: Double, longitude: Double) {
-
         if (Constants.isNetworkAvailable(activity)) {
-
             showCustomProgressDialog()
-
             disposable =
                 ServiceBuilder.buildService()
                     .getWikiArticles(
@@ -344,7 +326,6 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
 
     private fun onResponse(response: WikipediaResponse) {
         // continue working and dispose all subscriptions when the values from the Single objects are not interesting any more
-
         val retrofit = Retrofit.Builder()
             .baseUrl("https://api.opentripmap.com/0.1/en/places/xid/")
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
@@ -352,9 +333,7 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
             .build()
 
         val backendAPI = retrofit.create(MyBackendAPI::class.java)
-
         val requests = ArrayList<Observable<PlaceInfoResponse>>()
-
         for (i in response.features.indices) {
             Log.d("DBG", response.features[i].properties.xid)
 
@@ -365,33 +344,24 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
                 )
             )
         }
-
         disposable = Observable.zip(requests) { objects ->
             val dataResponses = mutableListOf<PlaceInfoResponse>()
-
             for (o in objects) {
-                var placeInfo = o as PlaceInfoResponse
-
+                val placeInfo = o as PlaceInfoResponse
                 dataResponses.add(placeInfo)
             }
-
             return@zip dataResponses
         }
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.newThread())
             .subscribe({ placeInfos ->
                 Log.d("DBG", "Success")
-
                 disposable?.dispose()
-
                 setupUI(placeInfos)
-
             }, { t ->
                 t.printStackTrace()
                 Log.d("DBG", "Failure")
-
                 disposable?.dispose()
-
                 activity?.runOnUiThread {
                     hideProgressDialog()
                 }
@@ -408,7 +378,7 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
      */
 
     // extension function to get / download bitmap from url
-    fun URL.toBitmap(): Bitmap? {
+    private fun URL.toBitmap(): Bitmap? {
         return try {
             BitmapFactory.decodeStream(openStream())
         } catch (e: IOException) {
@@ -438,19 +408,14 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
         GlobalScope.async {
 
             for (dataResponse in dataResponses) {
-
-                var url: URL?
-                if (dataResponse.preview?.source == null) {
-                    url =
-                        URL("https://cdn-a.william-reed.com/var/wrbm_gb_food_pharma/storage/images/9/2/8/5/235829-6-eng-GB/Feed-Test-SIC-Feed-20142_news_large.jpg")
+                val url: URL = if (dataResponse.preview?.source == null) {
+                    URL("https://cdn-a.william-reed.com/var/wrbm_gb_food_pharma/storage/images/9/2/8/5/235829-6-eng-GB/Feed-Test-SIC-Feed-20142_news_large.jpg")
                 } else {
-                    url = URL(dataResponse.preview.source)
+                    URL(dataResponse.preview.source)
                 }
-
-                var result: Deferred<Bitmap?> = GlobalScope.async {
+                val result: Deferred<Bitmap?> = GlobalScope.async {
                     url.toBitmap()
                 }
-
                 val bitmap: Bitmap? = result.await()
 
                 GlobalScope.launch {
@@ -472,33 +437,25 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
     }
 
     private fun setupUI(dataResponses: MutableList<PlaceInfoResponse>) {
-
-
         GlobalScope.launch(Dispatchers.Main) {
             updateUI(dataResponses)
         }
     }
-
     private fun onFailure(t: Throwable) {
         t.printStackTrace()
     }
-
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.favorites_places_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
-
     // when button is pressed do this
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_favorites -> {
-
                 findNavController().navigate(R.id.action_attractionsFragment_to_favouritesFragment)
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
-
-
 }

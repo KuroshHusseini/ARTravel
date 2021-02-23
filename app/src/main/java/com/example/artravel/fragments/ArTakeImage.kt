@@ -10,6 +10,9 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.MotionEvent
 import android.view.PixelCopy
+import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -41,96 +44,61 @@ import java.io.OutputStream
  * @date 23.02.2021
  */
 
+@Suppress("DEPRECATION")
 class ArTakeImage : AppCompatActivity() {
-
     private lateinit var arFragment: ArFragment
-
     private var anchorNode: AnchorNode? = null
-
     private var selectedNode: TransformableNode? = null
     private var selectedRenderable: ModelRenderable? = null
 
-
-    /*
-    *   SceneView
-    * */
     private lateinit var sceneView: SceneView
 
-
-    /*
-    *
-    * Pyramid URL and Model
-    *
-    * */
-
-    private var PYRAMID_URL: String =
-        "https://raw.githubusercontent.com/thelockymichael/gltf-Sample_models/main/2.0/PUSHILIN_pyramid.gltf"
-
+    companion object {
+        private var PYRAMID_URL: String =
+            "https://raw.githubusercontent.com/thelockymichael/gltf-Sample_models/main/2.0/PUSHILIN_pyramid.gltf"
+        private var COLOSSEUM_URL: String =
+            "https://raw.githubusercontent.com/thelockymichael/gltf-Sample_models/main/2.0/colosseum002.gltf"
+        private var WALLS_CHINA: String =
+            "https://raw.githubusercontent.com/thelockymichael/gltf-Sample_models/main/2.0/wallsOfChina004_lego.gltf"
+        private var TAJ_MAHAL_URL: String =
+            "https://raw.githubusercontent.com/thelockymichael/gltf-Sample_models/main/2.0/tajMahal001_lego.gltf"
+    }
 
     // Model
     private var pyramidRenderable: ModelRenderable? = null
-
-    /*
-    *
-    * END
-    *
-    * */
-
-    /*
-    *
-    * Duck URL and Model
-    *
-    * */
-
-    private var COLOSSEUM_URL: String =
-        "https://raw.githubusercontent.com/thelockymichael/gltf-Sample_models/main/2.0/colosseum002.gltf"
-
-
-    // Model
     private var colosseumRenderable: ModelRenderable? = null
-
-    /*
-    *
-    * END
-    *
-    * */
-
-    /*
-    *
-    * Pyramid URL and Model
-    *
-    * */
-
-    private var WALLS_CHINA: String =
-        "https://raw.githubusercontent.com/thelockymichael/gltf-Sample_models/main/2.0/wallsOfChina004_lego.gltf"
-//    private var foxNode: TransformableNode? = null
-
-    // Model
     private var wallsOfChinaRenderable: ModelRenderable? = null
-
-    /*
-    *
-    * END
-    *
-    * */
-
-    /*
-    *
-    * Pyramid URL and Model
-    *
-    * */
-
-    private var TAJ_MAHAL_URL: String =
-        "https://raw.githubusercontent.com/thelockymichael/gltf-Sample_models/main/2.0/tajMahal001_lego.gltf"
-
-    // Model
     private var tajMahalRenderable: ModelRenderable? = null
 
-    /*
-    *
-    * END
-    *
-    * */
+    //Animation for floating buttons
+    private val rotateOpen: Animation by lazy {
+        AnimationUtils.loadAnimation(
+            this,
+            R.anim.rotate_open_anim
+        )
+    }
+    private val rotateClose: Animation by lazy {
+        AnimationUtils.loadAnimation(
+            this,
+            R.anim.rotate_close_anim
+        )
+    }
+    private val fromBottom: Animation by lazy {
+        AnimationUtils.loadAnimation(
+            this,
+            R.anim.from_bottom_anim
+        )
+    }
+    private val toBottom: Animation by lazy {
+        AnimationUtils.loadAnimation(
+            this,
+            R.anim.to_bottom_anim
+        )
+    }
+
+    private var clicked = false
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ar_take_image)
@@ -146,7 +114,6 @@ class ArTakeImage : AppCompatActivity() {
         }
 
         setUpPlane()
-
         // RangeSlider
         modelSizeSlider.addOnSliderTouchListener(object :
 
@@ -162,7 +129,7 @@ class ArTakeImage : AppCompatActivity() {
             }
         })
 
-        modelSizeSlider.addOnChangeListener { slider, value, fromUser ->
+        modelSizeSlider.addOnChangeListener { _, value, _ ->
 
             Log.d("From", value.toString())
             Log.d("From", "pyramid $pyramidRenderable")
@@ -175,6 +142,9 @@ class ArTakeImage : AppCompatActivity() {
         /*
         *  Setup all the buttons
         * */
+        id_add_button.setOnClickListener {
+            onAddButtonClicked()
+        }
 
         selectPyramid_btn.setOnClickListener {
             selectedRenderable = pyramidRenderable
@@ -201,6 +171,7 @@ class ArTakeImage : AppCompatActivity() {
             takePicture()
         }
 
+
         goBack_btn.setOnClickListener {
             finish()
         }
@@ -215,42 +186,83 @@ class ArTakeImage : AppCompatActivity() {
      * @author Michael Lock
      * @date 23.02.2021
      */
+    private fun onAddButtonClicked() {
+        clicked = !clicked
+        setVisiblity(clicked)
+        setAnimation(clicked)
+        setClickable(clicked)
+    }
 
+    private fun setVisiblity(clicked: Boolean) {
+        if (!clicked) {
+            selectPyramid_btn.visibility = View.VISIBLE
+            selectColosseum_btn.visibility = View.VISIBLE
+            selectWallsOfChina_btn.visibility = View.VISIBLE
+            selectTajMahal_btn.visibility = View.VISIBLE
+        } else {
+            selectPyramid_btn.visibility = View.INVISIBLE
+            selectColosseum_btn.visibility = View.INVISIBLE
+            selectWallsOfChina_btn.visibility = View.INVISIBLE
+            selectTajMahal_btn.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun setAnimation(clicked: Boolean) {
+        if (!clicked) {
+            selectPyramid_btn.startAnimation(fromBottom)
+            selectColosseum_btn.startAnimation(fromBottom)
+            selectWallsOfChina_btn.startAnimation(fromBottom)
+            selectTajMahal_btn.startAnimation(fromBottom)
+            id_add_button.startAnimation(rotateOpen)
+        } else {
+            selectPyramid_btn.startAnimation(toBottom)
+            selectColosseum_btn.startAnimation(toBottom)
+            selectWallsOfChina_btn.startAnimation(toBottom)
+            selectTajMahal_btn.startAnimation(toBottom)
+            id_add_button.startAnimation(rotateClose)
+        }
+    }
+
+    private fun setClickable(clicked: Boolean) {
+        if (clicked) {
+            selectPyramid_btn.isClickable = false
+            selectColosseum_btn.isClickable = false
+            selectWallsOfChina_btn.isClickable = false
+            selectTajMahal_btn.isClickable = false
+        } else {
+            selectPyramid_btn.isClickable = true
+            selectColosseum_btn.isClickable = true
+            selectWallsOfChina_btn.isClickable = true
+            selectTajMahal_btn.isClickable = true
+        }
+    }
+
+    // Capture Image
     private fun takePicture() {
-        var view: ArSceneView = arFragment.arSceneView
-
+        val view: ArSceneView = arFragment.arSceneView
         // Create a bitmap the size of the scene view.
         val bitmap: Bitmap = Bitmap.createBitmap(
             sceneView?.width, sceneView?.height,
             Bitmap.Config.ARGB_8888
         )
-
         // Create a handler thread to offload the processing of the image.
         val handlerThread = HandlerThread("PixelCopier")
-
         handlerThread.start()
-
         // Make the request to copy.
 
         PixelCopy.request(view, bitmap, { copyResult ->
-
             if (copyResult == PixelCopy.SUCCESS) {
-
                 try {
                     saveMediaToStorage(bitmap)
                 } catch (e: IOException) {
-
                     Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show()
                     return@request
                 }
-
-                Toast.makeText(this, "Photo saved", Toast.LENGTH_SHORT).show()
-
-
+                Toast.makeText(this, getString(R.string.get_string), Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(
                     this,
-                    "Failed to copyPixels: " + copyResult, Toast.LENGTH_LONG
+                    getString(R.string.failed_to_copy_pixels) + copyResult, Toast.LENGTH_LONG
                 ).show()
             }
 
@@ -374,12 +386,9 @@ class ArTakeImage : AppCompatActivity() {
                 .build()
                 .thenAccept { renderable: ModelRenderable ->
                     colosseumRenderable = renderable
-
                     selectedRenderable = colosseumRenderable
-
                     Log.d("Finishus", "finished duck $colosseumRenderable")
                     Log.d("Finishus", "finished duck $colosseumRenderable")
-
                 }
                 .exceptionally {
                     Log.i("Model", "cant load")
@@ -451,28 +460,24 @@ class ArTakeImage : AppCompatActivity() {
      */
 
     private fun setUpPlane() {
-        arFragment.setOnTapArPlaneListener { hitResult: HitResult, plane: Plane?, motionEvent: MotionEvent? ->
+        arFragment.setOnTapArPlaneListener { hitResult: HitResult, _: Plane?, _: MotionEvent? ->
             val anchor = hitResult.createAnchor()
             anchorNode =
                 AnchorNode(anchor)
             anchorNode?.setParent(arFragment.arSceneView.scene)
-
             detectPlane(anchorNode)
         }
     }
 
     private fun detectPlane(anchorNode: AnchorNode?) {
-
         if (selectedRenderable?.equals(pyramidRenderable) == true) {
             Log.d("Finishus", "This is a pyramid")
         }
-
         // Create the Transformable model
         selectedNode = TransformableNode(arFragment.transformationSystem)
         selectedNode!!.setParent(anchorNode)
         selectedNode!!.renderable = selectedRenderable
-        selectedNode!!.setOnTapListener { hitTestResult, motionEvent ->
-
+        selectedNode!!.setOnTapListener { _, _ ->
             // Add OnTap listener to 3D model
             Toast.makeText(this, "Model was touched", Toast.LENGTH_SHORT).show()
             arFragment.arSceneView.scene.removeChild(anchorNode)

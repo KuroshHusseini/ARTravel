@@ -13,23 +13,17 @@ import kotlinx.android.synthetic.main.fragment_attractions_detail.view.*
 
 
 class AttractionsDetailFragment : Fragment() {
-
     private var lat: String? = null
     private var lon: String? = null
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-
         val view = inflater.inflate(R.layout.fragment_attractions_detail, container, false)
-
         view.showOnMap_button.setOnClickListener {
-
-            var bundle = Bundle()
-
+            val bundle = Bundle()
             bundle.putString("lat", lat)
             bundle.putString("lon", lon)
 
@@ -39,21 +33,15 @@ class AttractionsDetailFragment : Fragment() {
             )
         }
 
-        var name = arguments?.getString("name")
-        var bytes = arguments?.getByteArray("bytes")
-
-
-        var image = BitmapFactory.decodeByteArray(bytes, 0, bytes!!.size)
-
-
-        var description = arguments?.getString("description")
+        val name = arguments?.getString("name")
+        val bytes = arguments?.getByteArray("bytes")
+        val image = BitmapFactory.decodeByteArray(bytes, 0, bytes!!.size)
+        val description = arguments?.getString("description")
 
         lat = arguments?.getString("lat")
         lon = arguments?.getString("lon")
 
-
         Log.d("DBEGGUS", name!!)
-//        Log.d("DBEGGUS", image.toString())
         if (description != null) {
             Log.d("DBEGGUS", description)
         }
@@ -64,24 +52,10 @@ class AttractionsDetailFragment : Fragment() {
             Log.d("DBEGGUS", lon!!)
         }
 
-
-
         view.tv_detail_place_name.text = name
-
         if (image != null)
             view.iv_detail_place_image.setImageBitmap(image)
-
         view.tv_detail_place_desc.text = description
-
-//
-//        var str = arguments?.getString("key")
-//
-//        Log.d("DBG", "PLACENAMUS ${str}")
-
         return view
-    }
-
-    private fun setupUI() {
-
     }
 }

@@ -16,14 +16,14 @@
             android:elevation="10dp"
             android:maxHeight="300dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_place_holder" />
+            android:src="@drawable/ic_place_holder"
+            android:contentDescription="@string/iv_desc_atd" />
 
         <TextView
             android:id="@+id/tv_detail_place_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
-            android:text="name"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
             android:textStyle="bold" />
 
@@ -33,7 +33,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:text="desc"
             android:textSize="15sp" />
 
         <Button

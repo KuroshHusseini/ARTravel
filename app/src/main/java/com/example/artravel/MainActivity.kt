@@ -16,8 +16,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setupViews()
     }
-
-    fun setupViews() {
+    private fun setupViews() {
         // Finding the Navigation Controller
         val navController = findNavController(R.id.fragNavHost)
         val appBarConfiguration = AppBarConfiguration(
@@ -28,14 +27,11 @@ class MainActivity : AppCompatActivity() {
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
-
         // Setting Navigation Controller with the BottomNavigationView
         bottomNavView.setupWithNavController(navController)
     }
-
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.fragNavHost)
-
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 }
