@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.location.Location
 import android.location.LocationManager
 import android.net.Uri
@@ -18,6 +19,7 @@ import android.provider.Settings
 import android.util.Log
 import android.view.*
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
@@ -115,6 +117,7 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
             disposable?.dispose()
     }
 
+    @SuppressLint("ResourceAsColor")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -129,6 +132,9 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
          * @author Kurosh Husseini
          * @date 24.02.2021
          */
+        //** Set the colors of the Pull To Refresh View
+        items_swipe_to_refresh.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(activity!!.baseContext, R.color.colorPrimary))
+        items_swipe_to_refresh.setColorSchemeColors(R.color.purple_200)
 
         items_swipe_to_refresh.setOnRefreshListener {
             Toast.makeText(activity, "Refresh", Toast.LENGTH_SHORT).show()
