@@ -165,8 +165,13 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
         if (item.desc != null) {
             bundle.putString("description", item.desc)
         }
-        bundle.putString("lat", item.lat)
-        bundle.putString("lon", item.lng)
+
+        if (item.lat != null || item.lng != null)  {
+            bundle.putString("lat", item.lat)
+            bundle.putString("lon", item.lng)
+        }
+
+
         findNavController().navigate(
             R.id.action_attractionsFragment_to_attractionsDetailFragment,
             bundle
