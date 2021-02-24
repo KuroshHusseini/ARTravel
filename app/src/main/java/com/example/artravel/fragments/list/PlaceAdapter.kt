@@ -3,6 +3,7 @@ package com.example.artravel.fragments.list
 
 import android.app.AlertDialog
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,9 +30,12 @@ class PlaceAdapter(
     *  Favourites Database
     * */
 
+    private var favourites: List<DBPlace>? = null
+
     private val favouritesDatabase by lazy { ARTravelDatabase.getDatabase(context) }
 
     inner class PlaceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaceViewHolder {
         return PlaceViewHolder(
             LayoutInflater
@@ -41,6 +45,13 @@ class PlaceAdapter(
     }
 
     override fun onBindViewHolder(holder: PlaceViewHolder, position: Int) {
+
+        GlobalScope.launch {
+
+            favourites = favouritesDatabase.favouriteDao().getAll()
+
+            Log.d("Favs", favourites.toString())
+        }
         holder.itemView.tv_place_desc.text = items[position].desc
         holder.itemView.tv_place_name.text = items[position].name
         holder.itemView.place_image.load(items[position].image)
@@ -50,31 +61,45 @@ class PlaceAdapter(
         }
 
         holder.itemView.add_to_favorites.setOnClickListener {
-            AlertDialog.Builder(context)
-                .setPositiveButton("Yes") { _, _ ->
 
-                    GlobalScope.launch {
-                        favouritesDatabase.favouriteDao().addFavourite(
-                            DBPlace(
-                                items[position].id,
-                                items[position].name,
-                                items[position].image,
-                                items[position].desc,
-                                items[position].lat,
-                                items[position].lng,
+            var selectedItem = favourites?.find { it.xid == items[position].xid }
+
+            Log.d("Favs selectus itemus", selectedItem.toString())
+
+            if (selectedItem == null) {
+                AlertDialog.Builder(context)
+                    .setPositiveButton("Yes") { _, _ ->
+
+                        GlobalScope.launch {
+                            favouritesDatabase.favouriteDao().addFavourite(
+                                DBPlace(
+                                    items[position].id,
+                                    items[position].xid,
+                                    items[position].name,
+                                    items[position].image,
+                                    items[position].desc,
+                                    items[position].lat,
+                                    items[position].lng,
+                                )
                             )
-                        )
-                    }
-                    Toast.makeText(
-                        context,
-                        "Successfully added ${items[position].name} to favourites.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }.setNegativeButton("No") { _, _ -> }
-                .setTitle("Add ${items[position].name} to favourites?")
-                .setMessage("Are you sure you want to add ${items[position].name} to favourites?")
-                .create()
-                .show()
+                        }
+                        Toast.makeText(
+                            context,
+                            "Successfully added ${items[position].name} to favourites.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }.setNegativeButton("No") { _, _ -> }
+                    .setTitle("Add ${items[position].name} to favourites?")
+                    .setMessage("Are you sure you want to add ${items[position].name} to favourites?")
+                    .create()
+                    .show()
+            } else {
+                AlertDialog.Builder(context)
+                    .setNegativeButton("No") { _, _ -> }
+                    .setTitle("${items[position].name} is already added to favourites.")
+                    .create()
+                    .show()
+            }
         }
     }
 

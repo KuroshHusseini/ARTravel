@@ -10,6 +10,7 @@ data class DBPlace(
     @NonNull
     @PrimaryKey(autoGenerate = true)
     var id: Int,
+    var xid: String,
     var name: String,
     var image: Bitmap?,
     var desc: String?,
@@ -22,6 +23,7 @@ data class DBAttraction(
     @NonNull
     @PrimaryKey(autoGenerate = true)
     var id: Int,
+    var xid: String,
     var name: String,
     var image: Bitmap?,
     var desc: String?,

@@ -13,6 +13,7 @@ class AttractionViewModel(application: Application): AndroidViewModel(
 ){
     val readAllData: LiveData<List<DBAttraction>>
     val repository: AttractionRepository
+
     init {
         val attractionDao = ARTravelDatabase.getDatabase(application).attractionDao()
         repository = AttractionRepository(attractionDao)
