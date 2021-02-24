@@ -59,7 +59,8 @@ import java.net.URL
  * @date 23.02.2021
  */
 
-@Suppress("UNREACHABLE_CODE", "DEPRECATION", "NAME_SHADOWING",
+@Suppress(
+    "UNREACHABLE_CODE", "DEPRECATION", "NAME_SHADOWING",
     "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS"
 )
 class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
@@ -78,8 +79,11 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
         setHasOptionsMenu(true)
         super.onCreate(savedInstanceState)
     }
+
     //What is this?
-    inline fun <reified T> Gson.fromJson(json: String) = fromJson<T>(json, object : TypeToken<T>() {}.type)
+    inline fun <reified T> Gson.fromJson(json: String) =
+        fromJson<T>(json, object : TypeToken<T>() {}.type)
+
     private fun sendNetworkRequests() {
 
         /*
@@ -117,8 +121,19 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-
         return inflater.inflate(R.layout.fragment_attractions, container, false)
+        /**
+         * Pull to refresh
+         *
+         *
+         * @author Kurosh Husseini
+         * @date 24.02.2021
+         */
+
+        items_swipe_to_refresh.setOnRefreshListener {
+            Toast.makeText(activity, "Refresh", Toast.LENGTH_SHORT).show()
+            items_swipe_to_refresh.isRefreshing = false
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -425,8 +440,6 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
      */
 
     private suspend fun updateUI(dataResponses: MutableList<PlaceInfoResponse>) {
-
-
         GlobalScope.launch {
             attractionsDatabase.attractionDao()
                 .deleteAllAttractions()
@@ -468,6 +481,7 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
             updateUI(dataResponses)
         }
     }
+
     private fun onFailure(t: Throwable) {
         t.printStackTrace()
     }
