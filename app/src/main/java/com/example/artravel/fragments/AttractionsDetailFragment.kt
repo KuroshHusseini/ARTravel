@@ -22,8 +22,6 @@ class AttractionsDetailFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_attractions_detail, container, false)
-
-
         view.showOnMap_button.setOnClickListener {
             val bundle = Bundle()
             bundle.putString("lat", lat)
@@ -47,7 +45,6 @@ class AttractionsDetailFragment : Fragment() {
 
 
         Log.d("Detail", "$lat, $lon")
-
         view.tv_detail_place_name.text = name
         if (image != null)
             view.iv_detail_place_image.setImageBitmap(image)

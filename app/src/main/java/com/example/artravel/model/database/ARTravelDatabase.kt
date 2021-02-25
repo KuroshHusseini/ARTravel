@@ -12,7 +12,7 @@ import com.example.artravel.model.entity.DBPlace
 import com.example.artravel.model.dao.FavouritesDao
 import com.example.artravel.model.entity.DBAttraction
 
-@Database(entities = [DBPlace::class, DBAttraction::class], version = 1, exportSchema = false)
+@Database(entities = [DBPlace::class, DBAttraction::class], version = 3, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class ARTravelDatabase : RoomDatabase() {
     abstract fun favouriteDao(): FavouritesDao

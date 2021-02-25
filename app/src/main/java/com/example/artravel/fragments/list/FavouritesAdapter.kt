@@ -35,11 +35,9 @@ class FavouritesAdapter(
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val currentItem = favouritesList[position]
-        if (currentItem != null) {
-            holder.itemView.place_image.load(currentItem.image)
-            holder.itemView.tv_place_name.text = currentItem.name
-            holder.itemView.tv_place_desc.text = currentItem.desc
-        }
+        holder.itemView.place_image.load(currentItem.image)
+        holder.itemView.tv_place_name.text = currentItem.name
+        holder.itemView.tv_place_desc.text = currentItem.desc
         holder.itemView.setOnClickListener {
             clickListener.onItemClick(currentItem, position)
         }

@@ -36,7 +36,7 @@ import java.util.*
 @Suppress("DEPRECATION", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class AttractionsDrawRoute : Fragment(), RoutingListener {
     companion object {
-        val GOOGLE_API_KEY = Constants.GOOGLE_API_KEY
+        const val GOOGLE_API_KEY = Constants.GOOGLE_API_KEY
         private const val LOCATION_PERMISSION_REQUEST = 1
     }
 
