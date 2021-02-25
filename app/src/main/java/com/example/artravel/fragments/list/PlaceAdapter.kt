@@ -16,7 +16,9 @@ import com.example.artravel.R
 import com.example.artravel.model.entity.DBAttraction
 import com.example.artravel.model.entity.DBPlace
 import kotlinx.android.synthetic.main.attraction_item.view.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class PlaceAdapter(
@@ -44,27 +46,15 @@ class PlaceAdapter(
         )
     }
 
-    override fun onBindViewHolder(holder: PlaceViewHolder, position: Int) {
-
-        GlobalScope.launch {
-
+    private suspend fun getFavourites(position: Int) {
+        val isReady = GlobalScope.async {
             favourites = favouritesDatabase.favouriteDao().getAll()
-
             Log.d("Favs", favourites.toString())
         }
-        holder.itemView.tv_place_desc.text = items[position].desc
-        holder.itemView.tv_place_name.text = items[position].name
-        holder.itemView.place_image.load(items[position].image)
 
-        holder.itemView.setOnClickListener {
-            clickListener.onItemClick(items[position], position)
-        }
-
-        holder.itemView.add_to_favorites.setOnClickListener {
+        if (isReady.await() === 1) {
 
             var selectedItem = favourites?.find { it.xid == items[position].xid }
-
-            Log.d("Favs selectus itemus", selectedItem.toString())
 
             if (selectedItem == null) {
                 AlertDialog.Builder(context)
@@ -88,6 +78,7 @@ class PlaceAdapter(
                             "Successfully added ${items[position].name} to favourites.",
                             Toast.LENGTH_SHORT
                         ).show()
+
                     }.setNegativeButton("No") { _, _ -> }
                     .setTitle("Add ${items[position].name} to favourites?")
                     .setMessage("Are you sure you want to add ${items[position].name} to favourites?")
@@ -103,8 +94,26 @@ class PlaceAdapter(
         }
     }
 
+    override fun onBindViewHolder(holder: PlaceViewHolder, position: Int) {
+
+
+        holder.itemView.tv_place_desc.text = items[position].desc
+        holder.itemView.tv_place_name.text = items[position].name
+        holder.itemView.place_image.load(items[position].image)
+
+        holder.itemView.setOnClickListener {
+            clickListener.onItemClick(items[position], position)
+        }
+
+        holder.itemView.add_to_favorites.setOnClickListener {
+
+            GlobalScope.launch(Dispatchers.Main) {
+                getFavourites(position)
+            }
+        }
+    }
+
     override fun getItemCount(): Int {
         return items.size
     }
 }
-

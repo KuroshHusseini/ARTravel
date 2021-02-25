@@ -64,8 +64,6 @@ class AttractionsDrawRoute : Fragment(), RoutingListener {
         // Inflate the layout for this fragment
         destinationLat = arguments?.getString("lat")
         destinationLng = arguments?.getString("lon")
-        destinationLat?.let { Log.d("WTF", it) }
-        destinationLng?.let { Log.d("WTF", it) }
 
         parentLayout = view?.findViewById(android.R.id.content)
         return inflater.inflate(R.layout.fragment_attractions_draw_route, container, false)
@@ -74,7 +72,6 @@ class AttractionsDrawRoute : Fragment(), RoutingListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Log.d("END", "onViewCreated")
         val mapFragment =
             childFragmentManager.findFragmentById(R.id.google_map_draw_route) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
@@ -87,8 +84,6 @@ class AttractionsDrawRoute : Fragment(), RoutingListener {
         getLocationAccess()
         // Use a custom info window adapter to handle multiple lines of text in the
 
-        Log.d("END", "Does map exist? ${map.toString()}")
-        Log.d("END", "Does map exist?")
         // info window contents.
         map.setInfoWindowAdapter(object : GoogleMap.InfoWindowAdapter {
             // Return null here, so that getInfoContents() is called next.
@@ -208,20 +203,15 @@ class AttractionsDrawRoute : Fragment(), RoutingListener {
         start = LatLng(userLocation!!.latitude, userLocation!!.longitude)
         end = LatLng(destinationLat!!.toDouble(), destinationLng!!.toDouble())
 
-
-        Log.d("END", "$start")
-        Log.d("END", "$end")
         findRoute(start, end)
     }
 
     private fun findRoute(start: LatLng?, end: LatLng?) {
         if (start == null || end == null) {
-            Log.d("END", "Unable to get location")
 
             Toast.makeText(activity, "Unable to get location", Toast.LENGTH_LONG).show()
         } else {
 
-            Log.d("END", "var routing=Routing")
             val routing: Routing? = Routing.Builder()
                 .travelMode(AbstractRouting.TravelMode.DRIVING)
                 .withListener(this)
@@ -288,11 +278,8 @@ class AttractionsDrawRoute : Fragment(), RoutingListener {
 
             }
 
-            Log.d("polylineStart", polyLineStartLatLng.toString())
-            Log.d("polylineEmd", polylineEndLatLng.toString())
 
             // Add Marker on route starting position
-
             if (polyLineStartLatLng == null) {
                 Toast.makeText(
                     requireContext(),

@@ -333,8 +333,7 @@ class MapsFragment : Fragment() {
     }
 
     /**
-     * resizeMapIcons draws AlertDialog screen for user to choose where
-     * wants to set Marker on Map
+     * resizeMapIcons method is used for custom markers and icons on Google Maps
      *
      * This method is called at end of showCurrentPlace method.
      *

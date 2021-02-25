@@ -72,9 +72,7 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private var mProgressDialog: Dialog? = null
 
-    //    private lateinit var placesList: ArrayList<DBAttraction>
     private val attractionsDatabase by lazy { ARTravelDatabase.getDatabase(requireContext()) }
-
     // Swipe Refresh Layout
 
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
@@ -84,9 +82,15 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
         super.onCreate(savedInstanceState)
     }
 
-    //What is this?
-    inline fun <reified T> Gson.fromJson(json: String) =
-        fromJson<T>(json, object : TypeToken<T>() {}.type)
+    /**
+     * Checks if network is available and invokes necessary methods for
+     * retrieving RecyclerView items.
+     *
+     * Method is called at start of onCreateView and when user refreshes the view.
+     *
+     * @author Michael Lock & Kurosh Husseini
+     * @date 25.02.2021
+     */
 
     private fun sendNetworkRequests() {
 
@@ -138,27 +142,6 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
         sendNetworkRequests()
 
         val ump = ViewModelProviders.of(this).get(AttractionViewModel::class.java)
-
-
-
-
-//        var jotain = favourites.readAllData.observe(this,{
-//            it.sortedBy {  that ->
-//                that.name
-//            }
-//        })
-
-//        favourites.readAllData.observe(this, {
-//
-//            for (fav in it) {
-//                Log.d("Favourite", "${fav.toString()}")
-//            }
-//        })
-
-//        val jotain = Transformations.map(favourites.readAllData) {
-//            it
-//        }
-
 
         ump.readAllData.observe(this, {
             recycler_view.adapter = PlaceAdapter(
