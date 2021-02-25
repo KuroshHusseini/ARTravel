@@ -1,6 +1,7 @@
 package com.example.artravel.wikipediaPlaces
 
 data class PlaceInfoResponse(
+    val xid: String,
     val name: String,
     val address: Address,
     val bbox: Bbox,

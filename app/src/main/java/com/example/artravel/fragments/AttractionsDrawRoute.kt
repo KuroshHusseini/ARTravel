@@ -25,6 +25,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.material.snackbar.Snackbar
 import java.util.*
+
 /**
  * Fragment for drawing a route from user to destination.
  *
@@ -43,9 +44,11 @@ class AttractionsDrawRoute : Fragment(), RoutingListener {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationCallback: LocationCallback
+
     // Destination LatLng
     private var destinationLat: String? = null
     private var destinationLng: String? = null
+
     // Destination
     private val polylines = mutableListOf<Polyline>()
 
@@ -61,8 +64,6 @@ class AttractionsDrawRoute : Fragment(), RoutingListener {
         // Inflate the layout for this fragment
         destinationLat = arguments?.getString("lat")
         destinationLng = arguments?.getString("lon")
-        destinationLat?.let { Log.d("WTF", it) }
-        destinationLng?.let { Log.d("WTF", it) }
 
         parentLayout = view?.findViewById(android.R.id.content)
         return inflater.inflate(R.layout.fragment_attractions_draw_route, container, false)
@@ -70,18 +71,21 @@ class AttractionsDrawRoute : Fragment(), RoutingListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         val mapFragment =
             childFragmentManager.findFragmentById(R.id.google_map_draw_route) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
         // For locating and updating user location
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
     }
+
     private val callback = OnMapReadyCallback { googleMap ->
         map = googleMap
         getLocationAccess()
         // Use a custom info window adapter to handle multiple lines of text in the
+
         // info window contents.
-        this.map.setInfoWindowAdapter(object : GoogleMap.InfoWindowAdapter {
+        map.setInfoWindowAdapter(object : GoogleMap.InfoWindowAdapter {
             // Return null here, so that getInfoContents() is called next.
             override fun getInfoWindow(arg0: Marker): View? {
                 return null
@@ -198,13 +202,16 @@ class AttractionsDrawRoute : Fragment(), RoutingListener {
         userLocation ?: return
         start = LatLng(userLocation!!.latitude, userLocation!!.longitude)
         end = LatLng(destinationLat!!.toDouble(), destinationLng!!.toDouble())
+
         findRoute(start, end)
     }
 
     private fun findRoute(start: LatLng?, end: LatLng?) {
         if (start == null || end == null) {
+
             Toast.makeText(activity, "Unable to get location", Toast.LENGTH_LONG).show()
         } else {
+
             val routing: Routing? = Routing.Builder()
                 .travelMode(AbstractRouting.TravelMode.DRIVING)
                 .withListener(this)
@@ -245,6 +252,7 @@ class AttractionsDrawRoute : Fragment(), RoutingListener {
     }
 
     override fun onRoutingStart() {
+        Log.d("END", "Finding route...")
         Toast.makeText(activity, getString(R.string.finding_routing), Toast.LENGTH_LONG).show()
     }
 
@@ -267,19 +275,27 @@ class AttractionsDrawRoute : Fragment(), RoutingListener {
 
                 polylineEndLatLng = polyline.points[k - 1]
                 polylines.add(polyline)
+
             }
+
+
             // Add Marker on route starting position
-            val startMarker = MarkerOptions()
-            if (polyLineStartLatLng != null) {
-                startMarker.position(polyLineStartLatLng)
+            if (polyLineStartLatLng == null) {
+                Toast.makeText(
+                    requireContext(),
+                    "Could not draw route to destination.",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return
             }
+
+            val startMarker = MarkerOptions()
+            startMarker.position(polyLineStartLatLng!!)
             startMarker.title("My Location")
             map.addMarker(startMarker)
             // Add Marker on route ending position
             val endMarker = MarkerOptions()
-            if (polylineEndLatLng != null) {
-                endMarker.position(polylineEndLatLng)
-            }
+            endMarker.position(polylineEndLatLng!!)
             endMarker.title("Destination")
             map.addMarker(endMarker)
         }

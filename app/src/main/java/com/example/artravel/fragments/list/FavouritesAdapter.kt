@@ -49,14 +49,7 @@ class FavouritesAdapter(
 
                     GlobalScope.launch {
                         favouritesDatabase.favouriteDao().deleteFavourite(
-                            DBPlace(
-                                currentItem.id,
-                                currentItem.name,
-                                null,
-                                currentItem.desc,
-                                currentItem.lat,
-                                currentItem.lng,
-                            )
+                            currentItem
                         )
                     }
                     Toast.makeText(

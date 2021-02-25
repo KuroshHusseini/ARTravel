@@ -192,6 +192,9 @@ class WeatherFragment : Fragment() {
     private fun requestLocationData() {
         val mLocationRequest = LocationRequest()
         mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+
+        mFusedLocationClient.removeLocationUpdates(mLocationCallback)
+
         mFusedLocationClient.requestLocationUpdates(
             mLocationRequest,
             mLocationCallback,

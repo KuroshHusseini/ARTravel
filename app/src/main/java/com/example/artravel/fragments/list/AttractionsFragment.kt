@@ -19,16 +19,19 @@ import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.artravel.AttractionsRC.OnPlaceItemClickListener
 import com.example.artravel.R
 import com.example.artravel.constants.Constants
 import com.example.artravel.model.database.ARTravelDatabase
 import com.example.artravel.model.entity.DBAttraction
+import com.example.artravel.model.entity.DBPlace
 import com.example.artravel.model.viewmodel.AttractionViewModel
+import com.example.artravel.model.viewmodel.FavouritesViewModel
 import com.example.artravel.wikipediaPlaces.*
 import com.google.android.gms.location.*
 import com.google.gson.Gson
@@ -44,6 +47,7 @@ import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.attraction_item.*
 import kotlinx.android.synthetic.main.fragment_attractions.*
+import kotlinx.android.synthetic.main.fragment_attractions.view.*
 import kotlinx.coroutines.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -70,16 +74,26 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private var mProgressDialog: Dialog? = null
 
-    //    private lateinit var placesList: ArrayList<DBAttraction>
     private val attractionsDatabase by lazy { ARTravelDatabase.getDatabase(requireContext()) }
+    // Swipe Refresh Layout
 
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
+
     override fun onCreate(savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)
         super.onCreate(savedInstanceState)
     }
-    //What is this?
-    inline fun <reified T> Gson.fromJson(json: String) = fromJson<T>(json, object : TypeToken<T>() {}.type)
+
+    /**
+     * Checks if network is available and invokes necessary methods for
+     * retrieving RecyclerView items.
+     *
+     * Method is called at start of onCreateView and when user refreshes the view.
+     *
+     * @author Michael Lock & Kurosh Husseini
+     * @date 25.02.2021
+     */
+
     private fun sendNetworkRequests() {
 
         /*
@@ -117,8 +131,11 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
+        val view = inflater.inflate(R.layout.fragment_attractions, container, false)
 
-        return inflater.inflate(R.layout.fragment_attractions, container, false)
+        mSwipeRefreshLayout = view.swipe_recyclerview
+
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -133,11 +150,19 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
                 requireContext(),
                 it.sortedBy { that ->
                     that.name
-                }, this
+                },
+                this
             )
 
             recycler_view.layoutManager = LinearLayoutManager(requireContext())
         })
+
+
+        mSwipeRefreshLayout.setOnRefreshListener {
+            Log.d("Refreshing", "Refreshing recycler view")
+
+            sendNetworkRequests()
+        }
     }
 
     private var disposable: Disposable? = null
@@ -165,8 +190,13 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
         if (item.desc != null) {
             bundle.putString("description", item.desc)
         }
-        bundle.putString("lat", item.lat)
-        bundle.putString("lon", item.lng)
+
+        if (item.lat != null || item.lng != null) {
+            bundle.putString("lat", item.lat)
+            bundle.putString("lon", item.lng)
+        }
+
+
         findNavController().navigate(
             R.id.action_attractionsFragment_to_attractionsDetailFragment,
             bundle
@@ -237,6 +267,9 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
     private fun requestLocationData() {
         val mLocationRequest = LocationRequest()
         mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+
+        mFusedLocationClient.removeLocationUpdates(mLocationCallback)
+
         mFusedLocationClient.requestLocationUpdates(
             mLocationRequest,
             mLocationCallback,
@@ -391,6 +424,8 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
                 disposable?.dispose()
                 activity?.runOnUiThread {
                     hideProgressDialog()
+
+                    mSwipeRefreshLayout.isRefreshing = false
                 }
             })
     }
@@ -450,6 +485,7 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
                         .addAttraction(
                             DBAttraction(
                                 0,
+                                dataResponse.xid,
                                 dataResponse.name,
                                 bitmap,
                                 dataResponse?.wikipedia_extracts?.text,
@@ -461,6 +497,7 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
             }
         }
         hideProgressDialog()
+        mSwipeRefreshLayout.isRefreshing = false
     }
 
     private fun setupUI(dataResponses: MutableList<PlaceInfoResponse>) {
@@ -468,6 +505,7 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
             updateUI(dataResponses)
         }
     }
+
     private fun onFailure(t: Throwable) {
         t.printStackTrace()
     }

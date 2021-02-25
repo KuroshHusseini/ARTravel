@@ -13,6 +13,7 @@ import com.example.artravel.model.repository.FavouritesRepository
 class FavouritesViewModel (application: Application) : AndroidViewModel(
     application
 ) {
+
     val readAllData: LiveData<List<DBPlace>>
     private val repository: FavouritesRepository
 

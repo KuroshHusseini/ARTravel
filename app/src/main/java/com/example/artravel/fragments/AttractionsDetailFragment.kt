@@ -22,10 +22,14 @@ class AttractionsDetailFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_attractions_detail, container, false)
+
+
         view.showOnMap_button.setOnClickListener {
             val bundle = Bundle()
             bundle.putString("lat", lat)
             bundle.putString("lon", lon)
+
+            Log.d("showOnMap_button", "$lat, $lon")
 
             findNavController().navigate(
                 R.id.action_attractionsDetailFragment_to_attractionsDrawRoute,
@@ -41,16 +45,8 @@ class AttractionsDetailFragment : Fragment() {
         lat = arguments?.getString("lat")
         lon = arguments?.getString("lon")
 
-        Log.d("DBEGGUS", name!!)
-        if (description != null) {
-            Log.d("DBEGGUS", description)
-        }
-        if (lat != null) {
-            Log.d("DBEGGUS", lat!!)
-        }
-        if (lon != null) {
-            Log.d("DBEGGUS", lon!!)
-        }
+
+        Log.d("Detail", "$lat, $lon")
 
         view.tv_detail_place_name.text = name
         if (image != null)

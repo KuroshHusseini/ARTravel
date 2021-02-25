@@ -21,4 +21,8 @@ interface FavouritesDao {
 
     @Query("SELECT * FROM place ORDER BY id ASC")
     fun readAllData(): LiveData<List<DBPlace>>
+
+    @Query("SELECT * FROM place ORDER BY id ASC")
+    fun getAll(): List<DBPlace>
+
 }
