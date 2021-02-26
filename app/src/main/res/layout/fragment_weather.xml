@@ -228,7 +228,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="end"
-                        android:text="@string/miles_per_hour"
+                        android:text="@string/meter_per_sec"
                         android:textColor="@color/secondary_text_color"
                         android:textSize="@dimen/value_text_size" />
                 </LinearLayout>
@@ -256,7 +256,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                tools:ignore="UselessParent">
 
                 <ImageView
                     android:id="@+id/iv_location"
@@ -276,7 +277,8 @@
                         android:id="@+id/tv_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="end"
+                        android:layout_marginStart="@dimen/place_txt_margin_left"
+                        android:gravity="start"
                         android:textColor="@color/primary_text_color"
                         android:textSize="@dimen/label_text_size"
                         android:textStyle="bold"
@@ -286,73 +288,118 @@
                         android:id="@+id/tv_country"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="end"
+                        android:layout_marginStart="@dimen/place_txt_margin_left"
+                        android:gravity="start"
                         android:textColor="@color/secondary_text_color"
                         android:textSize="@dimen/value_text_size"
                         tools:text="Country" />
                 </LinearLayout>
 
             </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/divider_height"
-                android:layout_margin="@dimen/divider_margin"
-                android:background="@color/divider_background" />
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/card_view_marginStartEnd"
+        android:layout_marginTop="@dimen/card_view_marginTop"
+        android:layout_marginEnd="@dimen/card_view_marginStartEnd"
+        android:background="@android:color/white"
+        app:cardCornerRadius="@dimen/card_view_corner_radius"
+        app:cardElevation="@dimen/card_view_elevation">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:baselineAligned="false"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal">
+                android:layout_marginEnd="@dimen/sunrise_marginTop"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:padding="@dimen/card_view_content_padding"
+                tools:ignore="RtlCompat,UseCompoundDrawables">
+
+                <ImageView
+                    android:id="@+id/iv_sunrise"
+                    android:layout_width="@dimen/identification_image_size"
+                    android:layout_height="@dimen/identification_image_size"
+                    android:layout_marginEnd="@dimen/identification_image_marginEnd"
+                    android:contentDescription="@string/image_contentDescription"
+                    android:src="@drawable/sunrise"
+                    tools:ignore="RtlCompat" />
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/sunrise_marginTop"
-                    android:orientation="vertical"
-                    tools:ignore="RtlCompat,UseCompoundDrawables">
+                    android:orientation="vertical">
 
-                    <ImageView
-                        android:id="@+id/iv_sunrise"
-                        android:layout_width="@dimen/identification_image_size"
-                        android:layout_height="@dimen/identification_image_size"
-                        android:layout_marginEnd="@dimen/identification_image_marginEnd"
-                        android:contentDescription="@string/image_contentDescription"
-                        android:src="@drawable/sunrise"
-                        tools:ignore="RtlCompat" />
+                    <TextView
+                        android:id="@+id/id_sunrise_txt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="end"
+                        android:textColor="@color/primary_text_color"
+                        android:textSize="@dimen/label_text_size"
+                        android:textStyle="bold"
+                        android:visibility="visible"
+                        tools:text="Sunrise" />
 
                     <TextView
                         android:id="@+id/tv_sunrise_time"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:gravity="end"
                         android:textColor="@color/secondary_text_color"
-                        android:textSize="@dimen/value_text_size"
-                        tools:text="Sunrise" />
+                        android:textSize="@dimen/value_text_size" />
                 </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/sunset_marginStart"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:padding="@dimen/card_view_content_padding"
+                tools:ignore="RtlCompat,UseCompoundDrawables">
+
+                <ImageView
+                    android:id="@+id/iv_sunset"
+                    android:layout_width="@dimen/identification_image_size"
+                    android:layout_height="@dimen/identification_image_size"
+                    android:layout_marginEnd="@dimen/identification_image_marginEnd"
+                    android:contentDescription="@string/image_contentDescription"
+                    android:src="@drawable/sunset" />
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/sunset_marginStart"
-                    android:orientation="vertical"
-                    tools:ignore="RtlCompat,UseCompoundDrawables">
+                    android:orientation="vertical">
 
-                    <ImageView
-                        android:id="@+id/iv_sunset"
-                        android:layout_width="@dimen/identification_image_size"
-                        android:layout_height="@dimen/identification_image_size"
-                        android:layout_marginEnd="@dimen/identification_image_marginEnd"
-                        android:contentDescription="@string/image_contentDescription"
-                        android:src="@drawable/sunset" />
+                    <TextView
+                        android:id="@+id/id_sunset_txt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="end"
+                        android:textColor="@color/primary_text_color"
+                        android:textSize="@dimen/label_text_size"
+                        android:textStyle="bold"
+                        android:visibility="visible"
+                        tools:text="Sunset" />
 
                     <TextView
                         android:id="@+id/tv_sunset_time"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:gravity="end"
                         android:textColor="@color/secondary_text_color"
-                        android:textSize="@dimen/value_text_size"
-                        tools:text="Sunset" />
+                        android:textSize="@dimen/value_text_size" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

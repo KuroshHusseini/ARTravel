@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.location.Address
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -41,9 +40,10 @@ import kotlinx.android.synthetic.main.fragment_maps.*
  * @date 23.02.2021
  */
 
+@Suppress("DEPRECATION")
 class MapsFragment : Fragment() {
     companion object {
-        val GOOGLE_API_KEY = Constants.GOOGLE_API_KEY
+        const val GOOGLE_API_KEY = Constants.GOOGLE_API_KEY
         private const val LOCATION_PERMISSION_REQUEST = 1
     }
     /*
@@ -155,26 +155,23 @@ class MapsFragment : Fragment() {
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 // Geocode user location address
-                val addresses: List<Address>
                 activity ?: return
                 if (locationResult.locations.isNotEmpty()) {
                     val location = locationResult.lastLocation
-                    if (location != null) {
-                        val latLng = LatLng(location.latitude, location.longitude)
-                        map.addMarker(
-                            MarkerOptions().position(latLng).title("You are here.")
-                                .icon(
-                                    BitmapDescriptorFactory.fromBitmap(
-                                        resizeMapIcons(
-                                            "map_marker",
-                                            100,
-                                            100
-                                        )
+                    val latLng = LatLng(location.latitude, location.longitude)
+                    map.addMarker(
+                        MarkerOptions().position(latLng).title("You are here.")
+                            .icon(
+                                BitmapDescriptorFactory.fromBitmap(
+                                    resizeMapIcons(
+                                        "map_marker",
+                                        100,
+                                        100
                                     )
                                 )
-                        )
-                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
-                    }
+                            )
+                    )
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
                 }
             }
         }

@@ -73,6 +73,7 @@ class WeatherFragment : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_weather, container, false)
     }
+
     /**
      * @param dataResponses array with properties (e.g. coord, weather, base, main, id , name, cod etc).
      * Based on users location
@@ -118,6 +119,7 @@ class WeatherFragment : Fragment() {
                         }
                     }
                 }
+
                 override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
                     Log.e("Error", t.message.toString())
                     hideProgressDialog()
@@ -132,6 +134,7 @@ class WeatherFragment : Fragment() {
                 .show()
         }
     }
+
     private fun isLocationEnable(): Boolean {
         val locationManager: LocationManager =
             activity!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -215,6 +218,7 @@ class WeatherFragment : Fragment() {
         }
     }
 
+
     //Setting UI texts
     @SuppressLint("SetTextI18n")
     private fun setupUI(weatherList: WeatherResponse) {
@@ -226,10 +230,12 @@ class WeatherFragment : Fragment() {
             tv_temp?.text =
                 "${weatherList.main.temp} ${getUnit(resources.configuration.toString())}"
 
+            id_sunrise_txt.text = getString(R.string.sunrise_txt)
+            id_sunset_txt.text = getString(R.string.sunset_txt)
             tv_sunrise_time?.text = unixTime(weatherList.sys.sunrise)
             tv_sunset_time?.text = unixTime(weatherList.sys.sunset)
 
-            tv_humidity?.text = "${weatherList.main.humidity} percent"
+            tv_humidity?.text = "${weatherList.main.humidity} %"
 
             tv_min?.text = "${weatherList.main.temp_min} min"
             tv_max?.text = "${weatherList.main.temp_max} max"

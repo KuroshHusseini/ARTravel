@@ -16,7 +16,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setupViews()
     }
-
     /**
      *Finding the Navigation Controller
      *Setting Navigation Controller with the BottomNavigationView

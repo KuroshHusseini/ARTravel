@@ -19,4 +19,5 @@
     <dimen name="divider_height">1dp</dimen>
     <dimen name="divider_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="place_txt_margin_left">20dp</dimen>
 </resources>

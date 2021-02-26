@@ -14,7 +14,7 @@
     <string name="toast_txt_for_location">Your location provider is turned off. Please turn it on!</string>
     <string name="toast_txt_for_location_on">Your location provider is already ON!</string>
     <string name="image_contentDescription">image</string>
-    <string name="miles_per_hour">miles/hour</string>
+    <string name="meter_per_sec">m/s</string>
 
 
     <!-- Weather fragment -->
@@ -68,4 +68,6 @@
     <string name="iv_favorites_btn">Favorites button</string>
     <string name="failed_to_copy_pixels">Failed to copy pixels!</string>
     <string name="AR_models">AR Models +</string>
+    <string name="sunrise_txt">Sunrise</string>
+    <string name="sunset_txt">Sunset</string>
 </resources>
