@@ -70,4 +70,5 @@
     <string name="AR_models">AR Models +</string>
     <string name="sunrise_txt">Sunrise</string>
     <string name="sunset_txt">Sunset</string>
+    <string name="change_model_size">Change model size</string>
 </resources>

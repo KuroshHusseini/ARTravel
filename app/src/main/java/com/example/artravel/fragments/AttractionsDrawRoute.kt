@@ -2,6 +2,8 @@ package com.example.artravel.fragments
 
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.location.Address
+import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
@@ -24,6 +26,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.material.snackbar.Snackbar
+import java.io.IOException
 import java.util.*
 
 /**
@@ -234,6 +237,63 @@ class AttractionsDrawRoute : Fragment(), RoutingListener {
 
     @SuppressLint("MissingPermission")
     private fun startLocationUpdates() {
+
+
+        fusedLocationClient.lastLocation
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful && task.result != null) {
+                    val mLastLocation = task.result
+
+                    var address = "No known address"
+
+                    val gcd = Geocoder(activity, Locale.getDefault())
+                    val addresses: List<Address>
+                    try {
+                        addresses = gcd.getFromLocation(
+                            mLastLocation!!.latitude,
+                            mLastLocation.longitude, 1
+                        )
+                        if (addresses.isNotEmpty()) {
+                            address = addresses[0].getAddressLine(0)
+                        }
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
+
+                    map.addMarker(
+                        MarkerOptions()
+                            .position(
+                                LatLng(
+                                    mLastLocation!!.latitude,
+                                    mLastLocation.longitude
+                                )
+                            )
+                            .title("Current Location")
+                            .snippet(address)
+                    )
+
+                    val cameraPosition = CameraPosition.Builder()
+                        .target(
+                            LatLng(
+                                mLastLocation.latitude,
+                                mLastLocation.longitude
+                            )
+                        )
+                        .zoom(17f)
+                        .build()
+                    map.moveCamera(
+                        CameraUpdateFactory.newCameraPosition(
+                            cameraPosition
+                        )
+                    )
+                } else {
+                    Toast.makeText(
+                        activity, "No current location found",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
         fusedLocationClient.requestLocationUpdates(
             locationRequest,
             locationCallback,
@@ -289,10 +349,6 @@ class AttractionsDrawRoute : Fragment(), RoutingListener {
                 return
             }
 
-            val startMarker = MarkerOptions()
-            startMarker.position(polyLineStartLatLng!!)
-            startMarker.title("My Location")
-            map.addMarker(startMarker)
             // Add Marker on route ending position
             val endMarker = MarkerOptions()
             endMarker.position(polylineEndLatLng!!)

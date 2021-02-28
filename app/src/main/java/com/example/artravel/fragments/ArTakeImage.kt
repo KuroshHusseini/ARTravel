@@ -57,7 +57,7 @@ class ArTakeImage : AppCompatActivity() {
         private var PYRAMID_URL: String =
             "https://raw.githubusercontent.com/thelockymichael/gltf-Sample_models/main/2.0/PUSHILIN_pyramid.gltf"
         private var COLOSSEUM_URL: String =
-            "https://raw.githubusercontent.com/thelockymichael/gltf-Sample_models/main/2.0/colosseum002.gltf"
+            "https://raw.githubusercontent.com/thelockymichael/gltf-Sample_models/main/2.0/colosseum02.gltf"
         private var WALLS_CHINA: String =
             "https://raw.githubusercontent.com/thelockymichael/gltf-Sample_models/main/2.0/wallsOfChina004_lego.gltf"
         private var TAJ_MAHAL_URL: String =
@@ -114,20 +114,6 @@ class ArTakeImage : AppCompatActivity() {
         }
 
         setUpPlane()
-        // RangeSlider
-        modelSizeSlider.addOnSliderTouchListener(object :
-
-            RangeSlider.OnSliderTouchListener {
-            override fun onStartTrackingTouch(slider: RangeSlider) {
-                val values = modelSizeSlider.values
-                Log.d("onStartTrackingTouch From", values[0].toString())
-            }
-
-            override fun onStopTrackingTouch(slider: RangeSlider) {
-                val values = modelSizeSlider.values
-                Log.d("onStopTrackingTouch From", values[0].toString())
-            }
-        })
 
         modelSizeSlider.addOnChangeListener { _, value, _ ->
             Log.d("From", value.toString())
@@ -355,7 +341,7 @@ class ArTakeImage : AppCompatActivity() {
                         Uri.parse(PYRAMID_URL),
                         RenderableSource.SourceType.GLTF2
                     )
-                        .setScale(0.75f)
+                        .setScale(0.5f)
                         .setRecenterMode(RenderableSource.RecenterMode.ROOT)
                         .build()
                 ).setRegistryId(PYRAMID_URL)
@@ -384,7 +370,7 @@ class ArTakeImage : AppCompatActivity() {
                         ),
                         RenderableSource.SourceType.GLTF2
                     )
-                        .setScale(0.1f)
+                        .setScale(0.5f)
                         .setRecenterMode(RenderableSource.RecenterMode.ROOT)
                         .build()
                 ).setRegistryId(COLOSSEUM_URL)
@@ -410,7 +396,7 @@ class ArTakeImage : AppCompatActivity() {
                         Uri.parse(WALLS_CHINA),
                         RenderableSource.SourceType.GLTF2
                     )
-                        .setScale(0.75f)
+                        .setScale(0.5f)
                         .setRecenterMode(RenderableSource.RecenterMode.ROOT)
                         .build()
                 ).setRegistryId(WALLS_CHINA)
@@ -437,7 +423,7 @@ class ArTakeImage : AppCompatActivity() {
                         Uri.parse(TAJ_MAHAL_URL),
                         RenderableSource.SourceType.GLTF2
                     )
-                        .setScale(0.75f)
+                        .setScale(0.5f)
                         .setRecenterMode(RenderableSource.RecenterMode.ROOT)
                         .build()
                 ).setRegistryId(TAJ_MAHAL_URL)

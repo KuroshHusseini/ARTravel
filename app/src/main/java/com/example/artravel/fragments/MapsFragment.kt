@@ -4,8 +4,8 @@ import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+import android.location.Address
+import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -23,15 +23,18 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest
 import com.google.android.libraries.places.api.net.PlacesClient
 import kotlinx.android.synthetic.main.fragment_maps.*
+import java.io.IOException
+import java.util.*
 
 /**
  * MapsFragment uses Google Maps Services to locate user and look for places
@@ -46,6 +49,7 @@ class MapsFragment : Fragment() {
         const val GOOGLE_API_KEY = Constants.GOOGLE_API_KEY
         private const val LOCATION_PERMISSION_REQUEST = 1
     }
+
     /*
     * Likely Places
     * */
@@ -118,6 +122,7 @@ class MapsFragment : Fragment() {
                 LOCATION_PERMISSION_REQUEST
             )
     }
+
     @SuppressLint("MissingPermission")
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -152,6 +157,9 @@ class MapsFragment : Fragment() {
         locationRequest.interval = 30000
         locationRequest.fastestInterval = 20000
         locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+
+
+
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 // Geocode user location address
@@ -159,30 +167,89 @@ class MapsFragment : Fragment() {
                 if (locationResult.locations.isNotEmpty()) {
                     val location = locationResult.lastLocation
                     val latLng = LatLng(location.latitude, location.longitude)
-                    map.addMarker(
-                        MarkerOptions().position(latLng).title("You are here.")
-                            .icon(
-                                BitmapDescriptorFactory.fromBitmap(
-                                    resizeMapIcons(
-                                        "map_marker",
-                                        100,
-                                        100
-                                    )
-                                )
-                            )
-                    )
+//                    map.addMarker(
+//                        MarkerOptions().position(latLng).title("Current Location")
+//                    )
                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
                 }
             }
         }
     }
+
     @SuppressLint("MissingPermission")
     private fun startLocationUpdates() {
+
+        fusedLocationClient.lastLocation
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful && task.result != null) {
+                    val mLastLocation = task.result
+
+                    var address = "No known address"
+
+                    val gcd = Geocoder(activity, Locale.getDefault())
+                    val addresses: List<Address>
+                    try {
+                        addresses = gcd.getFromLocation(
+                            mLastLocation!!.latitude,
+                            mLastLocation.longitude, 1
+                        )
+                        if (addresses.isNotEmpty()) {
+                            address = addresses[0].getAddressLine(0)
+                        }
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
+
+                    map.addMarker(
+                        MarkerOptions()
+                            .position(
+                                LatLng(
+                                    mLastLocation!!.latitude,
+                                    mLastLocation.longitude
+                                )
+                            )
+                            .title("Current Location")
+                            .snippet(address)
+                    )
+
+                    val cameraPosition = CameraPosition.Builder()
+                        .target(
+                            LatLng(
+                                mLastLocation.latitude,
+                                mLastLocation.longitude
+                            )
+                        )
+                        .zoom(17f)
+                        .build()
+                    map.moveCamera(
+                        CameraUpdateFactory.newCameraPosition(
+                            cameraPosition
+                        )
+                    )
+                } else {
+                    Toast.makeText(
+                        activity, "No current location found",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
         fusedLocationClient.requestLocationUpdates(
             locationRequest,
             locationCallback,
             null
         )
+    }
+
+    private val cancellationTokenSource by lazy {
+        CancellationTokenSource()
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        // onStop or whenever you want to cancel the request
+        cancellationTokenSource.cancel()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -217,7 +284,6 @@ class MapsFragment : Fragment() {
 
         // For locating and updating user location
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
-
 
         // Construct a PlacesClient
         Places.initialize(requireContext(), GOOGLE_API_KEY)
@@ -327,29 +393,6 @@ class MapsFragment : Fragment() {
             .setTitle(R.string.pick_place)
             .setItems(likelyPlaceNames, listener)
             .show()
-    }
-
-    /**
-     * resizeMapIcons method is used for custom markers and icons on Google Maps
-     *
-     * This method is called at end of showCurrentPlace method.
-     *
-     * @param iconName name of icon in drawable in resources
-     * @param width width in pixels
-     * @param height height in pixels
-     *
-     * @return       custom map marker
-     *
-     * @author Michael Lock
-     * @date 23.02.2021
-     */
-
-    fun resizeMapIcons(iconName: String?, width: Int, height: Int): Bitmap? {
-        val imageBitmap = BitmapFactory.decodeResource(
-            resources,
-            resources.getIdentifier(iconName, "drawable", activity?.packageName)
-        )
-        return Bitmap.createScaledBitmap(imageBitmap, width, height, false)
     }
 }
 
