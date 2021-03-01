@@ -80,19 +80,6 @@ class WeatherFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        activity ?: return
-
-//        val sharedPreferences = SharedPreferences.ge
-
-        val sharedPreferences = activity?.getSharedPreferences("night", 0)
-
-        val booleanValue: Boolean = sharedPreferences?.getBoolean("night_mode", true) == true
-
-        if (booleanValue) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            switch_darkLight.isChecked = true
-        }
-
         switch_darkLight.setOnClickListener {
 
             val isNightTheme = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
