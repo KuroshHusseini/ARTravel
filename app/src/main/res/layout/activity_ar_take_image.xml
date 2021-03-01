@@ -17,7 +17,7 @@
         android:layout_marginBottom="16dp"
         android:text="@string/take_image"
         android:textColor="@color/white"
-        app:backgroundTint="@color/purple_500"
+        app:backgroundTint="@color/teal_700"
         app:icon="@drawable/ic_baseline_image_24"
         app:iconTint="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/changeModelSize_tv"
@@ -33,10 +33,10 @@
         android:contentDescription="@string/go_back"
         android:src="@drawable/ic_arrow_back"
         android:tintMode="add"
-        app:backgroundTint="@color/purple_500"
+        app:backgroundTint="@color/teal_700"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/purple_500" />
+        app:tint="@color/teal_700" />
 
 
     <com.google.android.material.slider.RangeSlider
@@ -55,29 +55,29 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <fragment
-        android:id="@+id/sceneform_fragment"
-        android:name="com.google.ar.sceneform.ux.ArFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="44dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout="@layout/activity_ar_take_image" />
+        <fragment
+            android:id="@+id/sceneform_fragment"
+            android:name="com.google.ar.sceneform.ux.ArFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="44dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout="@layout/activity_ar_take_image" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/id_add_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
         android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
         android:contentDescription="@string/AR_models"
         android:focusable="true"
         android:minWidth="125dp"
         android:text="@string/AR_models"
         android:textAlignment="center"
         android:textColor="@color/white"
-        app:backgroundTint="@color/purple_500"
+        app:backgroundTint="@color/teal_700"
         app:layout_constraintBottom_toTopOf="@+id/changeModelSize_tv"
         app:layout_constraintRight_toRightOf="parent" />
 
@@ -91,8 +91,10 @@
         android:focusable="true"
         android:text="@string/taj_mahal"
         android:textAlignment="center"
+        android:textColor="@color/white"
         android:tint="@color/white"
         android:visibility="invisible"
+        app:backgroundTint="@color/teal_700"
         app:layout_constraintBottom_toTopOf="@+id/id_add_button"
         app:layout_constraintEnd_toEndOf="@+id/id_add_button"
         app:srcCompat="@drawable/ic_attractions_24" />
@@ -107,8 +109,10 @@
         android:focusable="true"
         android:text="@string/walls_of_china"
         android:textAlignment="center"
+        android:textColor="@color/white"
         android:tint="@color/white"
         android:visibility="invisible"
+        app:backgroundTint="@color/teal_700"
         app:layout_constraintBottom_toTopOf="@+id/selectTajMahal_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_attractions_24" />
@@ -124,8 +128,10 @@
         android:focusable="true"
         android:text="@string/colosseum"
         android:textAlignment="center"
+        android:textColor="@color/white"
         android:tint="@color/white"
         android:visibility="invisible"
+        app:backgroundTint="@color/teal_700"
         app:layout_constraintBottom_toTopOf="@+id/selectWallsOfChina_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_attractions_24" />
@@ -140,8 +146,10 @@
         android:focusable="true"
         android:text="@string/pyramid"
         android:textAlignment="center"
+        android:textColor="@color/white"
         android:tint="@color/white"
         android:visibility="invisible"
+        app:backgroundTint="@color/teal_700"
         app:layout_constraintBottom_toTopOf="@+id/selectColosseum_btn"
         app:layout_constraintEnd_toEndOf="@+id/selectColosseum_btn" />
 
@@ -157,6 +165,7 @@
         android:text="@string/change_model_size"
         android:textColor="@color/white"
         android:textSize="28sp"
+        app:backgroundTint="@color/teal_700"
         app:layout_constraintBottom_toTopOf="@+id/modelSizeSlider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

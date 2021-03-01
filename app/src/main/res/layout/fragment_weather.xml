@@ -406,6 +406,16 @@
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
+
         </androidx.cardview.widget.CardView>
+
+        <Switch
+            android:id="@+id/switch_darkLight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="20dp"
+            android:text="Night Mode"
+            android:textColor="@color/black" />
     </LinearLayout>
 </ScrollView>

@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
             setOf(
                 R.id.mapsFragment,
                 R.id.attractionsFragment,
-                R.id.weatherFragment
+                R.id.weatherFragment,
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)

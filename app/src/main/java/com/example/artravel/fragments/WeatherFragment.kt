@@ -7,6 +7,8 @@ import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.location.Location
 import android.location.LocationManager
 import android.net.Uri
@@ -16,6 +18,7 @@ import android.provider.Settings
 import android.util.Log
 import android.view.*
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import com.example.artravel.R
 import com.example.artravel.constants.Constants
@@ -72,6 +75,40 @@ class WeatherFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_weather, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        activity ?: return
+
+//        val sharedPreferences = SharedPreferences.ge
+
+        val sharedPreferences = activity?.getSharedPreferences("night", 0)
+
+        val booleanValue: Boolean = sharedPreferences?.getBoolean("night_mode", true) == true
+
+        if (booleanValue) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            switch_darkLight.isChecked = true
+        }
+
+        switch_darkLight.setOnClickListener {
+
+            val isNightTheme = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+
+            // 4
+            when (isNightTheme) {
+                Configuration.UI_MODE_NIGHT_YES -> {
+                    AppCompatDelegate.setDefaultNightMode(
+                        AppCompatDelegate.MODE_NIGHT_NO
+                    )
+                }
+                Configuration.UI_MODE_NIGHT_NO -> AppCompatDelegate.setDefaultNightMode(
+                    AppCompatDelegate.MODE_NIGHT_YES
+                )
+            }
+        }
     }
 
     /**
@@ -137,7 +174,7 @@ class WeatherFragment : Fragment() {
 
     private fun isLocationEnable(): Boolean {
         val locationManager: LocationManager =
-            activity!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
             LocationManager.NETWORK_PROVIDER
         )
@@ -178,7 +215,7 @@ class WeatherFragment : Fragment() {
             .setPositiveButton(getString(R.string.positive_button_for_alert_txt)) { _, _ ->
                 try {
                     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                    val uri = Uri.fromParts("package", activity!!.packageName, null)
+                    val uri = Uri.fromParts("package",requireActivity().packageName, null)
                     intent.data = uri
                     startActivity(intent)
                 } catch (e: ActivityNotFoundException) {
@@ -276,7 +313,7 @@ class WeatherFragment : Fragment() {
 
     //custom dialog
     private fun showCustomProgressDialog() {
-        mProgressDialog = Dialog(activity!!)
+        mProgressDialog = Dialog(requireActivity())
         mProgressDialog!!.setContentView(R.layout.dialog_custom_progress)
         mProgressDialog!!.show()
     }
