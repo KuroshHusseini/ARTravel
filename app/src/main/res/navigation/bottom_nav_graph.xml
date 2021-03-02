@@ -80,6 +80,6 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.artravel.fragments.SettingsFragment"
-        android:label="fragment_settings"
+        android:label="@string/title_activity_settings_activity"
         tools:layout="@layout/fragment_settings" />
 </navigation>
