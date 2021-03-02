@@ -42,7 +42,13 @@ You could even record your adventure and then send it to a friend to walk throug
 
 </details>
 
-#### Running, building, generate API keys.
+### Running, building, generate API keys.
+
+<details><summary><b>Show instructions</b></summary>
+
+1. Download or clone this GitHub repository.
+
+2. Open the downloaded project in Android Studio (4.1.1 at the time of uploading) 
 
 * <b> Running project. </b>
 Running project will launch the application on an emulated or physical Android device.
@@ -66,7 +72,7 @@ Dependent source files, if appropriate, are also compiled.
 
 </details>
 
-### Adding API KEYS to USE the APP
+### Adding API keys
 
 1. Create gradle.properties file in root of project.
 2. Add three API keys accordingly
