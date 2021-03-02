@@ -23,6 +23,21 @@ AR allows everyone to see more of what they want and make every experience uniqu
 
 You could even record your adventure and then send it to a friend to walk through it with you.
 
+### Application screenshots
+
+<p align="center">
+  <img src="readme_images/attraction_detail_fragment" alt="attraction_detail_fragment" width="300">
+  <img src="readme_images/ar_take_image_gallery_02" alt="ar_take_image_gallery_02" width="300">
+  <img src="readme_images/attractions_fragment_01" alt="attractions_fragment_01" width="300">
+  <img src="readme_images/attractions_fragment_night_02" alt="attractions_fragment_night_02" width="300">
+  <img src="readme_images/draw_route_fragment" alt="draw_route_fragment" width="300">
+  <img src="readme_images/maps_fragment_day_01" alt="maps_fragment_day_01" width="300">
+  <img src="readme_images/maps_fragment_night_01" alt="maps_fragment_night_01" width="300">
+  <img src="readme_images/attractions_fragment_01" alt="attractions_fragment_01" width="300">
+  <img src="readme_images/weather_fragment_day" alt="weather_fragment_day" width="300">
+  <img src="readme_images/weather_fragment_night_02" alt="weather_fragment_night_02" width="300">
+</p>
+
 
 ### Adding API KEYS to USE the APP
 
