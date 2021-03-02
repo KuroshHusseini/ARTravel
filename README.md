@@ -26,16 +26,16 @@ You could even record your adventure and then send it to a friend to walk throug
 ### Application screenshots
 
 <p align="center">
-  <img src="readme_images/attraction_detail_fragment" alt="attraction_detail_fragment" width="300">
-  <img src="readme_images/ar_take_image_gallery_02" alt="ar_take_image_gallery_02" width="300">
-  <img src="readme_images/attractions_fragment_01" alt="attractions_fragment_01" width="300">
-  <img src="readme_images/attractions_fragment_night_02" alt="attractions_fragment_night_02" width="300">
-  <img src="readme_images/draw_route_fragment" alt="draw_route_fragment" width="300">
-  <img src="readme_images/maps_fragment_day_01" alt="maps_fragment_day_01" width="300">
-  <img src="readme_images/maps_fragment_night_01" alt="maps_fragment_night_01" width="300">
-  <img src="readme_images/attractions_fragment_01" alt="attractions_fragment_01" width="300">
-  <img src="readme_images/weather_fragment_day" alt="weather_fragment_day" width="300">
-  <img src="readme_images/weather_fragment_night_02" alt="weather_fragment_night_02" width="300">
+  <img src="readme_images/attraction_detail_fragment.jpg" alt="attraction_detail_fragment" width="300">
+  <img src="readme_images/ar_take_image_gallery_02.jpg" alt="ar_take_image_gallery_02" width="300">
+  <img src="readme_images/attractions_fragment_01.jpg" alt="attractions_fragment_01" width="300">
+  <img src="readme_images/attractions_fragment_night_02.jpg" alt="attractions_fragment_night_02" width="300">
+  <img src="readme_images/draw_route_fragment.jpg" alt="draw_route_fragment" width="300">
+  <img src="readme_images/maps_fragment_day_01.jpg" alt="maps_fragment_day_01" width="300">
+  <img src="readme_images/maps_fragment_night_01.jpg" alt="maps_fragment_night_01" width="300">
+  <img src="readme_images/attractions_fragment_01.jpg" alt="attractions_fragment_01" width="300">
+  <img src="readme_images/weather_fragment_day.jpg" alt="weather_fragment_day" width="300">
+  <img src="readme_images/weather_fragment_night_02.jpg" alt="weather_fragment_night_02" width="300">
 </p>
 
 
