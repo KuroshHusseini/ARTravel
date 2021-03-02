@@ -94,6 +94,46 @@ In the image the current emulating device is set to Pixel 3 XL.
   <img src="readme_images/google_select_api_key.jpeg" alt="google_select_api_key.jpeg" width="650">
 </p>
 
+Running project will launch the application on an emulated or physical Android device.
+In the image the current emulating device is set to Pixel 3 XL.
+<p align="center">
+  <img src="readme_images/google_new_api_key_01.jpeg" alt="google_new_api_key_01.jpeg" width="650">
+</p>
+
+Running project will launch the application on an emulated or physical Android device.
+In the image the current emulating device is set to Pixel 3 XL.
+<p align="center">
+  <img src="readme_images/google_add_directions_service.jpeg" alt="google_add_directions_service.jpeg" width="650">
+</p>
+
+Running project will launch the application on an emulated or physical Android device.
+In the image the current emulating device is set to Pixel 3 XL.
+<p align="center">
+  <img src="readme_images/google_services_in_dashboard.jpeg" alt="google_services_in_dashboard.jpeg" width="650">
+</p>
+
+--- 
+
+Running project will launch the application on an emulated or physical Android device.
+In the image the current emulating device is set to Pixel 3 XL.
+<p align="center">
+  <img src="readme_images/openweather_current_weather.jpeg" alt="openweather_current_weather.jpeg" width="650">
+</p>
+
+Running project will launch the application on an emulated or physical Android device.
+In the image the current emulating device is set to Pixel 3 XL.
+<p align="center">
+  <img src="readme_images/openweather_api_generate.jpeg" alt="openweather_api_generate.jpeg" width="650">
+</p>
+
+---
+
+Running project will launch the application on an emulated or physical Android device.
+In the image the current emulating device is set to Pixel 3 XL.
+<p align="center">
+  <img src="readme_images/opentripapi_api_key.jpeg" alt="opentrip_generate_api.jpeg" width="650">
+</p>
+
 
 2. Open the downloaded project in Android Studio (4.1.1 at the time of uploading) 
 
