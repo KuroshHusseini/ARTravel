@@ -88,4 +88,5 @@
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="night_mode">Night Mode</string>
     <string name="Light_Mode">Light Mode</string>
+    <string name="list_places">List Places</string>
 </resources>

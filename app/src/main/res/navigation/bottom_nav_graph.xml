@@ -77,4 +77,9 @@
             android:id="@+id/action_favouritesFragment_to_attractionsDetailFragment"
             app:destination="@id/attractionsDetailFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.artravel.fragments.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" />
 </navigation>

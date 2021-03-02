@@ -75,25 +75,6 @@ class WeatherFragment : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_weather, container, false)
     }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        switch_darkLight.setOnClickListener {
-            // 4
-            when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
-                Configuration.UI_MODE_NIGHT_YES -> {
-                    AppCompatDelegate.setDefaultNightMode(
-                        AppCompatDelegate.MODE_NIGHT_NO
-                    )
-                }
-                Configuration.UI_MODE_NIGHT_NO -> AppCompatDelegate.setDefaultNightMode(
-                    AppCompatDelegate.MODE_NIGHT_YES
-                )
-            }
-        }
-    }
-
     /**
      * @param dataResponses array with properties (e.g. coord, weather, base, main, id , name, cod etc).
      * Based on users location

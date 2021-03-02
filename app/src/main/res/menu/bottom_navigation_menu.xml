@@ -15,4 +15,8 @@
         android:id="@+id/weatherFragment"
         android:icon="@drawable/ic_weather_icon_24"
         android:title="@string/nav_bar_weather_txt" />
+    <item
+        android:id="@+id/settingsFragment"
+        android:icon="@drawable/ic_baseline_settings_24"
+        android:title="@string/nav_bar_weather_txt" />
 </menu>
