@@ -25,6 +25,8 @@ You could even record your adventure and then send it to a friend to walk throug
 
 ### Application screenshots
 
+<details><summary><b>Show screenshots</b></summary>
+
 <p align="center">
   <img src="readme_images/attraction_detail_fragment.jpg" alt="attraction_detail_fragment" width="300">
   <img src="readme_images/ar_take_image_gallery_02.jpg" alt="ar_take_image_gallery_02" width="300">
@@ -38,6 +40,31 @@ You could even record your adventure and then send it to a friend to walk throug
   <img src="readme_images/weather_fragment_night_02.jpg" alt="weather_fragment_night_02" width="300">
 </p>
 
+</details>
+
+#### Running, building, generate API keys.
+
+* <b> Running project. </b>
+Running project will launch the application on an emulated or physical Android device.
+In the image the current emulating device is set to Pixel 3 XL.
+<p align="center">
+  <img src="readme_images/play_circle.jpeg" alt="play project" width="650">
+</p>
+
+* <b> Building project. </b>
+Builds an APK of all modules in the current project for their selected variant. When IDE finishes building, a confirmation notification appears, providing a link to the APK file. The path to file is in <i><b>BirdApp/app/build/outputs/apk/debug/</b></i> and default file name is app-debug.
+<p align="center">
+  <img src="readme_images/build_circle.jpeg" alt="build project" width="650">
+</p>
+
+* <b> Make project. </b>
+Make project compile all the source files in the entire project that have been modified since the last compilation are compiled. 
+Dependent source files, if appropriate, are also compiled.
+<p align="center">
+  <img src="readme_images/make_circle.jpeg" alt="make project" width="650">
+</p>
+
+</details>
 
 ### Adding API KEYS to USE the APP
 
