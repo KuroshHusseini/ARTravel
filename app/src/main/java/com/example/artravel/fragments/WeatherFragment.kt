@@ -7,7 +7,6 @@ import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.location.Location
 import android.location.LocationManager
@@ -81,11 +80,8 @@ class WeatherFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         switch_darkLight.setOnClickListener {
-
-            val isNightTheme = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-
             // 4
-            when (isNightTheme) {
+            when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
                 Configuration.UI_MODE_NIGHT_YES -> {
                     AppCompatDelegate.setDefaultNightMode(
                         AppCompatDelegate.MODE_NIGHT_NO
