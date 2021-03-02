@@ -70,9 +70,36 @@ Dependent source files, if appropriate, are also compiled.
   <img src="readme_images/make_circle.jpeg" alt="make project" width="650">
 </p>
 
+#### Generating API keys.
+
+1. To use this project you must have an account on 3 different websites.
+  <ul>
+    <li>OpenTripMap</li>
+    <li>Google Cloud</li>
+    <li>Open Weather Map</li>
+  </ul>
+  
+  ---
+  
+  * <b> Generating API for Google Services . </b>
+Running project will launch the application on an emulated or physical Android device.
+In the image the current emulating device is set to Pixel 3 XL.
+<p align="center">
+  <img src="readme_images/google_select_credentials.jpeg" alt="google_select_credentials.jpeg" width="650">
+</p>
+
+Running project will launch the application on an emulated or physical Android device.
+In the image the current emulating device is set to Pixel 3 XL.
+<p align="center">
+  <img src="readme_images/google_select_api_key.jpeg" alt="google_select_api_key.jpeg" width="650">
+</p>
+
+
+2. Open the downloaded project in Android Studio (4.1.1 at the time of uploading) 
+
 </details>
 
-### Adding API keys
+### Adding API keys in project
 
 1. Create gradle.properties file in root of project.
 2. Add three API keys accordingly
