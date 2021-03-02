@@ -82,72 +82,73 @@ Dependent source files, if appropriate, are also compiled.
   ---
   
   * <b> Generating API for Google Services . </b>
-Running project will launch the application on an emulated or physical Android device.
-In the image the current emulating device is set to Pixel 3 XL.
+After logging in to Google Cloud select APIs & Services > Credentials
 <p align="center">
   <img src="readme_images/google_select_credentials.jpeg" alt="google_select_credentials.jpeg" width="650">
 </p>
 
-Running project will launch the application on an emulated or physical Android device.
-In the image the current emulating device is set to Pixel 3 XL.
+Select Create Credentials > API key.
 <p align="center">
   <img src="readme_images/google_select_api_key.jpeg" alt="google_select_api_key.jpeg" width="650">
 </p>
 
-Running project will launch the application on an emulated or physical Android device.
-In the image the current emulating device is set to Pixel 3 XL.
+Newly created API key should appear and you can copy the API key to Android Studio.
 <p align="center">
-  <img src="readme_images/google_new_api_key_01.jpeg" alt="google_new_api_key_01.jpeg" width="650">
+  <img src="readme_images/google_new_api_key_01.png" alt="google_new_api_key_01.jpeg" width="650">
 </p>
 
-Running project will launch the application on an emulated or physical Android device.
-In the image the current emulating device is set to Pixel 3 XL.
+Before you can use the project you need to add 2 services: Directions and Places API. Select APIs & Services > Library.
 <p align="center">
   <img src="readme_images/google_add_directions_service.jpeg" alt="google_add_directions_service.jpeg" width="650">
 </p>
 
-Running project will launch the application on an emulated or physical Android device.
-In the image the current emulating device is set to Pixel 3 XL.
+All enabled APIs & Services should appear in dashboard under APIs & Services > Dashboard.
 <p align="center">
   <img src="readme_images/google_services_in_dashboard.jpeg" alt="google_services_in_dashboard.jpeg" width="650">
 </p>
 
 --- 
 
-Running project will launch the application on an emulated or physical Android device.
-In the image the current emulating device is set to Pixel 3 XL.
+Register and login to OpenWeather. Make sure you have Current Weather service enabled in your user settings.
 <p align="center">
   <img src="readme_images/openweather_current_weather.jpeg" alt="openweather_current_weather.jpeg" width="650">
 </p>
 
-Running project will launch the application on an emulated or physical Android device.
-In the image the current emulating device is set to Pixel 3 XL.
+Under API keys tab generate new API key.
 <p align="center">
   <img src="readme_images/openweather_api_generate.jpeg" alt="openweather_api_generate.jpeg" width="650">
 </p>
 
 ---
 
-Running project will launch the application on an emulated or physical Android device.
-In the image the current emulating device is set to Pixel 3 XL.
+Register and login to OpentripMap API and you should have API key already generated.
 <p align="center">
   <img src="readme_images/opentripapi_api_key.jpeg" alt="opentrip_generate_api.jpeg" width="650">
 </p>
 
-
-2. Open the downloaded project in Android Studio (4.1.1 at the time of uploading) 
 
 </details>
 
 ### Adding API keys in project
 
 1. Create gradle.properties file in root of project.
-2. Add three API keys accordingly
+2. Add three API keys inside of the double quotation marks.
 
 <p align="center">
   <img src="readme_images/api_keys.png" alt="api keys" width="800%">
 </p>
 
+```
+android.useAndroidX=true
+
+android.enableJetifier=true
+
+kotlin.code.style=official
+
+GOOGLE_API_KEY="GOOGLE API KEY"
+OPEN_TRIP_MAP_API_KEY="OPENTRIPMAP API KEY"
+OPEN_WEATHER_API_KEY="OPENWEATHER API KEY"
+```
 
 You also need to add google_maps_api.xml file to values directory
 <p align="center">
