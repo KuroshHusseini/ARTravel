@@ -23,16 +23,132 @@ AR allows everyone to see more of what they want and make every experience uniqu
 
 You could even record your adventure and then send it to a friend to walk through it with you.
 
+### Application screenshots
 
-### Adding API KEYS to USE the APP
+<details><summary><b>Show screenshots</b></summary>
+
+<p align="center">
+  <img src="readme_images/attraction_detail_fragment.jpg" alt="attraction_detail_fragment" width="300">
+  <img src="readme_images/ar_take_image_gallery_02.jpg" alt="ar_take_image_gallery_02" width="300">
+  <img src="readme_images/attractions_fragment_01.jpg" alt="attractions_fragment_01" width="300">
+  <img src="readme_images/attractions_fragment_night_02.jpg" alt="attractions_fragment_night_02" width="300">
+  <img src="readme_images/draw_route_fragment.jpg" alt="draw_route_fragment" width="300">
+  <img src="readme_images/maps_fragment_day_01.jpg" alt="maps_fragment_day_01" width="300">
+  <img src="readme_images/maps_fragment_night_01.jpg" alt="maps_fragment_night_01" width="300">
+  <img src="readme_images/attractions_fragment_01.jpg" alt="attractions_fragment_01" width="300">
+  <img src="readme_images/weather_fragment_day.jpg" alt="weather_fragment_day" width="300">
+  <img src="readme_images/weather_fragment_night_02.jpg" alt="weather_fragment_night_02" width="300">
+</p>
+
+</details>
+
+### Running, building, generate API keys.
+
+<details><summary><b>Show instructions</b></summary>
+
+1. Download or clone this GitHub repository.
+
+2. Open the downloaded project in Android Studio (4.1.1 at the time of uploading) 
+
+* <b> Running project. </b>
+Running project will launch the application on an emulated or physical Android device.
+In the image the current emulating device is set to Pixel 3 XL.
+<p align="center">
+  <img src="readme_images/play_circle.jpeg" alt="play project" width="650">
+</p>
+
+* <b> Building project. </b>
+Builds an APK of all modules in the current project for their selected variant. When IDE finishes building, a confirmation notification appears, providing a link to the APK file. The path to file is in <i><b>BirdApp/app/build/outputs/apk/debug/</b></i> and default file name is app-debug.
+<p align="center">
+  <img src="readme_images/build_circle.jpeg" alt="build project" width="650">
+</p>
+
+* <b> Make project. </b>
+Make project compile all the source files in the entire project that have been modified since the last compilation are compiled. 
+Dependent source files, if appropriate, are also compiled.
+<p align="center">
+  <img src="readme_images/make_circle.jpeg" alt="make project" width="650">
+</p>
+
+#### Generating API keys.
+
+1. To use this project you must have an account on 3 different websites.
+  <ul>
+    <li>OpenTripMap</li>
+    <li>Google Cloud</li>
+    <li>Open Weather Map</li>
+  </ul>
+  
+  ---
+  
+  * <b> Generating API for Google Services . </b>
+After logging in to Google Cloud select APIs & Services > Credentials
+<p align="center">
+  <img src="readme_images/google_select_credentials.jpeg" alt="google_select_credentials.jpeg" width="650">
+</p>
+
+Select Create Credentials > API key.
+<p align="center">
+  <img src="readme_images/google_select_api_key.jpeg" alt="google_select_api_key.jpeg" width="650">
+</p>
+
+Newly created API key should appear and you can copy the API key to Android Studio.
+<p align="center">
+  <img src="readme_images/google_new_api_key_01.png" alt="google_new_api_key_01.jpeg" width="650">
+</p>
+
+Before you can use the project you need to add 2 services: Directions and Places API. Select APIs & Services > Library.
+<p align="center">
+  <img src="readme_images/google_add_directions_service.jpeg" alt="google_add_directions_service.jpeg" width="650">
+</p>
+
+All enabled APIs & Services should appear in dashboard under APIs & Services > Dashboard.
+<p align="center">
+  <img src="readme_images/google_services_in_dashboard.jpeg" alt="google_services_in_dashboard.jpeg" width="650">
+</p>
+
+--- 
+
+Register and login to OpenWeather. Make sure you have Current Weather service enabled in your user settings.
+<p align="center">
+  <img src="readme_images/openweather_current_weather.jpeg" alt="openweather_current_weather.jpeg" width="650">
+</p>
+
+Under API keys tab generate new API key.
+<p align="center">
+  <img src="readme_images/openweather_api_generate.jpeg" alt="openweather_api_generate.jpeg" width="650">
+</p>
+
+---
+
+Register and login to OpentripMap API and you should have API key already generated.
+<p align="center">
+  <img src="readme_images/opentripapi_api_key.jpeg" alt="opentrip_generate_api.jpeg" width="650">
+</p>
+
+
+</details>
+
+### Adding API keys in project
 
 1. Create gradle.properties file in root of project.
-2. Add three API keys accordingly
+2. Add three API keys inside of the double quotation marks.
 
 <p align="center">
   <img src="readme_images/api_keys.png" alt="api keys" width="800%">
 </p>
 
+```
+android.useAndroidX=true
+
+android.enableJetifier=true
+
+kotlin.code.style=official
+
+GOOGLE_API_KEY="GOOGLE API KEY"
+OPEN_TRIP_MAP_API_KEY="OPENTRIPMAP API KEY"
+OPEN_WEATHER_API_KEY="OPENWEATHER API KEY"
+```
 
 You also need to add google_maps_api.xml file to values directory
 <p align="center">
