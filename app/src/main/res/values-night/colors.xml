@@ -2,7 +2,7 @@
 <resources>
 
     <color name="black">#FFFFFF</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="white">#FFFFFF</color>
 
     <color name="main_screen_content_background_color">#7A8089</color>
 
@@ -16,7 +16,12 @@
     <color name="divider_background">#e0e0e0</color>
 
     <color name="cyan_800">#FFFFFF</color>
-    <color name="teal_700">#000000</color>
+    <color name="teal_700">#7A8089</color>
+
     <!-- Favourite Heart Color-->
     <color name="red_700">#d32f2f</color>
+
+    <!-- Bottom Navigation Color-->
+    <color name="bottom_navigation">#000000</color>
+
 </resources>

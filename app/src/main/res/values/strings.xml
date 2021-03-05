@@ -87,6 +87,9 @@
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="night_mode">Night Mode</string>
+    <string name="switch_metric_imperial">Metric / Imperial</string>
+    <string name="saved_measurement_system">measurement_system</string>
+    <string name="saved_night_mode_setting">night_mode</string>
     <string name="Light_Mode">Light Mode</string>
     <string name="list_places">List Places</string>
     <string name="title_activity_settings_activity">Settings</string>

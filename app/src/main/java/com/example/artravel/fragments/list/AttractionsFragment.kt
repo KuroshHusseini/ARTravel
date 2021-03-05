@@ -7,6 +7,7 @@ import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.location.Location
@@ -18,6 +19,7 @@ import android.provider.Settings
 import android.util.Log
 import android.view.*
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModelProviders
@@ -145,7 +147,7 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
 
         val ump = ViewModelProviders.of(this).get(AttractionViewModel::class.java)
 
-        ump.readAllData.observe(this, {
+        ump.readAllData.observe(viewLifecycleOwner, {
             recycler_view.adapter = PlaceAdapter(
                 requireContext(),
                 it.sortedBy { that ->
@@ -163,6 +165,48 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
 
             sendNetworkRequests()
         }
+
+//        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
+//
+//        // Get night mode value
+//        val nightModeValueSetting = sharedPref.getBoolean(getString(R.string.saved_night_mode_setting), false)
+//
+//        if (nightModeValueSetting) {
+//            when(resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+//                Configuration.UI_MODE_NIGHT_YES -> {
+//                    AppCompatDelegate.setDefaultNightMode(
+//                        AppCompatDelegate.MODE_NIGHT_NO
+//                    )
+//                }
+//                Configuration.UI_MODE_NIGHT_NO -> {
+//                    AppCompatDelegate.setDefaultNightMode(
+//                        AppCompatDelegate.MODE_NIGHT_YES
+//                    )
+//                }
+//            }
+//        }
+
+//        val sharedPref =
+//            activity?.getPreferences(Context.MODE_PRIVATE) ?: return
+//
+//        // Get night mode value
+//        val nightModeValueSetting =
+//            sharedPref.getBoolean(getString(R.string.saved_night_mode_setting), false)
+//
+//        if (nightModeValueSetting) {
+//            when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+//                Configuration.UI_MODE_NIGHT_YES -> {
+//                    AppCompatDelegate.setDefaultNightMode(
+//                        AppCompatDelegate.MODE_NIGHT_NO
+//                    )
+//                }
+//                Configuration.UI_MODE_NIGHT_NO -> {
+//                    AppCompatDelegate.setDefaultNightMode(
+//                        AppCompatDelegate.MODE_NIGHT_YES
+//                    )
+//                }
+//            }
+//        }
     }
 
     private var disposable: Disposable? = null
@@ -211,7 +255,7 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
      */
     private fun isLocationEnable(): Boolean {
         val locationManager: LocationManager =
-            activity!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
             LocationManager.NETWORK_PROVIDER
         )
@@ -291,7 +335,7 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
             .setPositiveButton(getString(R.string.positive_button_for_alert_txt)) { _, _ ->
                 try {
                     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                    val uri = Uri.fromParts("package", activity!!.packageName, null)
+                    val uri = Uri.fromParts("package", requireActivity().packageName, null)
                     intent.data = uri
                     startActivity(intent)
                 } catch (e: ActivityNotFoundException) {
@@ -316,7 +360,7 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
 
     //custom dialog
     private fun showCustomProgressDialog() {
-        mProgressDialog = Dialog(activity!!)
+        mProgressDialog = Dialog(requireActivity())
         mProgressDialog!!.setContentView(R.layout.dialog_custom_progress)
         mProgressDialog!!.show()
     }

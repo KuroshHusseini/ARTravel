@@ -7,7 +7,6 @@ import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.location.Location
 import android.location.LocationManager
 import android.net.Uri
@@ -17,14 +16,12 @@ import android.provider.Settings
 import android.util.Log
 import android.view.*
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import com.example.artravel.R
 import com.example.artravel.constants.Constants
 import com.example.artravel.weatherModels.WeatherResponse
 import com.example.artravel.weatherNetwork.WeatherService
 import com.google.android.gms.location.*
-
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -35,6 +32,7 @@ import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.round
 
 /**
  * WeatherFragment uses OpenWeatherAPI Services to show current weather
@@ -48,8 +46,19 @@ class WeatherFragment : Fragment() {
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private var mProgressDialog: Dialog? = null
 
+    private var measurementSystem: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Retrieve saved measurement preference
+        val sharedPref =
+            activity?.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE) ?: return
+        val defaultValue = resources.getString(R.string.saved_measurement_system)
+        measurementSystem =
+            sharedPref.getString(getString(R.string.saved_measurement_system), defaultValue)
+
+
         setHasOptionsMenu(true)
         mFusedLocationClient =
             activity?.let { LocationServices.getFusedLocationProviderClient(it) }!!
@@ -75,6 +84,7 @@ class WeatherFragment : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_weather, container, false)
     }
+
     /**
      * @param dataResponses array with properties (e.g. coord, weather, base, main, id , name, cod etc).
      * Based on users location
@@ -179,7 +189,7 @@ class WeatherFragment : Fragment() {
             .setPositiveButton(getString(R.string.positive_button_for_alert_txt)) { _, _ ->
                 try {
                     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                    val uri = Uri.fromParts("package",requireActivity().packageName, null)
+                    val uri = Uri.fromParts("package", requireActivity().packageName, null)
                     intent.data = uri
                     startActivity(intent)
                 } catch (e: ActivityNotFoundException) {
@@ -219,6 +229,11 @@ class WeatherFragment : Fragment() {
         }
     }
 
+    private fun Double.round(decimals: Int): Double {
+        var multiplier = 1.0
+        repeat(decimals) { multiplier *= 10 }
+        return round(this * multiplier) / multiplier
+    }
 
     //Setting UI texts
     @SuppressLint("SetTextI18n")
@@ -228,8 +243,9 @@ class WeatherFragment : Fragment() {
 
             tv_main?.text = weatherList.weather[i].main
             tv_main_description?.text = weatherList.weather[i].description
+
             tv_temp?.text =
-                "${weatherList.main.temp} ${getUnit(resources.configuration.toString())}"
+                getUnit(resources.configuration.toString(), weatherList.main.temp)
 
             id_sunrise_txt.text = getString(R.string.sunrise_txt)
             id_sunset_txt.text = getString(R.string.sunset_txt)
@@ -238,10 +254,19 @@ class WeatherFragment : Fragment() {
 
             tv_humidity?.text = "${weatherList.main.humidity} %"
 
-            tv_min?.text = "${weatherList.main.temp_min} min"
-            tv_max?.text = "${weatherList.main.temp_max} max"
+            if (measurementSystem == "imperial") {
+                tv_min?.text = "${convertCelsiusToFahrenheit(weatherList.main.temp_min)} min"
+                tv_max?.text = "${convertCelsiusToFahrenheit(weatherList.main.temp_max)} max"
 
-            tv_speed?.text = weatherList.wind.speed.toString()
+                tv_speed_unit.text = "mph"
+                tv_speed?.text = convertFromMetersPerSecondToMph(weatherList.wind.speed).toString()
+            } else {
+                tv_min?.text = "${weatherList.main.temp_min} min"
+                tv_max?.text = "${weatherList.main.temp_max} max"
+
+                tv_speed?.text = weatherList.wind.speed.toString()
+            }
+
             tv_name?.text = weatherList.name
             tv_country?.text = weatherList.sys.country
 
@@ -258,13 +283,26 @@ class WeatherFragment : Fragment() {
         }
     }
 
+    // Converts to fahrenheit
+    private fun convertCelsiusToFahrenheit(celsius: Double): Double {
+        return (celsius * 9 / 5 + 32).round(0)
+    }
+
+    // Converts to miles per hour
+    private fun convertFromMetersPerSecondToMph(metersPerSecond: Double): Double {
+        return (metersPerSecond * 2.237).round(2)
+    }
+
     //get the right unit
-    private fun getUnit(value: String): String {
+    private fun getUnit(value: String, temp: Double): String {
         var vl = "°C"
-        if ("US" == value || "LR" == value || "MM" == value) {
+        var newTemp = temp
+
+        if (measurementSystem == "imperial" || "US" == value || "LR" == value || "MM" == value) {
             vl = "°F"
+            newTemp = convertCelsiusToFahrenheit(temp)
         }
-        return vl
+        return "$newTemp $vl"
     }
 
     // getting time

@@ -12,6 +12,8 @@
     <color name="secondary_text_color">#7A8089</color>
     <color name="divider_background">#e0e0e0</color>
 
+    <!-- Bottom Navigation Color-->
+    <color name="bottom_navigation">#FFFFFF</color>
 
     <!-- Icon Color -->
     <color name="primary_icon_color">#ffffff</color>

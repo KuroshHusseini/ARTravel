@@ -4,10 +4,15 @@ package com.example.artravel.constants
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
+import android.provider.Settings.Global.getString
+import android.util.Log
+import androidx.appcompat.app.AppCompatDelegate
 import com.example.artravel.BuildConfig
+import com.example.artravel.R
 
 
 /**
@@ -27,6 +32,22 @@ object Constants {
 
     @SuppressLint("ObsoleteSdkInt")
     fun isNetworkAvailable(context: Context?): Boolean {
+
+        // Check if Dark Theme was enabled in Shared Preferences
+        val sharedPrefs =
+            context?.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
+
+        when (sharedPrefs?.getBoolean("night_mode", false)) {
+            // Apply Dark Theme
+            true -> {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            }
+            // Does not apply
+            false -> {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
+        }
+
         val connectivityManager =
             context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         // checking for the version

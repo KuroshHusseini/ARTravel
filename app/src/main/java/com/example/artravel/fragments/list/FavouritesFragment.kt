@@ -30,7 +30,7 @@ class FavouritesFragment : Fragment(), OnPlaceItemClickListener {
         super.onViewCreated(view, savedInstanceState)
         // FavouritesViewModel
         val ump = ViewModelProviders.of(this).get(FavouritesViewModel::class.java)
-        ump.readAllData.observe(this, {
+        ump.readAllData.observe(viewLifecycleOwner, {
             recycler_view.adapter = FavouritesAdapter(
                 requireContext(),
                 it.sortedBy { that ->
