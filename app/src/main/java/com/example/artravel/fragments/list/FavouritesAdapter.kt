@@ -16,6 +16,13 @@ import kotlinx.android.synthetic.main.attraction_item.view.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
+/**
+ * FavouritesAdapter shows items displayed in AttractionsFragment
+ *
+ * @author Michael Lock & Kurosh Husseini
+ * @date 08.03.2021
+ */
+
 class FavouritesAdapter(
     var context: Context,
     private val favouritesList: List<DBPlace>,

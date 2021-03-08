@@ -21,30 +21,43 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
-class PlaceAdapter(
+/**
+ * AttractionsAdapter shows items displayed in AttractionsFragment
+ *
+ * @author Michael Lock & Kurosh Husseini
+ * @date 08.03.2021
+ */
+
+class AttractionsAdapter(
     var context: Context,
     var items: List<DBAttraction>,
     var clickListener: OnPlaceItemClickListener
 ) :
-    RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder>() {
-
-    /*
-    *  Favourites Database
-    * */
+    RecyclerView.Adapter<AttractionsAdapter.AttractionsViewHolder>() {
 
     private var favourites: List<DBPlace>? = null
 
     private val favouritesDatabase by lazy { ARTravelDatabase.getDatabase(context) }
 
-    inner class PlaceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    inner class AttractionsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaceViewHolder {
-        return PlaceViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AttractionsViewHolder {
+        return AttractionsViewHolder(
             LayoutInflater
                 .from(parent.context)
                 .inflate(R.layout.attraction_item, parent, false)
         )
     }
+
+    /**
+     * Queries all items from favourites table and adds selected attraction item if it
+     * hasn't been added.
+     *
+     * Method is in 'add_to_favorites' setOnClickListener
+     *
+     * @author Michael Lock & Kurosh Husseini
+     * @date 25.02.2021
+     */
 
     private suspend fun getFavourites(position: Int) {
         val isReady = GlobalScope.async {
@@ -94,9 +107,7 @@ class PlaceAdapter(
         }
     }
 
-    override fun onBindViewHolder(holder: PlaceViewHolder, position: Int) {
-
-
+    override fun onBindViewHolder(holder: AttractionsViewHolder, position: Int) {
         holder.itemView.tv_place_desc.text = items[position].desc
         holder.itemView.tv_place_name.text = items[position].name
         holder.itemView.place_image.load(items[position].image)

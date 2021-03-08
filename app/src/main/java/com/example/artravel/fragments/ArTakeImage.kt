@@ -1,6 +1,7 @@
 package com.example.artravel.fragments
 
 import android.Manifest
+import android.app.Dialog
 import android.content.ContentValues
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -17,7 +18,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.example.artravel.R
-import com.google.android.material.slider.RangeSlider
 import com.google.ar.core.HitResult
 import com.google.ar.core.Plane
 import com.google.ar.sceneform.AnchorNode
@@ -29,14 +29,12 @@ import com.google.ar.sceneform.rendering.ModelRenderable
 import com.google.ar.sceneform.ux.ArFragment
 import com.google.ar.sceneform.ux.TransformableNode
 import kotlinx.android.synthetic.main.activity_ar_take_image.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
+
 /**
  * ArTakeImage class handles UI and functionality of the AR
  *
@@ -64,11 +62,18 @@ class ArTakeImage : AppCompatActivity() {
             "https://raw.githubusercontent.com/thelockymichael/gltf-Sample_models/main/2.0/tajMahal001_lego.gltf"
     }
 
-    // Model
+    // Models & Ready to be displayed variables
     private var pyramidRenderable: ModelRenderable? = null
+    private var pyramidRenderableIsReady: Boolean = false
+
     private var colosseumRenderable: ModelRenderable? = null
+    private var colosseumRenderableIsReady: Boolean = false
+
     private var wallsOfChinaRenderable: ModelRenderable? = null
+    private var wallsOfChinaRenderableIsReady: Boolean = false
+
     private var tajMahalRenderable: ModelRenderable? = null
+    private var tajMahalRenderableIsReady: Boolean = false
 
     //Animation for floating buttons
     private val rotateOpen: Animation by lazy {
@@ -96,8 +101,7 @@ class ArTakeImage : AppCompatActivity() {
         )
     }
 
-    private var clicked = false
-
+    private var isOpen = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -168,24 +172,17 @@ class ArTakeImage : AppCompatActivity() {
         }
     }
 
-    /**
-     * Take screenshot of ARSCene and save it to gallery.
-     * Uses PixelCopy.
-     *
-     * Method is called when user presses takePicture_btn.
-     *
-     * @author Michael Lock
-     * @date 23.02.2021
-     */
     private fun onAddButtonClicked() {
-        clicked = !clicked
-        setVisiblity(clicked)
-        setAnimation(clicked)
-        setClickable(clicked)
+        isOpen = !isOpen
+        setVisiblity(isOpen)
+        setAnimation(isOpen)
+        setClickable(isOpen)
+
+        Log.d("DBG", "isOpen $isOpen")
     }
 
-    private fun setVisiblity(clicked: Boolean) {
-        if (!clicked) {
+    private fun setVisiblity(isOpen: Boolean) {
+        if (isOpen) {
             selectPyramid_btn.visibility = View.VISIBLE
             selectColosseum_btn.visibility = View.VISIBLE
             selectWallsOfChina_btn.visibility = View.VISIBLE
@@ -198,8 +195,8 @@ class ArTakeImage : AppCompatActivity() {
         }
     }
 
-    private fun setAnimation(clicked: Boolean) {
-        if (!clicked) {
+    private fun setAnimation(isOpen: Boolean) {
+        if (isOpen) {
             selectPyramid_btn.startAnimation(fromBottom)
             selectColosseum_btn.startAnimation(fromBottom)
             selectWallsOfChina_btn.startAnimation(fromBottom)
@@ -214,8 +211,8 @@ class ArTakeImage : AppCompatActivity() {
         }
     }
 
-    private fun setClickable(clicked: Boolean) {
-        if (clicked) {
+    private fun setClickable(isOpen: Boolean) {
+        if (!isOpen) {
             selectPyramid_btn.isClickable = false
             selectColosseum_btn.isClickable = false
             selectWallsOfChina_btn.isClickable = false
@@ -228,7 +225,15 @@ class ArTakeImage : AppCompatActivity() {
         }
     }
 
-    // Capture Image
+    /**
+     * Take screenshot of ARSCene and save it to gallery.
+     * Uses PixelCopy.
+     *
+     * Method is called when user presses takePicture_btn.
+     *
+     * @author Michael Lock
+     * @date 23.02.2021
+     */
     private fun takePicture() {
         val view: ArSceneView = arFragment.arSceneView
         // Create a bitmap the size of the scene view.
@@ -348,14 +353,18 @@ class ArTakeImage : AppCompatActivity() {
                 .build()
                 .thenAccept { renderable: ModelRenderable ->
                     pyramidRenderable = renderable
+                    pyramidRenderableIsReady = true
 
-                    Log.d("Finishus", "finished $pyramidRenderable")
-                    Log.d("Finishus", "finished $selectedRenderable")
+                    Log.d("DBG", "finished pyramid $pyramidRenderable")
 
                 }
                 .exceptionally {
                     Log.i("Model", "cant load")
-                    Toast.makeText(applicationContext, "Model can't be Loaded", Toast.LENGTH_SHORT)
+                    Toast.makeText(
+                        applicationContext,
+                        "Model can't be Loaded",
+                        Toast.LENGTH_SHORT
+                    )
                         .show()
                     null
                 }
@@ -377,13 +386,18 @@ class ArTakeImage : AppCompatActivity() {
                 .build()
                 .thenAccept { renderable: ModelRenderable ->
                     colosseumRenderable = renderable
+                    colosseumRenderableIsReady = true
+                    // Default selected 3D model
                     selectedRenderable = colosseumRenderable
-                    Log.d("Finishus", "finished duck $colosseumRenderable")
-                    Log.d("Finishus", "finished duck $colosseumRenderable")
+                    Log.d("DBG", "finished colosseum $colosseumRenderable")
                 }
                 .exceptionally {
                     Log.i("Model", "cant load")
-                    Toast.makeText(applicationContext, "Model can't be Loaded", Toast.LENGTH_SHORT)
+                    Toast.makeText(
+                        applicationContext,
+                        "Model can't be Loaded",
+                        Toast.LENGTH_SHORT
+                    )
                         .show()
                     null
                 }
@@ -403,13 +417,17 @@ class ArTakeImage : AppCompatActivity() {
                 .build()
                 .thenAccept { renderable: ModelRenderable ->
                     wallsOfChinaRenderable = renderable
+                    wallsOfChinaRenderableIsReady = true
 
-                    Log.d("Finishus", "finished fox $wallsOfChinaRenderable")
-                    Log.d("Finishus", "finished fox $wallsOfChinaRenderable")
+                    Log.d("DBG", "finished china $wallsOfChinaRenderable")
                 }
                 .exceptionally {
                     Log.i("Model", "cant load")
-                    Toast.makeText(applicationContext, "Model can't be Loaded", Toast.LENGTH_SHORT)
+                    Toast.makeText(
+                        applicationContext,
+                        "Model can't be Loaded",
+                        Toast.LENGTH_SHORT
+                    )
                         .show()
                     null
                 }
@@ -429,14 +447,20 @@ class ArTakeImage : AppCompatActivity() {
                 ).setRegistryId(TAJ_MAHAL_URL)
                 .build()
                 .thenAccept { renderable: ModelRenderable ->
+                    runOnUiThread {
+                        hideProgressDialog()
+                    }
                     tajMahalRenderable = renderable
 
-                    Log.d("Finishus", "finished fox $tajMahalRenderable")
-                    Log.d("Finishus", "finished fox $tajMahalRenderable")
+                    Log.d("DBG", "finished taj mahal $tajMahalRenderable")
                 }
                 .exceptionally {
                     Log.i("Model", "cant load")
-                    Toast.makeText(applicationContext, "Model can't be Loaded", Toast.LENGTH_SHORT)
+                    Toast.makeText(
+                        applicationContext,
+                        "Model can't be Loaded",
+                        Toast.LENGTH_SHORT
+                    )
                         .show()
                     null
                 }
@@ -469,13 +493,28 @@ class ArTakeImage : AppCompatActivity() {
         selectedNode!!.setParent(anchorNode)
         selectedNode!!.renderable = selectedRenderable
         selectedNode!!.setOnTapListener { _, _ ->
-            // Add OnTap listener to 3D model
-            Toast.makeText(this, "Model was touched", Toast.LENGTH_SHORT).show()
+            // Add OnTap listener to delete 3D model
+            Toast.makeText(this, "Model was deleted", Toast.LENGTH_SHORT).show()
             arFragment.arSceneView.scene.removeChild(anchorNode)
             if (anchorNode != null) {
                 anchorNode.anchor?.detach()
                 anchorNode.setParent(null)
             }
+        }
+    }
+
+    private var mProgressDialog: Dialog? = null
+
+    // Custom dialog
+    private fun showCustomProgressDialog() {
+        mProgressDialog = Dialog(this)
+        mProgressDialog!!.setContentView(R.layout.dialog_custom_progress)
+        mProgressDialog!!.show()
+    }
+
+    private fun hideProgressDialog() {
+        if (mProgressDialog != null) {
+            mProgressDialog!!.dismiss()
         }
     }
 }

@@ -7,7 +7,6 @@ import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.location.Location
@@ -19,9 +18,7 @@ import android.provider.Settings
 import android.util.Log
 import android.view.*
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,13 +28,9 @@ import com.example.artravel.R
 import com.example.artravel.constants.Constants
 import com.example.artravel.model.database.ARTravelDatabase
 import com.example.artravel.model.entity.DBAttraction
-import com.example.artravel.model.entity.DBPlace
 import com.example.artravel.model.viewmodel.AttractionViewModel
-import com.example.artravel.model.viewmodel.FavouritesViewModel
 import com.example.artravel.wikipediaPlaces.*
 import com.google.android.gms.location.*
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -148,7 +141,7 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
         val ump = ViewModelProviders.of(this).get(AttractionViewModel::class.java)
 
         ump.readAllData.observe(viewLifecycleOwner, {
-            recycler_view.adapter = PlaceAdapter(
+            recycler_view.adapter = AttractionsAdapter(
                 requireContext(),
                 it.sortedBy { that ->
                     that.name
