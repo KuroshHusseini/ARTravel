@@ -142,25 +142,20 @@ class ArTakeImage : AppCompatActivity() {
         }
 
         selectPyramid_btn.setOnClickListener {
-            selectedRenderable = pyramidRenderable
-
+            checkIfModelIsDownloaded(pyramidRenderable)
         }
 
         selectColosseum_btn.setOnClickListener {
-            selectedRenderable = colosseumRenderable
-
+            checkIfModelIsDownloaded(colosseumRenderable)
         }
 
         selectWallsOfChina_btn.setOnClickListener {
-            selectedRenderable = wallsOfChinaRenderable
-
+            checkIfModelIsDownloaded(wallsOfChinaRenderable)
         }
 
         selectTajMahal_btn.setOnClickListener {
-            selectedRenderable = tajMahalRenderable
-
+            checkIfModelIsDownloaded(tajMahalRenderable)
         }
-
 
         takePicture_btn.setOnClickListener {
             takePicture()
@@ -169,6 +164,32 @@ class ArTakeImage : AppCompatActivity() {
 
         goBack_btn.setOnClickListener {
             finish()
+        }
+    }
+
+    /**
+     * checkIfModelIsDownloaded checks if selected model has been loaded. Displays spinner if
+     * model hasn't been assigned. Sets ..isReady boolean to false for later use.
+     *
+     * Method is called when one of the buttons in pressed in AR MODELS +
+     *
+     * @param modelRenderable 3D model corresponds to button selected
+     *
+     * @author Michael Lock
+     * @date 09.03.2021
+     */
+
+    private fun checkIfModelIsDownloaded(modelRenderable: ModelRenderable?) {
+        if (modelRenderable == null) {
+            showCustomProgressDialog()
+            when (modelRenderable) {
+                pyramidRenderable -> pyramidRenderableIsReady = true
+                colosseumRenderable -> colosseumRenderableIsReady = true
+                wallsOfChinaRenderable -> wallsOfChinaRenderableIsReady = true
+                tajMahalRenderable -> tajMahalRenderableIsReady = true
+            }
+        } else {
+            selectedRenderable = modelRenderable
         }
     }
 
@@ -327,7 +348,56 @@ class ArTakeImage : AppCompatActivity() {
     }
 
     /**
-     * Creates network thread for downloading and
+     * setupModelOnCompletion sets corresponding boolean 3D model to TRUE on completion
+     * and hides spinner.
+     *
+     * Method is called in setupAndDownloadAllModels method.
+     *
+     * @param renderableToBeAssigned e.g. pyramidRenderable 3D model
+     * @param renderable 3D model that is downloaded
+     *
+     * @author Michael Lock
+     * @date 09.03.2021
+     */
+
+    private fun setupModelOnCompletion(
+        renderableToBeAssigned: ModelRenderable?,
+        renderable: ModelRenderable?
+    ) {
+        runOnUiThread {
+            hideProgressDialog()
+        }
+        when (renderableToBeAssigned) {
+            pyramidRenderable -> {
+                pyramidRenderable = renderable
+                if (pyramidRenderableIsReady)
+                    selectedRenderable = pyramidRenderable
+
+                selectedRenderable = colosseumRenderable
+            }
+
+            colosseumRenderable -> {
+                colosseumRenderable = renderable
+                if (colosseumRenderableIsReady)
+                    selectedRenderable = colosseumRenderable
+            }
+
+            wallsOfChinaRenderable -> {
+                wallsOfChinaRenderable = renderable
+                if (wallsOfChinaRenderableIsReady)
+                    selectedRenderable = wallsOfChinaRenderable
+            }
+
+            tajMahalRenderable -> {
+                tajMahalRenderable = renderable
+                if (tajMahalRenderableIsReady)
+                    selectedRenderable = tajMahalRenderable
+            }
+        }
+    }
+
+    /**
+     * setupAndDownloadAllModels network thread for downloading and
      * assigning the 4 world wonder model 3D model renderables.
      *
      * @author Michael Lock
@@ -352,9 +422,8 @@ class ArTakeImage : AppCompatActivity() {
                 ).setRegistryId(PYRAMID_URL)
                 .build()
                 .thenAccept { renderable: ModelRenderable ->
-                    pyramidRenderable = renderable
-                    pyramidRenderableIsReady = true
 
+                    setupModelOnCompletion(pyramidRenderable, renderable)
                     Log.d("DBG", "finished pyramid $pyramidRenderable")
 
                 }
@@ -385,10 +454,11 @@ class ArTakeImage : AppCompatActivity() {
                 ).setRegistryId(COLOSSEUM_URL)
                 .build()
                 .thenAccept { renderable: ModelRenderable ->
-                    colosseumRenderable = renderable
-                    colosseumRenderableIsReady = true
-                    // Default selected 3D model
-                    selectedRenderable = colosseumRenderable
+                    runOnUiThread {
+                        hideProgressDialog()
+                    }
+                    setupModelOnCompletion(colosseumRenderable, renderable)
+
                     Log.d("DBG", "finished colosseum $colosseumRenderable")
                 }
                 .exceptionally {
@@ -416,8 +486,7 @@ class ArTakeImage : AppCompatActivity() {
                 ).setRegistryId(WALLS_CHINA)
                 .build()
                 .thenAccept { renderable: ModelRenderable ->
-                    wallsOfChinaRenderable = renderable
-                    wallsOfChinaRenderableIsReady = true
+                    setupModelOnCompletion(wallsOfChinaRenderable, renderable)
 
                     Log.d("DBG", "finished china $wallsOfChinaRenderable")
                 }
@@ -431,7 +500,6 @@ class ArTakeImage : AppCompatActivity() {
                         .show()
                     null
                 }
-
 
             ModelRenderable.builder()
                 .setSource(
@@ -447,10 +515,7 @@ class ArTakeImage : AppCompatActivity() {
                 ).setRegistryId(TAJ_MAHAL_URL)
                 .build()
                 .thenAccept { renderable: ModelRenderable ->
-                    runOnUiThread {
-                        hideProgressDialog()
-                    }
-                    tajMahalRenderable = renderable
+                    setupModelOnCompletion(tajMahalRenderable, renderable)
 
                     Log.d("DBG", "finished taj mahal $tajMahalRenderable")
                 }
