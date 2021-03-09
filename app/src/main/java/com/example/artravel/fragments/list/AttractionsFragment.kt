@@ -158,48 +158,6 @@ class AttractionsFragment : Fragment(), OnPlaceItemClickListener {
 
             sendNetworkRequests()
         }
-
-//        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
-//
-//        // Get night mode value
-//        val nightModeValueSetting = sharedPref.getBoolean(getString(R.string.saved_night_mode_setting), false)
-//
-//        if (nightModeValueSetting) {
-//            when(resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
-//                Configuration.UI_MODE_NIGHT_YES -> {
-//                    AppCompatDelegate.setDefaultNightMode(
-//                        AppCompatDelegate.MODE_NIGHT_NO
-//                    )
-//                }
-//                Configuration.UI_MODE_NIGHT_NO -> {
-//                    AppCompatDelegate.setDefaultNightMode(
-//                        AppCompatDelegate.MODE_NIGHT_YES
-//                    )
-//                }
-//            }
-//        }
-
-//        val sharedPref =
-//            activity?.getPreferences(Context.MODE_PRIVATE) ?: return
-//
-//        // Get night mode value
-//        val nightModeValueSetting =
-//            sharedPref.getBoolean(getString(R.string.saved_night_mode_setting), false)
-//
-//        if (nightModeValueSetting) {
-//            when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
-//                Configuration.UI_MODE_NIGHT_YES -> {
-//                    AppCompatDelegate.setDefaultNightMode(
-//                        AppCompatDelegate.MODE_NIGHT_NO
-//                    )
-//                }
-//                Configuration.UI_MODE_NIGHT_NO -> {
-//                    AppCompatDelegate.setDefaultNightMode(
-//                        AppCompatDelegate.MODE_NIGHT_YES
-//                    )
-//                }
-//            }
-//        }
     }
 
     private var disposable: Disposable? = null
