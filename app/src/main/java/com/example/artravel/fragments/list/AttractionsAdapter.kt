@@ -60,13 +60,11 @@ class AttractionsAdapter(
      */
 
     private suspend fun getFavourites(position: Int) {
-        val isReady = GlobalScope.async {
+        GlobalScope.async {
             favourites = favouritesDatabase.favouriteDao().getAll()
-            Log.d("Favs", favourites.toString())
-        }
+        }.await()
 
-        if (isReady.await() === 1) {
-
+        if (favourites != null) {
             var selectedItem = favourites?.find { it.xid == items[position].xid }
 
             if (selectedItem == null) {
