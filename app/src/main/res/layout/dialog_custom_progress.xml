@@ -17,7 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/please_wait"
-        android:textColor="@android:color/black"
+        android:textColor="@color/primary_text_color"
         android:textSize="@dimen/progress_bar_text_size" />
 
 </LinearLayout>

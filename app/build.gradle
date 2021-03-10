@@ -104,9 +104,6 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:1.1.0"
     // For control over item selection of both touch and mouse driven selection
     implementation "androidx.recyclerview:recyclerview-selection:1.1.0"
-    // ReactiveX/RxJava
-    implementation "io.reactivex.rxjava3:rxjava:3.0.11-RC3"
-    implementation "com.github.akarnokd:rxjava3-retrofit-adapter:3.0.0"
 
     //Room DB
     def lifecycle_version = "2.1.0"

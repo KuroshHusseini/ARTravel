@@ -49,6 +49,7 @@ class AttractionsAdapter(
         )
     }
 
+
     /**
      * Queries all items from favourites table and adds selected attraction item if it
      * hasn't been added.
@@ -59,7 +60,7 @@ class AttractionsAdapter(
      * @date 25.02.2021
      */
 
-    private suspend fun getFavourites(position: Int) {
+    private suspend fun addToFavourites(position: Int, holder: AttractionsViewHolder) {
         GlobalScope.async {
             favourites = favouritesDatabase.favouriteDao().getAll()
         }.await()
@@ -90,6 +91,8 @@ class AttractionsAdapter(
                             Toast.LENGTH_SHORT
                         ).show()
 
+                        holder.itemView.add_to_favorites.setImageResource(R.drawable.ic_baseline_favorite_24)
+
                     }.setNegativeButton("No") { _, _ -> }
                     .setTitle("Add ${items[position].name} to favourites?")
                     .setMessage("Are you sure you want to add ${items[position].name} to favourites?")
@@ -97,7 +100,7 @@ class AttractionsAdapter(
                     .show()
             } else {
                 AlertDialog.Builder(context)
-                    .setNegativeButton("No") { _, _ -> }
+                    .setNegativeButton("Ok") { _, _ -> }
                     .setTitle("${items[position].name} is already added to favourites.")
                     .create()
                     .show()
@@ -105,7 +108,24 @@ class AttractionsAdapter(
         }
     }
 
+    private suspend fun listFavourites(position: Int, holder: AttractionsViewHolder) {
+        GlobalScope.async {
+            favourites = favouritesDatabase.favouriteDao().getAll()
+        }.await()
+
+        Log.d("DBG", "favourites $favourites")
+
+        var selectedItem = favourites?.find { it.xid == items[position].xid }
+
+        if (selectedItem == null) holder.itemView.add_to_favorites.setImageResource(R.drawable.ic_baseline_favorite_outline_icon)
+    }
+
     override fun onBindViewHolder(holder: AttractionsViewHolder, position: Int) {
+
+        GlobalScope.launch {
+            listFavourites(position, holder)
+        }
+
         holder.itemView.tv_place_desc.text = items[position].desc
         holder.itemView.tv_place_name.text = items[position].name
         holder.itemView.place_image.load(items[position].image)
@@ -117,7 +137,7 @@ class AttractionsAdapter(
         holder.itemView.add_to_favorites.setOnClickListener {
 
             GlobalScope.launch(Dispatchers.Main) {
-                getFavourites(position)
+                addToFavourites(position, holder)
             }
         }
     }
