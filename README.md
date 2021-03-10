@@ -23,6 +23,33 @@ AR allows everyone to see more of what they want and make every experience uniqu
 
 You could even record your adventure and then send it to a friend to walk through it with you.
 
+### Description
+
+### Features
+
+### Concepts used
+<ul>
+  <li>Fragments</li>
+  <li>GPS</li>
+  <li>Camera</li>
+  <li>LiveData, ViewModel</li>
+  <li>Google Services, OpenTripMap API, OpenWeatherMap API</li>
+</ul>
+Phone’s internal sensor(s), which ones
+Basic components (activity, broadcast receiver, service, content provider), which ones
+Fragments
+Persistence (Room and/or File and/or SharedPreferences), which one
+Connection to some web service, which service
+Have AR related functionality
+External sensor(s) and BT-communication
+NFC
+GPS, microphone, camera, which ones
+ViewModel, LiveData
+WorkManager/Worker
+Other APIs (map, audio, graph,...) or JetPack librairies
+
+
+
 ### Application screenshots
 
 <details><summary><b>Show screenshots</b></summary>
