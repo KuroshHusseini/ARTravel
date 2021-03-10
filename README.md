@@ -55,6 +55,13 @@ User can add one of the 4 preset 3D models (Pyramid, Colosseum, Great Wall of Ch
   <img src="readme_images/ar_take_image_gallery_02.jpg" alt="ar_take_image_gallery_02" width="300">
 </p>
 
+* <b> Settings </b>
+includes Night mode and switching between metric and imperial measurements.
+
+<p align="center">
+  <img src="readme_images/settings_fragment.png" alt="ar_take_image_gallery_02" width="300">
+</p>
+
 </details>
 
 ### Concepts used
@@ -108,6 +115,8 @@ Other APIs (map, audio, graph,...) or JetPack librairies
   <img src="readme_images/attractions_fragment_01.jpg" alt="attractions_fragment_01" width="300">
   <img src="readme_images/weather_fragment_day.jpg" alt="weather_fragment_day" width="300">
   <img src="readme_images/weather_fragment_night_02.jpg" alt="weather_fragment_night_02" width="300">
+  <img src="readme_images/weather_fragment_imperial.png" alt="weather_fragment_imperial" width="300">
+  <img src="readme_images/settings_fragment.png" alt="settings_fragment" width="300">
 </p>
 
 </details>
