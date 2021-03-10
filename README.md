@@ -112,7 +112,7 @@ Other APIs (map, audio, graph,...) or JetPack librairies
 
 </details>
 
-### Running, building, generate API keys.
+### Running, building, generating API keys.
 
 <details><summary><b>Show instructions</b></summary>
 
@@ -151,7 +151,7 @@ Dependent source files, if appropriate, are also compiled.
   
   ---
   
-  * <b> Generating API for Google Services . </b>
+  * <b> Generating API for Google Services. </b>
 After logging in to Google Cloud select APIs & Services > Credentials
 <p align="center">
   <img src="readme_images/google_select_credentials.jpeg" alt="google_select_credentials.jpeg" width="650">
