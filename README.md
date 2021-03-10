@@ -2,26 +2,103 @@
 
 ## Tours and maps
 
-The application aims to develop detailed texts, pictures,
-videos and other guidance information are provided, and so
-people can better understand the tourist attractions and
-make decision objectively. A problem is shown that tourists
-are not able to get travel information timely when they are
-on the move. Therefore, we intend to explore how to build a
-mobile tourist guide system based on mashup technology to
-solve this problem. 
+ARTravel is a travel guide app for Android. It provides user information about user and weather location, nearby interesting places and a feature that allows user to make use of Camera's AR functionality. 
+App is targeted for Android API versions 24 and above. 
+
+### Features
+
+<details><summary><b>Show features</b></summary>
+
+1. Download or clone this GitHub repository.
+
+2. Open the downloaded project in Android Studio (4.1.1 at the time of uploading)
+
+* <b> Attractions </b>
+Attractions fragment displays nearby places within 2 km radius. User can navigate to place detail screen and app provides user a route to selected place.
+
+<p align="center">
+  <img src="readme_images/attractions_fragment_01.jpg" alt="attractions_fragment_01" width="300">
+</p>
+
+* <b> Attraction Detail Screen </b>
+View provides an image and a description of a place. Show on map displays a destination route to user selected place.
+
+<p align="center">
+  <img src="readme_images/attraction_detail_fragment.jpg" alt="attraction_detail_fragment" width="300">
+</p>
+
+* <b> Attraction Draw Route </b>
+Route is drawn in Google Maps to user selected place.
+
+<p align="center">
+  <img src="readme_images/draw_route_fragment.jpg" alt="draw_route_fragment" width="300">
+</p>
+
+* <b> Maps Fragment </b>
+Uses Google Maps to locate user with GPS and "LIST PLACES" menu gives user an option to mark a close place. 
+
+<p align="center">
+  <img src="readme_images/maps_fragment_day_01.jpg" alt="maps_fragment_day_01" width="300">
+</p>
+
+* <b> Weather Fragment </b>
+Provides current weather information to user. Measurements can be changed from metric to imperial within Settings. 
+
+<p align="center">
+  <img src="readme_images/weather_fragment_day.jpg" alt="weather_fragment_day" width="300">
+</p>
+
+* <b> AR Take Image </b>
+User can add one of the 4 preset 3D models (Pyramid, Colosseum, Great Wall of China and Taj Mahal) to the scene and take an image that is saved to Gallery.
+
+<p align="center">
+  <img src="readme_images/ar_take_image_gallery_02.jpg" alt="ar_take_image_gallery_02" width="300">
+</p>
+
+* <b> Settings </b>
+includes Night mode and switching between metric and imperial measurements.
+
+<p align="center">
+  <img src="readme_images/settings_fragment.png" alt="ar_take_image_gallery_02" width="300">
+</p>
+
+</details>
+
+### Concepts used
+<ul>
+  <li>Fragments</li>
+  <li>GPS</li>
+  <li>Camera</li>
+  <li>ARCore & Sceneform
+  <li>LiveData, ViewModel</li>
+  <li>Google Services, OpenTripMap API, OpenWeatherMap API</li>
+</ul>
+
+<b>Main packages that were used include: </b>
+<ul>
+  <li>Kotlinx Coroutines</li>
+  <li>ReactiveX/RxJava</li>
+  <li>retrofit2-kotlinx-serialization-converter</li>
+  <li>com.github.jd-alexander:library:1.1.0</li>
+  <li>com.google.android.gms:play-services-location:18.0.0</li>
+  <li>Room Database packages</li>
+  <li>ARCore</li>
+</ul>
+
+Phone’s internal sensor(s), which ones
+Basic components (activity, broadcast receiver, service, content provider), which ones
+Fragments
+Persistence (Room and/or File and/or SharedPreferences), which one
+Connection to some web service, which service
+Have AR related functionality
+External sensor(s) and BT-communication
+NFC
+GPS, microphone, camera, which ones
+ViewModel, LiveData
+WorkManager/Worker
+Other APIs (map, audio, graph,...) or JetPack librairies
 
 
-Have you ever wanted to visit the Louvre, hike Mount Everest, or wander through the pyramids of Giza,
-but you just don’t have the time? If you can’t go there, AR can turn any hallway into a museum, 
-any molehill into a mountain, and any park into a pyramid, that you’ll be able to see through your iPhone or Android device.
-
-augmented reality mobile app development for all
-If you are able to go to your favorite places, AR make any tour more interesting by giving more of the information that actually want. 
-Some people want to know the history, some like to hear stories and others want to get to know the people behind the portraits. 
-AR allows everyone to see more of what they want and make every experience unique.
-
-You could even record your adventure and then send it to a friend to walk through it with you.
 
 ### Application screenshots
 
@@ -38,11 +115,13 @@ You could even record your adventure and then send it to a friend to walk throug
   <img src="readme_images/attractions_fragment_01.jpg" alt="attractions_fragment_01" width="300">
   <img src="readme_images/weather_fragment_day.jpg" alt="weather_fragment_day" width="300">
   <img src="readme_images/weather_fragment_night_02.jpg" alt="weather_fragment_night_02" width="300">
+  <img src="readme_images/weather_fragment_imperial.png" alt="weather_fragment_imperial" width="300">
+  <img src="readme_images/settings_fragment.png" alt="settings_fragment" width="300">
 </p>
 
 </details>
 
-### Running, building, generate API keys.
+### Running, building, generating API keys.
 
 <details><summary><b>Show instructions</b></summary>
 
@@ -81,7 +160,7 @@ Dependent source files, if appropriate, are also compiled.
   
   ---
   
-  * <b> Generating API for Google Services . </b>
+  * <b> Generating API for Google Services. </b>
 After logging in to Google Cloud select APIs & Services > Credentials
 <p align="center">
   <img src="readme_images/google_select_credentials.jpeg" alt="google_select_credentials.jpeg" width="650">
